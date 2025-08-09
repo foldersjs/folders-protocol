@@ -1,0 +1,15 @@
+{
+  "name": "folders-s3",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "Folders.io provider for AWS S3",
+  "main": "./src/folders-s3.js",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.2.28",
+    "folders": "git://github.com/foldersjs/folders",
+    "s3rver": "git://github.com/anitahitouch/s3rver.git#backendfs",
+    "zod": "^3.0.0"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "folders-hive",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "Folders module direct connecting to HiveServer 2 ",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/foldersjs/folders-hive.git"
+  },
+  "author": "",
+  "license": "(Apache-2.0 OR MIT)",
+  "bugs": {
+    "url": "https://github.com/foldersjs/folders-hive/issues"
+  },
+  "main": "./src/folders-hive.js",
+  "homepage": "https://github.com/foldersjs/folders-hive",
+  "dependencies": {
+    "markdown-table": "^0.4.0",
+    "thrift": "^0.9.3",
+    "zod": "^3.0.0"
+  }
+}

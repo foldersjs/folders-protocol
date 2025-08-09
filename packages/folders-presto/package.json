@@ -1,0 +1,22 @@
+{
+  "name": "folders-presto",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "Folders module connecting to Presto",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/foldersjs/folders-presto.git"
+  },
+  "author": "",
+  "license": "(Apache-2.0 OR MIT)",
+  "bugs": {
+    "url": "https://github.com/foldersjs/folders-presto/issues"
+  },
+  "main": "./src/folders-presto.js",
+  "homepage": "https://github.com/foldersjs/folders-presto",
+  "dependencies": {
+    "markdown-table": "^0.4.0",
+    "presto-client": "^0.1.0",
+    "zod": "^3.0.0"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "folders-ssh",
+  "version": "0.0.4",
+  "type": "module",
+  "description": "Synthetic file system for your ssh servers",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/foldersjs/folders-ssh.git"
+  },
+  "author": "",
+  "license": "(Apache-2.0 OR MIT)",
+  "bugs": {
+    "url": "https://github.com/foldersjs/folders-ssh/issues"
+  },
+  "main": "./src/folders-ssh.js",
+  "homepage": "https://github.com/foldersjs/folders-ssh",
+  "dependencies": {
+    "buffer-equal-constant-time": "1.x",
+    "folders": "0.0.x",
+    "mime": "^1.3.4",
+    "ssh2": "0.4.x",
+    "zod": "^3.0.0"
+  }
+}

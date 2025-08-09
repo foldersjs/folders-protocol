@@ -1,290 +1,221 @@
-/*
- *
- * Folders.io provider: share an FTP endpoint.
- *
- */
-
 import uriParse from 'url';
 import ldap from 'ldapjs';
+import { z } from 'zod';
 import Server from './folders-ldap-server.js';
 import { Readable } from 'stream';
 
-var FoldersLdap = function(prefix,options) {
-	console.log('FoldersLdap');
-	this.options = options || {};
-	this.prefix = prefix;
-	this.connectionString = options.connectionString;
-	this.server = null;
+const FoldersLdapOptions = z.object({
+  connectionString: z.string(),
+  enableEmbeddedServer: z.boolean().optional(),
+  backend: z.any().optional(),
+});
 
-	var enableEmbeddedServer = options.enableEmbeddedServer || false;
-	if (enableEmbeddedServer) {
-		var conn = parseConnString(this.connectionString);
-		this.server = new Server(conn);
-		this.server.start(options.backend);
-	}
+const parseConnString = function (connectionString) {
+  const uri = uriParse.parse(connectionString, true);
+  const conn = {
+    host: uri.hostname || uri.host,
+    port: uri.port || 389,
+  };
+  if (uri.auth) {
+    const auth = uri.auth.split(':', 2);
+    conn.user = auth[0];
+    if (auth.length == 2) {
+      conn.pass = auth[1];
+    }
+  }
+  conn.debugMode = true;
+  return conn;
 };
 
-FoldersLdap.dataVolume = function(){
-	return {RXOK:FoldersLdap.RXOK,TXOK:FoldersLdap.TXOK};
-};
+class FoldersLdap {
+  constructor(prefix, options) {
+    const parsedOptions = FoldersLdapOptions.parse(options);
+    this.options = parsedOptions;
+    this.prefix = prefix;
+    this.connectionString = parsedOptions.connectionString;
+    this.server = null;
 
-FoldersLdap.TXOK = 0 ;
-FoldersLdap.RXOK = 0 ;
-export default FoldersLdap;
+    const enableEmbeddedServer = parsedOptions.enableEmbeddedServer || false;
+    if (enableEmbeddedServer) {
+      const conn = parseConnString(this.connectionString);
+      this.server = new Server(conn);
+      this.server.start(parsedOptions.backend);
+    }
+  }
 
-FoldersLdap.prototype.features = FoldersLdap.features = {
-	cat : true,
-	ls : true,
-	write : true,
-	server : true
-};
+  static dataVolume() {
+    return { RXOK: FoldersLdap.RXOK, TXOK: FoldersLdap.TXOK };
+  }
 
-FoldersLdap.prototype.prepare = function() {
-	var self = this;
-	if (typeof (self.ldap) != 'undefined' && self.ldap != null) {
-		return self.ldap;
-	}
+  static TXOK = 0;
+  static RXOK = 0;
 
-	var connectionString = this.connectionString;
-	var conn = parseConnString(connectionString);
+  static features = {
+    cat: true,
+    ls: true,
+    write: true,
+    server: true,
+  };
 
-	console.log("folders-ldap, conn to server",conn);
+  prepare() {
+    if (this.ldap) {
+      return this.ldap;
+    }
 
-	var client = ldap.createClient({
-		url: 'ldap://127.0.0.1:1389'
-	});
-	/*
-	client.bind('cn=root', 'secret', function(err) {
-		// Oh.
-	});
-	*/
-	return client;
-};
+    const conn = parseConnString(this.connectionString);
+    console.log('folders-ldap, conn to server', conn);
 
-FoldersLdap.prototype.ls = function(path, cb) {
-	var self = this;
-	if (path!='.') {
-		if (path.length && path.substr(0, 1) != "/")
-			path = "/" + path;
-		if (path.length && path.substr(-1) != "/")
-			path = path + "/";
-	}
-	var cwd = path || "";
-	self.ldap = this.prepare();
-	// subOUsearcher.SearchScope = SearchScope.OneLevel
+    const client = ldap.createClient({
+      url: `ldap://${conn.host}:${conn.port}`,
+    });
 
-	var opts = {
-		filter: '(objectclass=organization)',
-		scope: 'one',
-		paging: {
-			pageSize: 250,
-			pagePause: true
-		},
-		// sizeLimit: 200
-	};
+    this.ldap = client;
+    return client;
+  }
 
-	// Streaming would be nice, but we do not support yet.
-	// Drain the buffer.
-	// self.ftp.ls(dirName, function(err, content) { }
+  ls(path, cb) {
+    if (path != '.') {
+      if (path.length && path.substr(0, 1) != '/') path = '/' + path;
+      if (path.length && path.substr(-1) != '/') path = path + '/';
+    }
 
-	var queue = [];
-	self.ldap.search('dc=example', opts, function(err, res) {
-		if (err) {
-			console.error(err);
-			cb(null, err);
-		}
-		// console.log('ls START');
-		res.on('searchEntry', function(entry) {
-			queue.push(entry.object);
-		});
-		res.on('page', function(result, cb) {
-			cb();
-		});
-		res.on('error', function(err) {
-			console.error(err);
-			cb(null, err);
-		});
-		res.on('end', function(result) {
-			// console.log('ls DONE');
-			// console.log('ls returns: ', self.asFolders(path, queue));
-			cb(self.asFolders(path, queue));
-		});
-	});
-	/*
-	self.ftp.raw.cwd(path, function(err, data) {
-		if (err){
-			console.error(err);
-			return cb(null,err);
-		}
-		self.ftp.ls(".", function(err, content) {
-			if (err) {
-				console.error(err);
-				//return cb(null, err);
-				return cb(err);
-			}
+    const ldapClient = this.prepare();
 
-			cb(null, self.asFolders(path, content));
+    const opts = {
+      filter: '(objectclass=organization)',
+      scope: 'one',
+      paging: {
+        pageSize: 250,
+        pagePause: true,
+      },
+    };
 
-			// FIXME there is a socket error when use this module after socket.end()
-			// self.ftp.socket.end();
-		});
-	});
-	*/
-};
+    const queue = [];
+    ldapClient.search('dc=example', opts, (err, res) => {
+      if (err) {
+        console.error(err);
+        return cb(null, err);
+      }
 
-FoldersLdap.prototype.asFolders = function(dir, files) {
-	// console.log('asFolders', dir, files);
-	var out = [];
-	for (var i = 0; i < files.length; i++) {
-		var file = files[i];
-		if(file.foldersio) file = JSON.parse(file.foldersio);
-		var o = {
-			name : file.name || file.dn
-		};
-		if (dir=='.')
-			o.fullPath = "/" + file.name || file.dn;
-		else
-			o.fullPath = dir + (file.name || file.dn);
+      res.on('searchEntry', (entry) => {
+        queue.push(entry.object);
+      });
+      res.on('page', (result, cb) => {
+        cb();
+      });
+      res.on('error', (err) => {
+        console.error(err);
+        cb(null, err);
+      });
+      res.on('end', (result) => {
+        cb(this.asFolders(path, queue));
+      });
+    });
+  }
 
-		//FIXME: restore prefix logic later
-		//o.uri = "#" + this.prefix + o.fullPath;
-		o.uri = o.fullPath;
-		o.size = file.size || 0;
+  asFolders(dir, files) {
+    const out = [];
+    for (let i = 0; i < files.length; i++) {
+      let file = files[i];
+      if (file.foldersio) file = JSON.parse(file.foldersio);
+      const o = {
+        name: file.name || file.dn,
+      };
+      if (dir == '.') o.fullPath = '/' + (file.name || file.dn);
+      else o.fullPath = dir + (file.name || file.dn);
 
-		//FIXME: does not look right here!
-		o.extension = file.extension || "txt";
-		o.type = file.type || "text/plain";
-		if(file.modificationTime) o.modificationTime = file.modificationTime;
+      o.uri = o.fullPath;
+      o.size = file.size || 0;
+      o.extension = file.extension || 'txt';
+      o.type = file.type || 'text/plain';
+      if (file.modificationTime) o.modificationTime = file.modificationTime;
 
-		if (file.type == '1') {
-			o.extension = '+folder';
-			o.type = "";
-		}
-		if (file.type == '2') {
-			// symlink/redirection.
-			o.extension = '+folder';
-			o.type = "";
-		}
+      if (file.type == '1') {
+        o.extension = '+folder';
+        o.type = '';
+      }
+      if (file.type == '2') {
+        o.extension = '+folder';
+        o.type = '';
+      }
 
-		out.push(o);
-	}
-	return out;
-};
+      out.push(o);
+    }
+    return out;
+  }
 
+  cat(data, cb) {
+    const path = data;
+    const ldapClient = this.prepare();
 
-FoldersLdap.prototype.cat = function(data, cb) {
-	var self = this;
-	var path = data;
+    const opts = {
+      filter: '(objectclass=organization)',
+      scope: 'sub',
+      paging: {
+        pageSize: 250,
+        pagePause: true,
+      },
+    };
 
-	var dirName = path.substring(0,path.lastIndexOf("/")+1);
-	var fileName = path.substring(path.lastIndexOf('/') + 1);
-	console.log('dirName: ', dirName);
-	console.log('fileName: ', fileName);
+    const queue = [];
+    ldapClient.search('o=example', opts, (err, res) => {
+      if (err) {
+        console.error(err);
+        return cb(null, err);
+      }
 
-	self.ldap = this.prepare();
+      res.on('searchEntry', (entry) => {
+        queue.push(entry);
+      });
+      res.on('page', (result, cb) => {
+        cb();
+      });
+      res.on('error', (resErr) => {
+        console.error(resErr);
+        cb(null, resErr);
+      });
+      res.on('end', (result) => {
+        const blob = JSON.stringify(queue);
+        const file = { size: blob.length, name: 'text.json' };
+        const stream = new Readable();
+        stream.push(blob);
+        stream.push(null);
+        cb({
+          stream: stream,
+          size: file.size,
+          name: file.name,
+          meta: { mime: 'text/json', date: new Date() },
+        });
+      });
+    });
+  }
 
-	var opts = {
-		filter: '(objectclass=organization)',
-		scope: 'sub',
-		paging: {
-			pageSize: 250,
-			pagePause: true
-		},
-		// sizeLimit: 200
-	};
+  write(uri, data, cb) {
+    const ldapClient = this.prepare();
+    data.on('data', function (d) {
+      FoldersLdap.RXOK += d.length;
+    });
 
-	// Streaming would be nice, but we do not support yet.
-	// Drain the buffer.
-	// self.ftp.ls(dirName, function(err, content) { }
+    const entry = {
+      cn: 'foo',
+      sn: 'bar',
+      email: ['foo@bar.com', 'foo1@bar.com'],
+      objectclass: 'fooPerson',
+    };
 
-	var queue = [];
-	self.ldap.search('o=example', opts, function(err, res) {
-		if (err) {
-			console.error(err);
-			cb(null, err);
-		}
-		console.log('ls START');
-		res.on('searchEntry', function(entry) {
-			// Submit incoming objects to queue
-			queue.push(entry);
-		});
-		res.on('page', function(result, cb) {
-			// request next batch.
-			cb();
-		});
-		res.on('error', function(resErr) {
-			if (err) {
-				console.error(err);
-				cb(null, err);
-			}
-		});
-		res.on('end', function(result) {
-			console.log('ls DONE');
-			var blob = JSON.stringify(queue);
-			var file = { size: blob.length, name: "text.json" };
-			var data = new Readable();
-			data.push(blob);
-			data.push(null);
-			cb({
-				stream: data,
-				size: file.size,
-				name: file.name,
-				meta: { mime:"text/json", date: (0+new Date()) }
-			});
-		});
-	});
-};
+    ldapClient.add('cn=foo, o=example', entry, (err) => {
+      if (err) {
+        console.error('File transferred failed,', err);
+        return cb(null, err);
+      }
+      console.log('File transferred successfully!');
+      cb('write uri success');
+    });
+  }
 
-FoldersLdap.prototype.write = function(uri, data, cb) {
-	var self = this;
-	self.ldap = this.prepare();
-	data.on('data',function(d) {
-		FoldersFtp.RXOK +=d.length;
-	});
-
-	// Incoming data must be JSON.
-	// FIXME: Back-pressure/drain per JSON record.
-	var entry = {
-		cn: 'foo',
-		sn: 'bar',
-		email: ['foo@bar.com', 'foo1@bar.com'],
-		objectclass: 'fooPerson'
-	};
-	// data, uri,
-	// self.ldap.add(data, uri, function(err) {
-	self.ldap.add('cn=foo, o=example', entry, function(err) {
-		if (err) {
-			console.error("File transferred failed,", err);
-			return cb(null, err);
-		}
-		console.log("File transferred successfully!");
-		cb("write uri success");
-		/*
-		client.unbind(function(err) {
-		  assert.ifError(err);
-		});
-		*/
-	});
-};
-
-FoldersLdap.prototype.dump = function(){
-	return this.options;
-};
-
-var parseConnString = function(connectionString){
-	var uri = uriParse.parse(connectionString, true);
-	var conn = {
-		host : uri.hostname || uri.host,
-		port : uri.port || 389
-	};
-	if (uri.auth) {
-		var auth = uri.auth.split(":", 2);
-		conn.user = auth[0];
-		if (auth.length == 2) {
-			conn.pass = auth[1];
-		}
-	}
-	conn.debugMode = true;
-
-	return conn;
+  dump() {
+    return this.options;
+  }
 }
+
+export default FoldersLdap;
