@@ -1,0 +1,25 @@
+{
+  "name": "folders-ldap",
+  "version": "0.0.1",
+  "description": "Folders module connecting to LDAP",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/foldersjs/folders-ldap.git"
+  },
+  "author": "",
+  "license": "(Apache-2.0 OR MIT)",
+  "bugs": {
+    "url": "https://github.com/foldersjs/folders-ldap/issues"
+  },
+  "main": "./src/folders-ldap",
+  "homepage": "https://github.com/foldersjs/folders-ldap",
+  "dependencies": {
+    "ldapjs": "^1.0.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-esformatter": "^4.0.0",
+    "gulp-eslint": "^0.15.0"
+  },
+  "readmeFilename": "README.md"
+}
