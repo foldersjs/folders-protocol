@@ -1,8 +1,8 @@
 "use strict";
 
-var http = require("http");
-var https = require("https");
-var bindApp = require("./bindApp");
+import http from "http";
+import https from "https";
+import bindApp from "./bindApp.js";
 
 /**
  * The default port that node servers bind to.
@@ -101,4 +101,4 @@ var DEFAULT_PORT = 8090;
 
   return nodeServer;
 }
-module.exports = serveApp;
+export default serveApp;

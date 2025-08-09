@@ -1,7 +1,7 @@
 /**
  * A map of HTTP header names with irregular case.
  */
-module.exports = [
+export default [
   'Content-ID',
   'Content-MD5',
   'DNT',

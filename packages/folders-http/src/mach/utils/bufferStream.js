@@ -1,6 +1,6 @@
-var bodec = require('bodec');
-var Promise = require('./Promise');
-var MaxLengthExceededError = require('./MaxLengthExceededError');
+import bodec from 'bodec';
+import Promise from './Promise.js';
+import MaxLengthExceededError from './MaxLengthExceededError.js';
 
 /**
  * Returns a promise for a buffer of all content in the given stream up to
@@ -37,4 +37,4 @@ function bufferStream(stream, maxLength) {
   });
 }
 
-module.exports = bufferStream;
+export default bufferStream;

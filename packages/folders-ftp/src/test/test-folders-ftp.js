@@ -1,4 +1,5 @@
-var FoldersFtp = new require('../folders-ftp');
+import FoldersFtp from '../folders-ftp.js';
+import { Buffer } from 'buffer';
 
 // This test suite will use a embedded localhost FTP server
 // If you want to test against a remote server,

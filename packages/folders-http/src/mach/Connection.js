@@ -1,12 +1,12 @@
 /* jshint -W058 */
-var d = require('describe-property');
-var isBinary = require('bodec').isBinary;
-var decodeBase64 = require('./utils/decodeBase64');
-var encodeBase64 = require('./utils/encodeBase64');
-var stringifyQuery = require('./utils/stringifyQuery');
-var Promise = require('./utils/Promise');
-var Location = require('./Location');
-var Message = require('./Message');
+import d from 'describe-property';
+import { isBinary } from 'bodec';
+import decodeBase64 from './utils/decodeBase64.js';
+import encodeBase64 from './utils/encodeBase64.js';
+import stringifyQuery from './utils/stringifyQuery.js';
+import Promise from './utils/Promise.js';
+import Location from './Location.js';
+import Message from './Message.js';
 
 function locationPropertyAlias(name) {
   return d.gs(function () {
@@ -233,4 +233,4 @@ Object.defineProperties(Connection.prototype, {
 
 });
 
-module.exports = Connection;
+export default Connection;

@@ -45,4 +45,4 @@ var getRandomCookie = function(maxLength){
  };
 
 
- module.exports = stringifyCookie;
+ export default stringifyCookie;

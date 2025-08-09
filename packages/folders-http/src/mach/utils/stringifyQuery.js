@@ -1,1 +1,2 @@
-module.exports = require('qs').stringify;
+import { stringify } from 'qs';
+export default stringify;

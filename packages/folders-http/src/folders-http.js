@@ -8,7 +8,7 @@
  */
 
 // we can also use fio channels to recieve messages
-var route = require('./route');
+import * as route from './route.js';
 
 var FoldersHttp = function (options) {
 
@@ -138,4 +138,4 @@ var cat = function (o,data,cb) {
 };
 
 
-module.exports = FoldersHttp;
+export default FoldersHttp;

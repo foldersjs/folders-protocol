@@ -14,7 +14,7 @@
  *
  */
 
-exports.getStubGetShare = function(){
+export const getStubGetShare = function(){
 
 	var stubShare;
 	 // test Stub
@@ -52,7 +52,7 @@ exports.getStubGetShare = function(){
 
 };
 
-exports.getStubSetFiles = function(){
+export const getStubSetFiles = function(){
 
 
 	//Test Stub
@@ -65,7 +65,7 @@ exports.getStubSetFiles = function(){
 
 };
 
-exports.getStubJson = function(){
+export const getStubJson = function(){
 
 	//eventFriendly(request, response);
     var stubShare = {"success":true,"signals":[{"data":{},"type":"KeepAlive"}]};
@@ -74,7 +74,7 @@ exports.getStubJson = function(){
 };
 
 
-exports.getStubSignalPoll = function(){
+export const getStubSignalPoll = function(){
 
 
 	//eventFriendly(request, response);
@@ -83,7 +83,7 @@ exports.getStubSignalPoll = function(){
 
 };
 
-exports.getStubSession = function(res){
+export const getStubSession = function(res){
 
 	 var stubShare = {
 		"users":[{
@@ -108,7 +108,7 @@ function dummyStream(){
 
 };
 
-exports.getStubFile = function(backend){
+export const getStubFile = function(backend){
 
 	if(backend){
 		return function() {
@@ -148,7 +148,7 @@ exports.getStubFile = function(backend){
 
 };
 
-exports.getStubDir = function(backend){
+export const getStubDir = function(backend){
 
 	var stubShare ;
 	if(backend) {
@@ -181,7 +181,7 @@ exports.getStubDir = function(backend){
 	return stubShare;
 };
 
-exports.getStubDefault = function(){
+export const getStubDefault = function(){
 
 	var stubShare = {"insert":"here"};
 	return stubShare;

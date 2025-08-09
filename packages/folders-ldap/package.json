@@ -1,6 +1,7 @@
 {
   "name": "folders-ldap",
   "version": "0.0.1",
+  "type": "module",
   "description": "Folders module connecting to LDAP",
   "repository": {
     "type": "git",
@@ -11,7 +12,7 @@
   "bugs": {
     "url": "https://github.com/foldersjs/folders-ldap/issues"
   },
-  "main": "./src/folders-ldap",
+  "main": "./src/folders-ldap.js",
   "homepage": "https://github.com/foldersjs/folders-ldap",
   "dependencies": {
     "ldapjs": "^1.0.0"

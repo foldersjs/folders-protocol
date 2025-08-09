@@ -1,10 +1,10 @@
-var bodec = require('bodec');
-var d = require('describe-property');
-var Stream = require('bufferedstream');
-var bufferStream = require('./utils/bufferStream');
-var normalizeHeaderName = require('./utils/normalizeHeaderName');
-var parseCookie = require('./utils/parseCookie');
-var parseQuery = require('./utils/parseQuery');
+import bodec from 'bodec';
+import d from 'describe-property';
+import Stream from 'bufferedstream';
+import bufferStream from './utils/bufferStream.js';
+import normalizeHeaderName from './utils/normalizeHeaderName.js';
+import parseCookie from './utils/parseCookie.js';
+import parseQuery from './utils/parseQuery.js';
 
 /**
  * The default content to use for new messages.
@@ -251,4 +251,4 @@ Object.defineProperties(Message.prototype, {
 
 });
 
-module.exports = Message;
+export default Message;

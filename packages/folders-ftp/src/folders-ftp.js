@@ -4,8 +4,9 @@
  *
  */
 
-var uriParse = require('url');
-var jsftp = require('jsftp');
+import uriParse from 'url';
+import jsftp from 'jsftp';
+import Server from './embedded-ftp-server.js';
 // var rush = require('node-rush');
 
 var FoldersFtp = function(prefix,options) {
@@ -19,7 +20,6 @@ var FoldersFtp = function(prefix,options) {
 	var enableEmbeddedServer = options.enableEmbeddedServer || false;
 	if (enableEmbeddedServer){
 		var conn = parseConnString(this.connectionString);
-		var Server = require('./embedded-ftp-server');
 		this.server = new Server(conn);
 		this.server.start(options.backend);
 	}
@@ -32,7 +32,7 @@ FoldersFtp.dataVolume = function(){
 
 FoldersFtp.TXOK = 0 ;
 FoldersFtp.RXOK = 0 ;
-module.exports = FoldersFtp;
+export default FoldersFtp;
 
 FoldersFtp.prototype.features = FoldersFtp.features = {
 	cat : true,

@@ -1,7 +1,7 @@
-var parseQuery = require('./parseQuery');
+import parseQuery from './parseQuery.js';
 
 function parseCookie(cookie) {
   return parseQuery(cookie, { delimiter: /[;,] */ });
 }
 
-module.exports = parseCookie;
+export default parseCookie;

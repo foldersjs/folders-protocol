@@ -9,7 +9,7 @@ var Server = function(credentials) {
 	this.ldapServer = null;
 };
 
-module.exports = Server;
+export default Server;
 
 Server.prototype.close = function(){
 	if (this.ldapServer != null){
@@ -18,8 +18,8 @@ Server.prototype.close = function(){
 };
 
 
+import ldap from 'ldapjs';
 Server.prototype.start = function(backend) {
-	var ldap = require('ldapjs');
 	var ldapServer = ldap.createServer();
 	var config = this.ldapCredentials || {};
 

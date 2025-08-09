@@ -1,10 +1,15 @@
+import path from 'path';
+import { fileURLToPath } from 'url';
+import sqlite3 from 'sqlite3';
 
-var path = require('path')
-var sqlite3 = require('sqlite3').verbose();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const sqlite3v = sqlite3.verbose();
 
 var dbFile = path.join(__dirname, '/../db/annotation.sqlite');
 console.log('dbFile: ', dbFile);
-var db = new sqlite3.Database(dbFile);
+var db = new sqlite3v.Database(dbFile);
 
 /* This class is used to add annotation on a give path */
 var Annotation = function() {
@@ -170,4 +175,4 @@ var Annotation = function() {
 
 }
 
-module.exports = Annotation
+export default Annotation

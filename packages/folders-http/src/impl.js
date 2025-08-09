@@ -5,20 +5,20 @@
 /*
  * Polyfill for promises: let's just implement a subset.
  */
-var Promise = require('promise');
+import Promise from 'promise';
 
 /*
  * Messaging library: security and verification.
  * Special thanks to TweetNaCl public domain contributors.
  */
-var nf = require('tweetnacl');
+import nf from 'tweetnacl';
 var handshakePub = nf.util.encodeBase64(nf.box.keyPair().publicKey);
 // var Nacl = require('nacl-stream');
-var Nacl = require('./util/stream-nacl.js');
+import Nacl from './util/stream-nacl.js';
 
-var outbound = require('request');
-var postal = require('postal');
-var route = require('./route');
+import outbound from 'request';
+import postal from 'postal';
+import * as route from './route.js';
 route.channel = function(uri) { var channel = postal.channel(namespace); return channel; };
 route.post = function(uri, opts) { return outbound.post(uri, { headers: headers }); };
 route.Promise = Promise;

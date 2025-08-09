@@ -6,7 +6,7 @@
  *
  */
 
-module.exports = function(o ,channel){
+export default function(o ,channel){
 	var self = o;
 	channel.subscribe("DirectoryListRequest", function(data, envelope) {
 		console.log("ready to list it", data);
