@@ -1,0 +1,22 @@
+{
+  "name": "folders-aws",
+  "version": "0.0.3",
+  "type": "module",
+  "description": "Connector from Folders to AWS",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/foldersjs/folders-aws.git"
+  },
+  "author": "",
+  "license": "(Apache-2.0 OR MIT)",
+  "bugs": {
+    "url": "https://github.com/foldersjs/folders-aws/issues"
+  },
+  "main": "./src/folders-aws.js",
+  "homepage": "https://github.com/foldersjs/folders-aws",
+  "dependencies": {
+    "aws-sdk": "2.x.x",
+    "mime": "1.x.x",
+    "zod": "^3.0.0"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "folders-hdfs",
+  "version": "0.0.3",
+  "type": "module",
+  "description": "Synthetic file system for your hdfs",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/foldersjs/folders-hdfs.git"
+  },
+  "author": "",
+  "license": "Apache 2.0/MIT Dual Licensed",
+  "bugs": {
+    "url": "https://github.com/foldersjs/folders-hdfs/issues"
+  },
+  "main": "./src/folders-hdfs.js",
+  "homepage": "https://github.com/foldersjs/folders-hdfs",
+  "dependencies": {
+    "mime": "^1.3.4",
+    "request": "^2.55.0",
+    "webhdfs-proxy": "^0.1.2",
+    "zod": "^3.0.0"
+  },
+  "devDependencies": {}
+}
