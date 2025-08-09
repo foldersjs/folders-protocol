@@ -17,6 +17,5 @@
   "dependencies": {
     "ldapjs": "^1.0.0",
     "zod": "^3.0.0"
-  },
-  "devDependencies": {}
+  }
 }
