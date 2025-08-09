@@ -1,6 +1,7 @@
 {
   "name": "folders-ftp",
   "version": "0.0.4",
+  "type": "module",
   "description": "Synthetic file system for your ftp servers",
   "repository": {
     "type": "git",
@@ -11,7 +12,7 @@
   "bugs": {
     "url": "https://github.com/foldersjs/folders-ftp/issues"
   },
-  "main": "./src/folders-ftp",
+  "main": "./src/folders-ftp.js",
   "homepage": "https://github.com/foldersjs/folders-ftp",
   "dependencies": {
     "folders": "0.0.x",

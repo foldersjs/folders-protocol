@@ -1,1 +1,2 @@
-module.exports = require('qs/lib/utils').merge;
+import { merge } from 'qs/lib/utils';
+export default merge;

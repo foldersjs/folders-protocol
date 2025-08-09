@@ -1,4 +1,4 @@
-var urlParse = require('url').parse;
+import { parse as urlParse } from 'url';
 
 function parseURL(url) {
   var parsed = urlParse(url);
@@ -14,4 +14,4 @@ function parseURL(url) {
   };
 }
 
-module.exports = parseURL;
+export default parseURL;

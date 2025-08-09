@@ -12,4 +12,4 @@ function bindApp(app, nodeServer) {
   nodeServer.on('request', app);
 }
 
-module.exports = bindApp;
+export default bindApp;

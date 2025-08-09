@@ -1,4 +1,4 @@
-var IrregularHeaderNames = require('./IrregularHeaderNames');
+import IrregularHeaderNames from './IrregularHeaderNames.js';
 
 /**
  * Normalizes HTTP header names according to RFC 2616.
@@ -14,4 +14,4 @@ function normalizeHeaderName(headerName) {
   });
 }
 
-module.exports = normalizeHeaderName;
+export default normalizeHeaderName;

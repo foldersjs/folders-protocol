@@ -2,7 +2,11 @@
   "name": "app",
   "packageManager": "yarn@4.9.2",
   "private": true,
+  "type": "module",
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "zod": "^4.0.17"
+  }
 }

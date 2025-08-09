@@ -13,8 +13,8 @@
 
 // Favored utility libraries.
 
-var parseQuery = require('../mach/utils/parseQuery')
-var Promise    = require('promise')
+import parseQuery from '../mach/utils/parseQuery.js';
+import Promise from 'promise';
 
 /*
  * convert post data to object and return promise
@@ -90,7 +90,7 @@ var requestObject = function(headers,uri ,method ,postObj,baseHost){
 
 }
 
-var jsonSafeStringify = require('json-stringify-safe')
+import jsonSafeStringify from 'json-stringify-safe';
 
 
 /*
@@ -132,9 +132,11 @@ var isStringEmpty = function(string){
 };
 
 
-exports.safeStringify     = safeStringify
-exports.uuid              = uuid
-exports.isStringEmpty     = isStringEmpty
-exports.objectifyPostData = objectifyPostData
-exports.requestObject     = requestObject
-exports.corsFriendly      = corsFriendly
+export {
+  safeStringify,
+  uuid,
+  isStringEmpty,
+  objectifyPostData,
+  requestObject,
+  corsFriendly
+};

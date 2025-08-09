@@ -9,7 +9,7 @@
  */
 
 
-module.exports = function(conn,requestId,shareid) {
+export default function(conn,requestId,shareid) {
   var uri = conn.location.pathname;
 
   if(uri.substr(0,5) === "/dir/") {

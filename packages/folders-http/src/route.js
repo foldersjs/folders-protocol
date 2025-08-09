@@ -6,8 +6,8 @@
  *
  */
 
-var stream = require('event-stream');
-var outbound = require('request');
+import stream from 'event-stream';
+import outbound from 'request';
 
 
 /*
@@ -48,7 +48,7 @@ var mockShare = function() {
 };
 
 // Request a new session, getting a share ID and token.
-exports.open = function(baseUri, cb, params) {
+export const open = function(baseUri, cb, params) {
 	var register = function(event) {
 		var shareId = event.shareId;
 		session[shareId] = event.token;
@@ -95,7 +95,7 @@ exports.open = function(baseUri, cb, params) {
 };
 
 // Watch a pipe listening for commands/requests.
-exports.watch = function(baseUri, session, onReady, onMessage, onClose) {
+export const watch = function(baseUri, session, onReady, onMessage, onClose) {
 	var cookie = session.token;
 	var shareId = session.shareId;
 	var r;
@@ -161,7 +161,7 @@ var resolve = function(shareName, cb) {
 };
 
 // Send a buffered response to a watched request.
-var post = function(streamId, data, headerMap, tokenId) {
+export const post = function(streamId, data, headerMap, tokenId) {
 // console.log("post data");
 	var headers = {};
 	if(headerMap) for(var i = 0; i < headerMap.length; i++) {

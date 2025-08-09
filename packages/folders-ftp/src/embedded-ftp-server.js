@@ -11,7 +11,7 @@ var Server = function(credentials){
 	console.log("inin the FTP Embedded server,",credentials);
 };
 
-module.exports = Server;
+export default Server;
 
 Server.prototype.close = function(){
 	if (this.sshServer != null){
@@ -20,6 +20,7 @@ Server.prototype.close = function(){
 };
 
 
+import ftpd from "ftpd";
 Server.prototype.start = function(backend) {
 	var FTPCredentials = this.FTPCredentials;
 	console.log("start the FTP Embedded server,",FTPCredentials);
@@ -27,7 +28,7 @@ Server.prototype.start = function(backend) {
 	//console.log('readdir?' , typeof(backend.readdir));
 	if (FTPCredentials.host === "localhost") {
 
-		var ftpd = require("ftpd");
+
 		ftpServer = ftpd;
 
 		server = new ftpd.FtpServer('127.0.0.1', {

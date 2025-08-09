@@ -1,1 +1,2 @@
-module.exports = require('qs').parse;
+import { parse } from 'qs';
+export default parse;

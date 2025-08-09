@@ -4,8 +4,10 @@
  *
  */
 
-var uriParse = require('url');
-var ldap = require('ldapjs');
+import uriParse from 'url';
+import ldap from 'ldapjs';
+import Server from './folders-ldap-server.js';
+import { Readable } from 'stream';
 
 var FoldersLdap = function(prefix,options) {
 	console.log('FoldersLdap');
@@ -17,7 +19,6 @@ var FoldersLdap = function(prefix,options) {
 	var enableEmbeddedServer = options.enableEmbeddedServer || false;
 	if (enableEmbeddedServer) {
 		var conn = parseConnString(this.connectionString);
-		var Server = require('./folders-ldap-server');
 		this.server = new Server(conn);
 		this.server.start(options.backend);
 	}
@@ -29,7 +30,7 @@ FoldersLdap.dataVolume = function(){
 
 FoldersLdap.TXOK = 0 ;
 FoldersLdap.RXOK = 0 ;
-module.exports = FoldersLdap;
+export default FoldersLdap;
 
 FoldersLdap.prototype.features = FoldersLdap.features = {
 	cat : true,
@@ -220,7 +221,6 @@ FoldersLdap.prototype.cat = function(data, cb) {
 		res.on('end', function(result) {
 			console.log('ls DONE');
 			var blob = JSON.stringify(queue);
-			var Readable = require('stream').Readable;
 			var file = { size: blob.length, name: "text.json" };
 			var data = new Readable();
 			data.push(blob);

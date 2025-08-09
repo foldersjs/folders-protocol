@@ -1,5 +1,5 @@
 /* jshint -W058 */
-var createConnection = require('./createConnection');
+import createConnection from './createConnection.js';
 
 /**
  * HTTP status codes that don't have entities.
@@ -51,4 +51,4 @@ function createRequestHandler(app) {
   };
 }
 
-module.exports = createRequestHandler;
+export default createRequestHandler;

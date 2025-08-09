@@ -10,19 +10,22 @@
  * This file can be used as a replacement of standaloneProxy.js
  * This module can be used both in debug mode and live mode
  */
-var express = require('express');
-var bodyParser = require('body-parser');
-var request = require('request');
+import express from 'express';
+import bodyParser from 'body-parser';
+import request from 'request';
+import http from 'http';
+import path from 'path';
+import os from 'os';
 //var publicIp = require('public-ip');
-var compression = require('compression');
-var stubApp = require('./app/stubApp');
+import compression from 'compression';
+import stubApp from './app/stubApp.js';
 var app = express();
-var Annotation = require('./annotate');
+import Annotation from './annotate.js';
 
 
 //Allow CORS when withCredentials = true in client
 //https://github.com/expressjs/cors
-var cors = require('cors');
+import cors from 'cors';
 var corsOptions = {
     origin: ['http://localhost:9999', 'http://45.55.145.52:8000', 'http://localhost:8000'],
     credentials: true
@@ -35,11 +38,11 @@ var stats = {
 };
 
 
-var Handshake = require('folders/src/handshake.js');
-var Qs = require('qs');
-var mime = require('mime');
-var LocalFio = require('folders/src/folders-local.js')
-var helpers = require('folders/src/util/helpers.js')
+import Handshake from 'folders/src/handshake.js';
+import Qs from 'qs';
+import mime from 'mime';
+import LocalFio from 'folders/src/folders-local.js';
+import helpers from 'folders/src/util/helpers.js';
 
 var HandshakeService = Handshake.HandshakeService;
 
@@ -149,7 +152,7 @@ standaloneServer.prototype.mountInstance = function (cb,clientUri) {
             }
             console.log(uri);
 
-            require('http').get(uri, function (res) {
+            http.get(uri, function (res) {
                 var content = '';
                 res.on('data', function (d) {
                     content += d.toString();
@@ -268,12 +271,12 @@ standaloneServer.prototype.configureAndStart = function (argv) {
 
         app_client = express();
 
-        app_client.use(express.static(require('path').normalize(client)));
+        app_client.use(express.static(path.normalize(client)));
 
         //do this so that server still renders the site when accesssing from localhost:9999/instance/...
-        app_client.use('/instance/*', express.static(require('path').normalize(client)));
+        app_client.use('/instance/*', express.static(path.normalize(client)));
 
-        app_client.use('/g/*', express.static(require('path').normalize(client)));
+        app_client.use('/g/*', express.static(path.normalize(client)));
 
         var clientServer = app_client.listen(clientPort, host, function() {
 		serverBootStatus += '>> Server Endpoint: http://' + clientServer.address().address + ":" + clientServer.address().port + '/instance/' +  self.instanceId + '\n';
@@ -593,7 +596,7 @@ standaloneServer.prototype.routerDebug = function () {
                     stats.bytes_out += parseInt(result.size);
                     stats.files.push({
 
-                        'download': require('path').basename(path),
+                        'download': path.basename(path),
                         'datetime': Date.now(),
                         'size': result.size
                     });
@@ -873,7 +876,7 @@ standaloneServer.prototype.routerDebug = function () {
                     stats.bytes_in += size;
                     stats.files.push({
 
-                        'upload': require('path').basename(path),
+                        'upload': path.basename(path),
                         'datetime': Date.now(),
                         'size': size
                     });
@@ -918,7 +921,7 @@ standaloneServer.prototype.routerDebug = function () {
                     stats.bytes_in += size;
                     stats.files.push({
 
-                        'upload': require('path').basename(path),
+                        'upload': path.basename(path),
                         'datetime': Date.now(),
                         'size': size
                     });
@@ -1400,8 +1403,6 @@ var strToArr = function (str) {
 
 var findLocalIps = function(){
 
-	var os = require('os');
-
 	var interfaces = os.networkInterfaces();
 	var addresses = [];
 	for (var k in interfaces) {
@@ -1417,4 +1418,4 @@ return addresses;
 
 };
 
-module.exports = standaloneServer;
+export default standaloneServer;

@@ -1,5 +1,5 @@
-var Connection = require('../Connection');
-var Location = require('../Location');
+import Connection from '../Connection.js';
+import Location from '../Location.js';
 
 /**
  * Standard ports for HTTP protocols.
@@ -87,4 +87,4 @@ function createConnection(nodeRequest) {
   return conn;
 }
 
-module.exports = createConnection;
+export default createConnection;

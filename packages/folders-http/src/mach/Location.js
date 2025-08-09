@@ -1,8 +1,8 @@
-var d = require('describe-property');
-var mergeQuery = require('./utils/mergeQuery');
-var stringifyQuery = require('./utils/stringifyQuery');
-var parseQuery = require('./utils/parseQuery');
-var parseURL = require('./utils/parseURL');
+import d from 'describe-property';
+import mergeQuery from './utils/mergeQuery.js';
+import stringifyQuery from './utils/stringifyQuery.js';
+import parseQuery from './utils/parseQuery.js';
+import parseURL from './utils/parseURL.js';
 
 /**
  * Standard ports for HTTP protocols.
@@ -218,6 +218,6 @@ Object.defineProperties(Location.prototype, {
 
 
 
-module.exports = Location;
+export default Location;
 
 //var y = new Location('/p/a/t/h?query=string#hash');

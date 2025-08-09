@@ -9,14 +9,14 @@
  */
 
 // Favored utility libraries.
-var outbound = require('request')
-  , index = require('./util/watchfile') // Watch a file for changes to the local file, otherwise keep it in memory.
-  , serveapp = require('./mach/utils/serveApp.js')
-  , createConnection = require("./mach/utils/createConnection")
-  , helpers    = require('./util/helpers')
-  , stringifyCookie = require('./mach/utils/stringifyCookie')
-  , Message = require('./mach/Message.js')
-  , stringify = require('./mach/utils/stringifyQuery')
+import outbound from 'request';
+import index from './util/watchfile.js';
+import serveapp from './mach/utils/serveApp.js';
+import createConnection from './mach/utils/createConnection.js';
+import helpers from './util/helpers.js';
+import stringifyCookie from './mach/utils/stringifyCookie.js';
+import Message from './mach/Message.js';
+import stringify from './mach/utils/stringifyQuery.js';
 
 /*
  * main class and constructor
@@ -306,4 +306,4 @@ var RouteServer   = function(proxy) {
 };
 
 
-module.exports = ForwardingProxy
+export default ForwardingProxy

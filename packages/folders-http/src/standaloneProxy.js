@@ -10,16 +10,16 @@
 
 
 // Favored utility libraries.
-var stream = require('event-stream');
-var index = require('./util/watchfile'); // Watch a file for changes to the local file, otherwise keep it in memory.
-var serveapp = require('./mach/utils/serveApp.js');
-var createConnection = require("./mach/utils/createConnection");
-var stubApp = require('./app/stubApp.js');
-var restApp = require('./app/restApp.js');
-var helpers = require('./util/helpers');
+import stream from 'event-stream';
+import index from './util/watchfile.js';
+import serveapp from './mach/utils/serveApp.js';
+import createConnection from './mach/utils/createConnection.js';
+import stubApp from './app/stubApp.js';
+import restApp from './app/restApp.js';
+import helpers from './util/helpers.js';
 //var Fio = require('folders/src/handshake.js');
 
-var Handshake = require('folders/src/handshake.js');
+import Handshake from 'folders/src/handshake.js';
 
 var HandshakeService = Handshake.HandshakeService;
 
@@ -351,4 +351,4 @@ standaloneProxy.prototype.routeFriendly = function(conn,response){
 
 
 
-module.exports = standaloneProxy;
+export default standaloneProxy;

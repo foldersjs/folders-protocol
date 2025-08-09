@@ -1,4 +1,4 @@
-var fs = require('fs');
+import fs from 'fs';
 
 // Basic util.
 // Watch a file for changes to the local file, otherwise keep it in memory.
@@ -39,4 +39,4 @@ var index = function(fileName, cb) {
   }
 };
 
-module.exports = index;
+export default index;

@@ -1,6 +1,6 @@
-var Promise = require('when/lib/Promise');
+import Promise from 'when/lib/Promise.js';
 
 if (process.env.NODE_ENV !== 'production')
-  require('when/monitor')(Promise);
+  import('when/monitor.js').then(monitor => monitor(Promise));
 
-module.exports = Promise;
+export default Promise;

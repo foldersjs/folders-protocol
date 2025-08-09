@@ -1,4 +1,4 @@
-var d = require('describe-property');
+import d from 'describe-property';
 
 /**
  * An error indicating that some maximum length has been exceeded.
@@ -17,4 +17,4 @@ MaxLengthExceededError.prototype = Object.create(Error.prototype, {
 
 });
 
-module.exports = MaxLengthExceededError;
+export default MaxLengthExceededError;

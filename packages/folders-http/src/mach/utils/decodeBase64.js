@@ -1,3 +1,4 @@
 "use strict";
 
-module.exports = require("bodec").decodeBase64;
+import { decodeBase64 } from 'bodec';
+export default decodeBase64;
