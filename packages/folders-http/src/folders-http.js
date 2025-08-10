@@ -1,141 +1,78 @@
-/*
- * (c) Folders.io - All rights reserved.
- * Software intended for internal use only.
- *
- * "http" is a special provider, as it provides event routing
- * (via that route.js implementation and the /json endpoint).
- *
- */
-
-// we can also use fio channels to recieve messages
+import { z } from 'zod';
 import * as route from './route.js';
+import util from 'util';
 
-var FoldersHttp = function (options) {
+const OptionsSchema = z.object({
+  provider: z.any(),
+  host: z.string().optional(),
+});
 
-    var self = this;
-	options = options || {};
+class FoldersHttp {
+  constructor(options) {
+    const validatedOptions = OptionsSchema.parse(options);
+    this.provider = validatedOptions.provider;
+    this.session = null;
 
-	// FIXME:Host should be passed to route.js for creating connections
+    if (!this.provider) {
+      throw new Error('No backend provider specified.');
+    }
 
-	var host = options.host;
-	var cb = options.cb ;
+    this.start();
+  }
 
-	this.provider = options.provider ;
+  async start() {
+    try {
+      this.session = await route.open('');
+      await route.watch(this.session, (message) => this.onMessage(message));
+    } catch (error) {
+      console.error('Error starting FoldersHttp:', error);
+    }
+  }
 
-	if (!this.provider){
+  async onMessage(message) {
+    if (message.type === 'DirectoryListRequest') {
+      await this.ls(message.data);
+    } else if (message.type === 'FileRequest') {
+      await this.cat(message.data);
+    }
+  }
 
-		console.log("!Error : no backend provided.");
-		return ;
+  async ls(data) {
+    const { path, streamId } = data;
+    try {
+      const lsAsync = util.promisify(this.provider.ls).bind(this.provider);
+      const result = await lsAsync(path);
+      await route.post(
+        streamId,
+        JSON.stringify(result),
+        {},
+        this.session
+      );
+    } catch (err) {
+      console.error('Error in ls:', err);
+      // Handle error, maybe post an error message back
+    }
+  }
 
-	}
-
-
-    var onReady = function (result) {
-
-
-        //console.log(result);
-
-    };
-
-    var onMessage = function (message) {
-
-
-        if (message.type = 'DirectoryListRequest') {
-
-            ls(self,message.data,cb);
-
-        } else if (message.type = 'FileRequest') {
-
-            cat(self,message.data,cb);
-
-        }
-
-	var onClose = function(){
-
-		//TODO: implement clean up
-
-	}
-
-
-    };
-
-
-    var stream = route.open('', function (result) {
-
-        var session = {};
-        session.token = result.token;
-        session.shareId = result.shareId;
-        self.session = session;
-
-        route.watch('', session, onReady, onMessage);
-
-    });
-
-
-};
-
-/*
- * The cb is to  expose the err of
- * 'ls' operation
- *
- */
-
-var ls = function (o,data,cb) {
-
-
-
-    var self = o,
-        headers = {}
-    var path = data.path;
-    var streamId = data.streamId;
-    self.provider.ls(path, function (err,result) {
-
-		if(err){
-			console.log(err);
-			return cb(err);
-
-		}
-
-
-		// this is working
-        route.post(streamId, JSON.stringify(result), headers, self.session.shareId);
-
-
-
-    });
-
-
-};
-
-/*
- * The cb is to  expose the err of
- * 'cat' operation
- *
- */
-
-var cat = function (o,data,cb) {
-
-    var self = o;
-    var path = data.path,
-        headers = {};
-    var streamId = data.streamId;
-
-    self.provider.cat(path, function (err,result) {
-
-		if(err){
-			console.log(err);
-			return cb(err);
-
-		}
-
-		headers['Content-Length'] = result.size;
-        route.post(streamId, result.stream, headers, self.session.shareId);
-		cb(result);
-
-    });
-
-
-};
-
+  async cat(data) {
+    const { path, streamId } = data;
+    try {
+      const catAsync = util.promisify(this.provider.cat).bind(this.provider);
+      const result = await catAsync(path);
+      const headers = {
+        'Content-Length': result.size,
+      };
+      await route.post(
+        streamId,
+        result.stream,
+        headers,
+        this.session
+      );
+    } catch (err) {
+      console.error('Error in cat:', err);
+      // Handle error
+    }
+  }
+}
 
 export default FoldersHttp;

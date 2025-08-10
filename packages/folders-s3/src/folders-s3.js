@@ -1,7 +1,5 @@
 import uriParse from 'url';
 import path from 'path';
-import local from 'folders/src/folders-local.js';
-import Fs from 'folders/src/fs.js';
 import AWS from 'aws-sdk';
 import { z } from 'zod';
 import Server from './embedded-s3-server.js';
@@ -34,11 +32,9 @@ const parseConnString = function (connectionString) {
 
 class FoldersS3 {
   constructor(prefix, options) {
-    console.log('FoldersS3');
     const parsedOptions = FoldersS3Options.parse(options || {});
     parsedOptions.connectionString = parsedOptions.connectionString || 'http://localhost:4568/';
     parsedOptions.directory = parsedOptions.directory || './bucket';
-    parsedOptions.fs = parsedOptions.fs || new Fs(new local());
     this.prefix = prefix;
     this.client = null;
 
@@ -47,9 +43,14 @@ class FoldersS3 {
       const conn = parseConnString(parsedOptions.connectionString);
       conn.silent = parsedOptions.silent;
       conn.directory = parsedOptions.directory;
-      conn.fs = parsedOptions.fs;
       this.server = new Server(conn);
       this.server.start(parsedOptions.backend);
+    }
+  }
+
+  async close() {
+    if (this.server) {
+      return new Promise((resolve) => this.server.close(resolve));
     }
   }
 
@@ -61,6 +62,9 @@ class FoldersS3 {
   };
 
   prepare() {
+    if (this.client) {
+      return;
+    }
     const config = {
       s3ForcePathStyle: true,
       accessKeyId: 'ACCESS_KEY_ID',
@@ -70,27 +74,19 @@ class FoldersS3 {
     this.client = new AWS.S3(config);
   }
 
-  listObjects(bucket, pathPrefix, cb) {
+  async listObjects(bucket, pathPrefix) {
     this.prepare();
 
-    this.client.listObjects(
-      {
+    const data = await this.client
+      .listObjects({
         Bucket: bucket,
         Prefix: pathPrefix,
-      },
-      (err, data) => {
-        if (err) {
-          console.log('error occured in folders-s3 listObjects() ', err);
-          return cb(err, null);
-        } else {
-          const result = data.Contents;
-          return cb(null, result);
-        }
-      },
-    );
+      })
+      .promise();
+    return data.Contents;
   }
 
-  download(filePath, cb) {
+  async download(filePath) {
     this.prepare();
     const params = {
       Bucket: 'bucket',
@@ -99,14 +95,14 @@ class FoldersS3 {
     const f = this.client.getObject(params);
     const file = f.createReadStream();
 
-    cb(null, {
+    return {
       stream: file,
       //size: data.ContentLength,
       //name: path.basename(key)
-    });
+    };
   }
 
-  upload(filePath, data, cb) {
+  async upload(filePath, data) {
     this.prepare();
 
     const params = {
@@ -115,10 +111,7 @@ class FoldersS3 {
       Body: data,
     };
 
-    this.client.upload(params, function uploadCallback(err, data) {
-      console.log(err, data);
-      cb(err, data);
-    });
+    return this.client.upload(params).promise();
   }
 }
 

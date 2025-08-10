@@ -3,6 +3,7 @@ import assert from 'assert';
 import { Readable } from 'stream';
 import tableFormatter from 'markdown-table';
 import { z } from 'zod';
+import util from 'util';
 
 const FoldersPrestoOptions = z.object({
   host: z.string(),
@@ -14,16 +15,6 @@ const FoldersPrestoOptions = z.object({
 });
 
 const DEFAULT_PRESTO_PREFIX = '/folders.io_0:presto/';
-
-const showDatabases = function (client, prefix, cb) {
-  client.execute('SHOW SCHEMAS', function (error, data, columns) {
-    if (error) {
-      console.log('show shemas error', error);
-      return cb(error, null);
-    }
-    cb(null, dbAsFolders(prefix, data));
-  });
-};
 
 const dbAsFolders = function (prefix, dbs) {
   const out = [];
@@ -41,16 +32,6 @@ const dbAsFolders = function (prefix, dbs) {
     out.push(o);
   }
   return out;
-};
-
-const showTables = function (client, prefix, dbName, cb) {
-  client.execute('SHOW TABLES FROM ' + dbName, function (error, data, columns) {
-    if (error) {
-      console.log('show TABLES error', error);
-      return cb(error, null);
-    }
-    cb(null, tbAsFolders(prefix, dbName, data));
-  });
 };
 
 const tbAsFolders = function (prefix, dbName, tbs) {
@@ -71,7 +52,7 @@ const tbAsFolders = function (prefix, dbName, tbs) {
   return out;
 };
 
-const showTableMetas = function (prefix, path, cb) {
+const showTableMetas = function (prefix, path) {
   const metadatas = ['columns', 'select'];
   const out = [];
   for (let i = 0; i < metadatas.length; i++) {
@@ -87,32 +68,10 @@ const showTableMetas = function (prefix, path, cb) {
     o.modificationTime = 0;
     out.push(o);
   }
-  cb(null, out);
+  return out;
 };
 
-const showTableSelect = function (client, prefix, dbName, tbName, cb) {
-  client.execute('SELECT * FROM ' + dbName + '.' + tbName + ' LIMIT 10', function (error, data, columns) {
-    if (error) {
-      console.log('SELECT * FROM error', error);
-      return cb(error, null);
-    }
-    const name = dbName + '.' + tbName + '.select.md';
-    showGenericResult(name, data, columns, cb);
-  });
-};
-
-const showTableColumns = function (client, prefix, dbName, tbName, cb) {
-  client.execute('SHOW COLUMNS FROM ' + dbName + '.' + tbName, function (error, data, columns) {
-    if (error) {
-      console.log('SHOW COLUMNS error', error);
-      return cb(error, null);
-    }
-    const name = dbName + '.' + tbName + '.columns.md';
-    showGenericResult(name, data, columns, cb);
-  });
-};
-
-const showGenericResult = function (name, data, columns, cb) {
+const showGenericResult = function (name, data, columns) {
   const title = [];
   for (let i = 0; i < columns.length; i++) {
     title.push(columns[i].name);
@@ -124,11 +83,11 @@ const showGenericResult = function (name, data, columns, cb) {
   stream.push(formattedColumnsData);
   stream.push(null);
 
-  cb(null, {
+  return {
     stream: stream,
     size: formattedColumnsData.length,
     name: name,
-  });
+  };
 };
 
 class FoldersPresto {
@@ -153,6 +112,8 @@ class FoldersPresto {
       catalog: this.catalog,
       schema: this.schema,
     });
+
+    this.client.execute = util.promisify(this.client.execute);
   }
 
   static features = {
@@ -162,15 +123,13 @@ class FoldersPresto {
     server: false,
   };
 
-  static isConfigValid(config, cb) {
+  static async isConfigValid(config) {
     const parsedConfig = FoldersPrestoOptions.parse(config);
-    assert.equal(typeof cb, 'function', "argument 'cb' must be a function");
-
     const { checkConfig } = parsedConfig;
     if (checkConfig == false) {
-      return cb(null, parsedConfig);
+      return parsedConfig;
     }
-    return cb(null, parsedConfig);
+    return parsedConfig;
   }
 
   getPrestoPath(path, prefix) {
@@ -197,31 +156,48 @@ class FoldersPresto {
     return out;
   }
 
-  ls(path, cb) {
+  async ls(path) {
     path = this.getPrestoPath(path, this.prefix);
     if (path == null || !path.database) {
-      showDatabases(this.client, this.prefix, cb);
+      const { data } = await this.client.execute('SHOW SCHEMAS');
+      return dbAsFolders(this.prefix, data);
     } else if (!path.table) {
-      showTables(this.client, this.prefix, path.database, cb);
+      const { data } = await this.client.execute(
+        'SHOW TABLES FROM ' + path.database
+      );
+      return tbAsFolders(this.prefix, path.database, data);
     } else {
-      showTableMetas(this.prefix, path.database + '/' + path.table, cb);
+      return showTableMetas(this.prefix, path.database + '/' + path.table);
     }
   }
 
-  cat(path, cb) {
+  async cat(path) {
     path = this.getPrestoPath(path, this.prefix);
-    if (path == null || !path.database || !path.table || !path.tableMetadata) {
-      const error = 'please specify the the database,table and metadata you want in path';
-      console.log(error);
-      cb(error, null);
+    if (
+      path == null ||
+      !path.database ||
+      !path.table ||
+      !path.tableMetadata
+    ) {
+      throw new Error(
+        'please specify the the database,table and metadata you want in path'
+      );
     }
 
     if (path.tableMetadata == 'select.md') {
-      showTableSelect(this.client, this.prefix, path.database, path.table, cb);
+      const { data, columns } = await this.client.execute(
+        'SELECT * FROM ' + path.database + '.' + path.table + ' LIMIT 10'
+      );
+      const name = path.database + '.' + path.table + '.select.md';
+      return showGenericResult(name, data, columns);
     } else if (path.tableMetadata == 'columns.md') {
-      showTableColumns(this.client, this.prefix, path.database, path.table, cb);
+      const { data, columns } = await this.client.execute(
+        'SHOW COLUMNS FROM ' + path.database + '.' + path.table
+      );
+      const name = path.database + '.' + path.table + '.columns.md';
+      return showGenericResult(name, data, columns);
     } else {
-      cb('not supported yet', null);
+      throw new Error('not supported yet');
     }
   }
 }

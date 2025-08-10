@@ -3,6 +3,7 @@ import ldap from 'ldapjs';
 import { z } from 'zod';
 import Server from './folders-ldap-server.js';
 import { Readable } from 'stream';
+import util from 'util';
 
 const FoldersLdapOptions = z.object({
   connectionString: z.string(),
@@ -63,7 +64,6 @@ class FoldersLdap {
     }
 
     const conn = parseConnString(this.connectionString);
-    console.log('folders-ldap, conn to server', conn);
 
     const client = ldap.createClient({
       url: `ldap://${conn.host}:${conn.port}`,
@@ -73,7 +73,7 @@ class FoldersLdap {
     return client;
   }
 
-  ls(path, cb) {
+  async ls(path) {
     if (path != '.') {
       if (path.length && path.substr(0, 1) != '/') path = '/' + path;
       if (path.length && path.substr(-1) != '/') path = path + '/';
@@ -90,25 +90,25 @@ class FoldersLdap {
       },
     };
 
-    const queue = [];
-    ldapClient.search('dc=example', opts, (err, res) => {
-      if (err) {
-        console.error(err);
-        return cb(null, err);
-      }
+    return new Promise((resolve, reject) => {
+      const queue = [];
+      ldapClient.search('dc=example', opts, (err, res) => {
+        if (err) {
+          return reject(err);
+        }
 
-      res.on('searchEntry', (entry) => {
-        queue.push(entry.object);
-      });
-      res.on('page', (result, cb) => {
-        cb();
-      });
-      res.on('error', (err) => {
-        console.error(err);
-        cb(null, err);
-      });
-      res.on('end', (result) => {
-        cb(this.asFolders(path, queue));
+        res.on('searchEntry', (entry) => {
+          queue.push(entry.object);
+        });
+        res.on('page', (result, cb) => {
+          if (cb) cb();
+        });
+        res.on('error', (err) => {
+          reject(err);
+        });
+        res.on('end', (result) => {
+          resolve(this.asFolders(path, queue));
+        });
       });
     });
   }
@@ -144,7 +144,7 @@ class FoldersLdap {
     return out;
   }
 
-  cat(data, cb) {
+  async cat(data) {
     const path = data;
     const ldapClient = this.prepare();
 
@@ -157,40 +157,40 @@ class FoldersLdap {
       },
     };
 
-    const queue = [];
-    ldapClient.search('o=example', opts, (err, res) => {
-      if (err) {
-        console.error(err);
-        return cb(null, err);
-      }
+    return new Promise((resolve, reject) => {
+      const queue = [];
+      ldapClient.search('o=example', opts, (err, res) => {
+        if (err) {
+          return reject(err);
+        }
 
-      res.on('searchEntry', (entry) => {
-        queue.push(entry);
-      });
-      res.on('page', (result, cb) => {
-        cb();
-      });
-      res.on('error', (resErr) => {
-        console.error(resErr);
-        cb(null, resErr);
-      });
-      res.on('end', (result) => {
-        const blob = JSON.stringify(queue);
-        const file = { size: blob.length, name: 'text.json' };
-        const stream = new Readable();
-        stream.push(blob);
-        stream.push(null);
-        cb({
-          stream: stream,
-          size: file.size,
-          name: file.name,
-          meta: { mime: 'text/json', date: new Date() },
+        res.on('searchEntry', (entry) => {
+          queue.push(entry);
+        });
+        res.on('page', (result, cb) => {
+          if (cb) cb();
+        });
+        res.on('error', (resErr) => {
+          reject(resErr);
+        });
+        res.on('end', (result) => {
+          const blob = JSON.stringify(queue);
+          const file = { size: blob.length, name: 'text.json' };
+          const stream = new Readable();
+          stream.push(blob);
+          stream.push(null);
+          resolve({
+            stream: stream,
+            size: file.size,
+            name: file.name,
+            meta: { mime: 'text/json', date: new Date() },
+          });
         });
       });
     });
   }
 
-  write(uri, data, cb) {
+  async write(uri, data) {
     const ldapClient = this.prepare();
     data.on('data', function (d) {
       FoldersLdap.RXOK += d.length;
@@ -203,14 +203,9 @@ class FoldersLdap {
       objectclass: 'fooPerson',
     };
 
-    ldapClient.add('cn=foo, o=example', entry, (err) => {
-      if (err) {
-        console.error('File transferred failed,', err);
-        return cb(null, err);
-      }
-      console.log('File transferred successfully!');
-      cb('write uri success');
-    });
+    const addAsync = util.promisify(ldapClient.add).bind(ldapClient);
+    await addAsync('cn=foo, o=example', entry);
+    return 'write uri success';
   }
 
   dump() {
