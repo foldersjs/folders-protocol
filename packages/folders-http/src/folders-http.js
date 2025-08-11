@@ -1,29 +1,29 @@
 import { z } from 'zod';
-import * as route from './route.js';
+import * as defaultRoute from './route.js';
 import util from 'util';
 
 const OptionsSchema = z.object({
   provider: z.any(),
   host: z.string().optional(),
+  route: z.any().optional(),
 });
 
 class FoldersHttp {
   constructor(options) {
     const validatedOptions = OptionsSchema.parse(options);
     this.provider = validatedOptions.provider;
+    this.route = validatedOptions.route || defaultRoute;
     this.session = null;
 
     if (!this.provider) {
       throw new Error('No backend provider specified.');
     }
-
-    this.start();
   }
 
   async start() {
     try {
-      this.session = await route.open('');
-      await route.watch(this.session, (message) => this.onMessage(message));
+      this.session = await this.route.open('');
+      await this.route.watch(this.session, (message) => this.onMessage(message));
     } catch (error) {
       console.error('Error starting FoldersHttp:', error);
     }
@@ -42,7 +42,7 @@ class FoldersHttp {
     try {
       const lsAsync = util.promisify(this.provider.ls).bind(this.provider);
       const result = await lsAsync(path);
-      await route.post(
+      await this.route.post(
         streamId,
         JSON.stringify(result),
         {},
@@ -62,7 +62,7 @@ class FoldersHttp {
       const headers = {
         'Content-Length': result.size,
       };
-      await route.post(
+      await this.route.post(
         streamId,
         result.stream,
         headers,

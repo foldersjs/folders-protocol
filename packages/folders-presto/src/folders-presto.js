@@ -1,7 +1,7 @@
 import presto from 'presto-client';
 import assert from 'assert';
 import { Readable } from 'stream';
-import tableFormatter from 'markdown-table';
+import * as tableFormatter from 'markdown-table';
 import { z } from 'zod';
 import util from 'util';
 

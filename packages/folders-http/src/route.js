@@ -5,7 +5,7 @@
  * This connects to a remote service requesting a new session and watches for events.
  *
  */
-import { fetch as nodeFetch } from 'node:fetch';
+import nodeFetch from 'node-fetch';
 
 const prefix = 'https://folders.io';
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
