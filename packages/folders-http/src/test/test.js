@@ -1,7 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert';
 import FoldersHttp from '../folders-http.js';
-import * as route from '../route.js';
 import { Readable } from 'stream';
 
 test('FoldersHttp', async (t) => {
@@ -23,24 +22,25 @@ test('FoldersHttp', async (t) => {
     },
   };
 
-  await t.test('should handle ls and cat messages', async () => {
-    const originalOpen = route.open;
-    const originalWatch = route.watch;
-    const originalPost = route.post;
-
-    route.open = async () => ({
-      shareId: 'testShareId',
-      token: 'testToken',
-    });
-    route.watch = async () => {};
-
+  await t.test('should handle ls and cat messages', async (t) => {
     let postData = null;
-    route.post = (streamId, data, headers, session) => {
-      postData = { streamId, data, headers, session };
+    const mockRoute = {
+      open: async () => ({
+        shareId: 'testShareId',
+        token: 'testToken',
+      }),
+      watch: async () => ({
+        destroy: () => {},
+      }),
+      post: (streamId, data, headers, session) => {
+        postData = { streamId, data, headers, session };
+      },
     };
 
-    const foldersHttp = new FoldersHttp({ provider: mockProvider });
-    await foldersHttp.start(); // wait for it to complete
+    const foldersHttp = new FoldersHttp({
+      provider: mockProvider,
+      route: mockRoute,
+    });
 
     await foldersHttp.onMessage({
       type: 'DirectoryListRequest',
@@ -64,9 +64,6 @@ test('FoldersHttp', async (t) => {
     assert.deepStrictEqual(postData.headers, { 'Content-Length': 12 });
     assert.deepStrictEqual(postData.session, foldersHttp.session);
 
-    // restore original functions
-    route.open = originalOpen;
-    route.watch = originalWatch;
-    route.post = originalPost;
+    await foldersHttp.stop();
   });
 });
