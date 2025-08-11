@@ -5,7 +5,7 @@
  * This connects to a remote service requesting a new session and watches for events.
  *
  */
-import { fetch as nodeFetch } from 'node:fetch';
+import nodeFetch from 'node-fetch';
 
 const prefix = 'https://folders.io';
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
@@ -15,7 +15,7 @@ const endpoint = (key, path) => {
 };
 
 // Request a new session, getting a share ID and token.
-export const open = async (baseUri, params, fetch = nodeFetch) => {
+const open = async (baseUri, params, fetch = nodeFetch) => {
   const response = await fetch(endpoint('', '/set_files'), {
     method: 'POST',
     body: JSON.stringify({
@@ -40,7 +40,7 @@ export const open = async (baseUri, params, fetch = nodeFetch) => {
 };
 
 // Watch a pipe listening for commands/requests.
-export const watch = async (session, onMessage, fetch = nodeFetch) => {
+const watch = async (session, onMessage, fetch = nodeFetch) => {
   const { token, shareId } = session;
 
   const response = await fetch(
@@ -79,7 +79,7 @@ export const watch = async (session, onMessage, fetch = nodeFetch) => {
 };
 
 // Send a buffered response to a watched request.
-export const post = async (streamId, data, headers, session, fetch = nodeFetch) => {
+const post = async (streamId, data, headers, session, fetch = nodeFetch) => {
   const postHeaders = { ...headers };
   postHeaders.Cookie = session.token;
 
@@ -89,3 +89,5 @@ export const post = async (streamId, data, headers, session, fetch = nodeFetch) 
     headers: postHeaders,
   });
 };
+
+export default { open, watch, post };

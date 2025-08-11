@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert';
 import FoldersHttp from '../folders-http.js';
-import * as route from '../route.js';
+import route from '../route.js';
 import { Readable } from 'stream';
 
 test('FoldersHttp', async (t) => {
@@ -39,7 +39,7 @@ test('FoldersHttp', async (t) => {
       postData = { streamId, data, headers, session };
     };
 
-    const foldersHttp = new FoldersHttp({ provider: mockProvider });
+    const foldersHttp = new FoldersHttp({ provider: mockProvider, route });
     await foldersHttp.start(); // wait for it to complete
 
     await foldersHttp.onMessage({
