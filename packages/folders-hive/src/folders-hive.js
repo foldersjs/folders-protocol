@@ -1,7 +1,7 @@
 import HiveThriftClient from './hiveThriftClient.js';
 import assert from 'assert';
 import { Readable } from 'stream';
-import tableFormatter from 'markdown-table';
+import * as tableFormatter from 'markdown-table';
 import { z } from 'zod';
 
 const FoldersHiveOptions = z.object({
