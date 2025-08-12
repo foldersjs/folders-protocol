@@ -4,10 +4,10 @@
  *
  */
 
-import uriParse from 'url';
-import jsftp from 'jsftp';
-import { z } from 'zod';
-import Server from './embedded-ftp-server.js';
+import uriParse from "url";
+import jsftp from "jsftp";
+import { z } from "zod";
+import Server from "./embedded-ftp-server.js";
 
 const OptionsSchema = z.object({
   connectionString: z.string(),
@@ -22,7 +22,7 @@ const parseConnString = (connectionString) => {
     port: uri.port || 21,
   };
   if (uri.auth) {
-    const auth = uri.auth.split(':', 2);
+    const auth = uri.auth.split(":", 2);
     conn.user = auth[0];
     if (auth.length === 2) {
       conn.pass = auth[1];
@@ -76,11 +76,11 @@ class FoldersFtp {
 
   ls(path, cb) {
     let normalizedPath = path;
-    if (normalizedPath !== '.') {
-      if (normalizedPath.length && !normalizedPath.startsWith('/')) {
+    if (normalizedPath !== ".") {
+      if (normalizedPath.length && !normalizedPath.startsWith("/")) {
         normalizedPath = `/${normalizedPath}`;
       }
-      if (normalizedPath.length && !normalizedPath.endsWith('/')) {
+      if (normalizedPath.length && !normalizedPath.endsWith("/")) {
         normalizedPath = `${normalizedPath}/`;
       }
     }
@@ -91,7 +91,7 @@ class FoldersFtp {
       if (err) {
         return cb(err);
       }
-      ftp.ls('.', (err, content) => {
+      ftp.ls(".", (err, content) => {
         if (err) {
           return cb(err);
         }
@@ -102,13 +102,13 @@ class FoldersFtp {
 
   asFolders(dir, files) {
     return files.map((file) => {
-      const fullPath = dir === '.' ? file.name : `${dir}${file.name}`;
-      let extension = 'txt';
-      let type = 'text/plain';
+      const fullPath = dir === "." ? file.name : `${dir}${file.name}`;
+      let extension = "txt";
+      let type = "text/plain";
 
-      if (file.type === '1' || file.type === '2') {
-        extension = '+folder';
-        type = '';
+      if (file.type === "1" || file.type === "2") {
+        extension = "+folder";
+        type = "";
       }
 
       return {
@@ -128,7 +128,7 @@ class FoldersFtp {
   }
 
   cat(path, cb) {
-    const dirName = path.substring(0, path.lastIndexOf('/') + 1);
+    const dirName = path.substring(0, path.lastIndexOf("/") + 1);
     const ftp = this.prepare();
 
     ftp.ls(dirName, (err, content) => {
@@ -140,7 +140,7 @@ class FoldersFtp {
       const file = files.find((f) => f.fullPath === path);
 
       if (!file) {
-        return cb(new Error('File not found'));
+        return cb(new Error("File not found"));
       }
 
       ftp.get(path, (err, socket) => {
@@ -159,7 +159,7 @@ class FoldersFtp {
 
   write(uri, data, cb) {
     const ftp = this.prepare();
-    data.on('data', (d) => {
+    data.on("data", (d) => {
       FoldersFtp.RXOK += d.length;
     });
 
@@ -167,7 +167,7 @@ class FoldersFtp {
       if (err) {
         return cb(err);
       }
-      cb(null, 'write uri success');
+      cb(null, "write uri success");
     });
   }
 

@@ -1,6 +1,6 @@
 const Config = {};
 
-Config.prefix = 'prefix';
+Config.prefix = "prefix";
 Config.server = {};
 Config.client = {};
 
@@ -15,7 +15,7 @@ Config.client.privateKeyPath = null;
 Config.client.publickKeyPath = null;
 Config.client.privateKey = process.env.SSH_CLIENT_PRIVATE_KEY;
 Config.client.publicKey = process.env.SSH_CLIENT_PUBLIC_KEY;
-Config.client.username = process.env.SSH_CLIENT_USERNAME || 'root';
-Config.client.password = process.env.SSH_CLIENT_PASSWORD || 'pass';
+Config.client.username = process.env.SSH_CLIENT_USERNAME || "root";
+Config.client.password = process.env.SSH_CLIENT_PASSWORD || "pass";
 
 export default Config;

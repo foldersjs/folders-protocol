@@ -1,171 +1,36 @@
-import HiveThriftClient from './hiveThriftClient.js';
-import assert from 'assert';
-import { Readable } from 'stream';
-import * as tableFormatter from 'markdown-table';
-import { z } from 'zod';
+import HiveThriftClient from "./hiveThriftClient.js";
+import assert from "assert";
+import { Readable } from "stream";
+import { markdownTable } from "markdown-table";
+import { z } from "zod";
 
 const FoldersHiveOptions = z.object({
   host: z.string(),
   port: z.number(),
-  username: z.string().optional(),
-  password: z.string().optional(),
-  auth: z.string().optional(),
-  timeout: z.number().optional(),
+  username: z.string().optional().default("anonymous"),
+  password: z.string().optional().default(""),
+  auth: z.string().optional().default("none"),
+  timeout: z.number().optional().default(10000),
   checkConfig: z.boolean().optional(),
 });
 
-const DEFAULT_HIVE_PREFIX = '/folders.io_0:hive/';
-
-const showDatabases = function (client, prefix, cb) {
-  client.getSchemasNames(function (error, databases) {
-    if (error) {
-      console.log('show shemas error', error);
-      return cb(error, null);
-    }
-    if (!databases) {
-      return cb('databases null', null);
-    }
-    cb(null, dbAsFolders(prefix, databases));
-  });
-};
-
-const dbAsFolders = function (prefix, dbs) {
-  const out = [];
-  for (let i = 0; i < dbs.length; i++) {
-    const db = dbs[i];
-    const o = {
-      name: db,
-    };
-    o.fullPath = o.name;
-    o.meta = {};
-    o.uri = prefix + o.fullPath;
-    o.size = 0;
-    o.extension = '+folder';
-    o.modificationTime = 0;
-    out.push(o);
-  }
-  return out;
-};
-
-const showTables = function (client, prefix, dbName, cb) {
-  client.getTablesNames(dbName, function (error, tables) {
-    if (error) {
-      return cb(error, null);
-    }
-    if (!tables) {
-      return cb('null tables,', tables);
-    }
-    cb(null, tbAsFolders(prefix, dbName, tables));
-  });
-};
-
-const tbAsFolders = function (prefix, dbName, tbs) {
-  const out = [];
-  for (let i = 0; i < tbs.length; i++) {
-    const table = tbs[i];
-    const o = {
-      name: table,
-    };
-    o.fullPath = dbName + '/' + o.name;
-    o.meta = {};
-    o.uri = prefix + o.fullPath;
-    o.size = 0;
-    o.extension = '+folder';
-    o.modificationTime = 0;
-    out.push(o);
-  }
-  return out;
-};
-
-const showTableMetas = function (prefix, path, cb) {
-  const metadatas = ['columns', 'create_table', 'select'];
-  const out = [];
-  for (let i = 0; i < metadatas.length; i++) {
-    const o = {
-      name: metadatas[i] + '.md',
-    };
-    o.fullPath = path + '/' + o.name;
-    o.meta = {};
-    o.uri = prefix + o.fullPath;
-    o.size = 0;
-    o.extension = 'md';
-    o.type = 'text/markdown';
-    o.modificationTime = 0;
-    out.push(o);
-  }
-  cb(null, out);
-};
-
-const showTableSelect = function (client, prefix, dbName, tbName, cb) {
-  client.getTableRecords(dbName, tbName, function (error, records) {
-    if (error) {
-      return cb(error, null);
-    }
-    if (!records) {
-      return cb('null tables data,', null);
-    }
-    const formattedData = tableFormatter(records);
-    callbackCatResult('select.md', formattedData, cb);
-  });
-};
-
-const showCreateTable = function (client, prefix, dbName, tbName, cb) {
-  client.showCreateTable(dbName, tbName, function (error, createTableSQL) {
-    if (error) {
-      return cb(error, null);
-    }
-    if (!createTableSQL) {
-      return cb('null tables,', null);
-    }
-    const foramttedCreateTableSQL = '```sql' + '\n' + createTableSQL + '\n' + '```';
-    callbackCatResult('create_table.md', foramttedCreateTableSQL, cb);
-  });
-};
-
-const showTableColumns = function (client, prefix, dbName, tbName, cb) {
-  client.getTableColumns(dbName, tbName, function (error, columns) {
-    if (error) {
-      return cb(error, null);
-    }
-    if (!columns) {
-      return cb('null tables,', null);
-    }
-    const formattedColumnsData = tableFormatter(columns);
-    callbackCatResult('columns.md', formattedColumnsData, cb);
-  });
-};
-
-const callbackCatResult = function (name, data, cb) {
-  const stream = new Readable();
-  stream.push(data);
-  stream.push(null);
-  cb(null, {
-    stream: stream,
-    size: data.length,
-    name: name,
-  });
-};
+const DEFAULT_HIVE_PREFIX = "/folders.io_0:hive/";
 
 class FoldersHive {
-  constructor(prefix, options, callback) {
+  constructor(prefix, options) {
     const parsedOptions = FoldersHiveOptions.parse(options);
-    if (prefix && prefix.length && prefix.substr(-1) != '/') prefix += '/';
-    this.prefix = prefix || DEFAULT_HIVE_PREFIX;
-    this.configure(parsedOptions, callback);
+    this.prefix =
+      (prefix && prefix.endsWith("/") ? prefix : `${prefix}/`) ||
+      DEFAULT_HIVE_PREFIX;
+    this.client = new HiveThriftClient(parsedOptions);
   }
 
-  configure(options, callback) {
-    this.host = options.host;
-    this.port = options.port;
-    this.username = options.username = options.username || 'anonymous';
-    this.password = options.password = options.password || '';
-    this.auth = options.auth = options.auth || 'none';
-    this.timeout = options.timeout = 10000;
-    this.client = new HiveThriftClient(options, callback);
+  async connect() {
+    await this.client.connect();
   }
 
-  disconnect(callback) {
-    this.client.disconnect(callback);
+  async disconnect() {
+    await this.client.disconnect();
   }
 
   static features = {
@@ -175,27 +40,18 @@ class FoldersHive {
     server: false,
   };
 
-  static isConfigValid(config, cb) {
-    const parsedConfig = FoldersHiveOptions.parse(config);
-    assert.equal(typeof cb, 'function', "argument 'cb' must be a function");
-    const { checkConfig } = parsedConfig;
-    if (checkConfig == false) {
-      return cb(null, parsedConfig);
-    }
-    return cb(null, parsedConfig);
+  static isConfigValid(config) {
+    return FoldersHiveOptions.parse(config);
   }
 
-  getHivePath(path, prefix) {
-    path = path == '/' ? null : path.slice(1);
+  getHivePath(path) {
+    path = path === "/" ? null : path.slice(1);
     if (path == null) {
-      return null;
+      return {};
     }
-    let parts = path.split('/');
-    let prefixPath = parts[0];
-    if (prefix && prefix[0] == '/') prefixPath = '/' + prefixPath;
-    prefixPath = prefixPath + '/';
-    if (prefixPath == prefix) {
-      parts = parts.slice(1, parts.length);
+    let parts = path.split("/");
+    if (parts[0] + "/" === this.prefix) {
+      parts = parts.slice(1);
     }
     const out = {};
     if (parts.length > 0) out.database = parts[0];
@@ -204,33 +60,94 @@ class FoldersHive {
     return out;
   }
 
-  ls(path, cb) {
-    path = this.getHivePath(path, this.prefix);
-    if (path == null || !path.database) {
-      showDatabases(this.client, this.prefix, cb);
-    } else if (!path.table) {
-      showTables(this.client, this.prefix, path.database, cb);
-    } else {
-      showTableMetas(this.prefix, path.database + '/' + path.table, cb);
+  async ls(path) {
+    const hivePath = this.getHivePath(path);
+
+    if (!hivePath.database) {
+      const dbs = await this.client.getSchemasNames();
+      return dbs.map((db) => ({
+        name: db,
+        fullPath: db,
+        uri: this.prefix + db,
+        size: 0,
+        extension: "+folder",
+        modificationTime: 0,
+        meta: {},
+      }));
     }
+
+    if (!hivePath.table) {
+      const tables = await this.client.getTablesNames(hivePath.database);
+      return tables.map((t) => ({
+        name: t,
+        fullPath: `${hivePath.database}/${t}`,
+        uri: `${this.prefix}${hivePath.database}/${t}`,
+        size: 0,
+        extension: "+folder",
+        modificationTime: 0,
+        meta: {},
+      }));
+    }
+
+    const metadatas = ["columns.md", "create_table.md", "select.md"];
+    return metadatas.map((m) => ({
+      name: m,
+      fullPath: `${hivePath.database}/${hivePath.table}/${m}`,
+      uri: `${this.prefix}${hivePath.database}/${hivePath.table}/${m}`,
+      size: 0,
+      extension: "md",
+      type: "text/markdown",
+      modificationTime: 0,
+      meta: {},
+    }));
   }
 
-  cat(path, cb) {
-    path = this.getHivePath(path, this.prefix);
-    if (path == null || !path.database || !path.table || !path.tableMetadata) {
-      const error = 'please specify the the database,table and metadata you want in path';
-      console.log(error);
-      return cb(error, null);
+  async cat(path) {
+    const hivePath = this.getHivePath(path);
+
+    if (!hivePath.database || !hivePath.table || !hivePath.tableMetadata) {
+      throw new Error(
+        "please specify the the database,table and metadata you want in path",
+      );
     }
-    if (path.tableMetadata == 'select.md') {
-      showTableSelect(this.client, this.prefix, path.database, path.table, cb);
-    } else if (path.tableMetadata == 'create_table.md') {
-      showCreateTable(this.client, this.prefix, path.database, path.table, cb);
-    } else if (path.tableMetadata == 'columns.md') {
-      showTableColumns(this.client, this.prefix, path.database, path.table, cb);
-    } else {
-      cb('not supported yet', null);
+
+    let content;
+    let name;
+
+    switch (hivePath.tableMetadata) {
+      case "select.md":
+        content = markdownTable(
+          await this.client.getTableRecords(hivePath.database, hivePath.table),
+        );
+        name = "select.md";
+        break;
+      case "create_table.md":
+        const sql = await this.client.showCreateTable(
+          hivePath.database,
+          hivePath.table,
+        );
+        content = "```sql\n" + sql + "\n```";
+        name = "create_table.md";
+        break;
+      case "columns.md":
+        content = markdownTable(
+          await this.client.getTableColumns(hivePath.database, hivePath.table),
+        );
+        name = "columns.md";
+        break;
+      default:
+        throw new Error("not supported yet");
     }
+
+    const stream = new Readable();
+    stream.push(content);
+    stream.push(null);
+
+    return {
+      stream,
+      size: content.length,
+      name,
+    };
   }
 }
 

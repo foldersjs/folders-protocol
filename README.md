@@ -7,6 +7,3 @@ Git clone the following repositories, copy their package and sources into respec
 https://github.com/foldersjs/folders-ftp
 https://github.com/foldersjs/folders-http
 https://github.com/foldersjs/folders-ldap
-
-
-

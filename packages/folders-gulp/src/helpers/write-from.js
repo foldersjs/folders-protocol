@@ -1,16 +1,16 @@
-import path from 'path';
-import { Writable } from 'stream';
+import path from "path";
+import { Writable } from "stream";
 
 const vinylToWrite = function (vinylObj) {
   const result = vinylObj.stat;
   const name = path.basename(vinylObj.path);
   const data = vinylObj.contents;
   const headers = {
-    'Content-Length': result.size,
-    'Content-Type': 'application/octet-stream',
-    'X-File-Type': 'application/octet-stream',
-    'X-File-Size': result.size,
-    'X-File-Name': name,
+    "Content-Length": result.size,
+    "Content-Type": "application/octet-stream",
+    "X-File-Type": "application/octet-stream",
+    "X-File-Size": result.size,
+    "X-File-Name": name,
   };
   const output = {
     data: data,
@@ -26,10 +26,8 @@ class WriteFrom extends Writable {
     super(options);
 
     this.path = filePath;
-    this.cb = cb || function (err, result) {
-      console.log(result);
-    };
-    provider = provider || 'ftp';
+    this.cb = cb || function (err, result) {};
+    provider = provider || "ftp";
     const Provider = import(`folders-${provider}`);
     Provider.then((ProviderModule) => {
       this.provider = new ProviderModule.default(provider, options);

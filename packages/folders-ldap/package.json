@@ -16,7 +16,7 @@
   "homepage": "https://github.com/foldersjs/folders-ldap",
   "dependencies": {
     "ldapjs": "^3.0.7",
-    "zod": "^3.22.4"
+    "zod": "^4.0.17"
   },
   "scripts": {
     "test": "node --test"

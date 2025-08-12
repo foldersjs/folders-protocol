@@ -1,6 +1,6 @@
-import { z } from 'zod';
-import * as defaultRoute from './route.js';
-import util from 'util';
+import { z } from "zod";
+import * as defaultRoute from "./route.js";
+import util from "util";
 
 const OptionsSchema = z.object({
   provider: z.any(),
@@ -16,62 +16,43 @@ class FoldersHttp {
     this.session = null;
 
     if (!this.provider) {
-      throw new Error('No backend provider specified.');
+      throw new Error("No backend provider specified.");
     }
   }
 
   async start() {
-    try {
-      this.session = await this.route.open('');
-      await this.route.watch(this.session, (message) => this.onMessage(message));
-    } catch (error) {
-      console.error('Error starting FoldersHttp:', error);
-    }
+    this.session = await this.route.open("");
+    await this.route.watch(this.session, (message) => this.onMessage(message));
   }
 
   async onMessage(message) {
-    if (message.type === 'DirectoryListRequest') {
-      await this.ls(message.data);
-    } else if (message.type === 'FileRequest') {
-      await this.cat(message.data);
+    try {
+      if (message.type === "DirectoryListRequest") {
+        await this.ls(message.data);
+      } else if (message.type === "FileRequest") {
+        await this.cat(message.data);
+      }
+    } catch (error) {
+      // TODO: Post error message back to the route
+      console.error("Error processing message:", error);
     }
   }
 
   async ls(data) {
     const { path, streamId } = data;
-    try {
-      const lsAsync = util.promisify(this.provider.ls).bind(this.provider);
-      const result = await lsAsync(path);
-      await this.route.post(
-        streamId,
-        JSON.stringify(result),
-        {},
-        this.session
-      );
-    } catch (err) {
-      console.error('Error in ls:', err);
-      // Handle error, maybe post an error message back
-    }
+    const lsAsync = util.promisify(this.provider.ls).bind(this.provider);
+    const result = await lsAsync(path);
+    await this.route.post(streamId, JSON.stringify(result), {}, this.session);
   }
 
   async cat(data) {
     const { path, streamId } = data;
-    try {
-      const catAsync = util.promisify(this.provider.cat).bind(this.provider);
-      const result = await catAsync(path);
-      const headers = {
-        'Content-Length': result.size,
-      };
-      await this.route.post(
-        streamId,
-        result.stream,
-        headers,
-        this.session
-      );
-    } catch (err) {
-      console.error('Error in cat:', err);
-      // Handle error
-    }
+    const catAsync = util.promisify(this.provider.cat).bind(this.provider);
+    const result = await catAsync(path);
+    const headers = {
+      "Content-Length": result.size,
+    };
+    await this.route.post(streamId, result.stream, headers, this.session);
   }
 }
 

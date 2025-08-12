@@ -1,5 +1,5 @@
-import path from 'path';
-import { Transform } from 'stream';
+import path from "path";
+import { Transform } from "stream";
 
 class CatFrom extends Transform {
   constructor(options = {}) {
@@ -12,11 +12,11 @@ class CatFrom extends Transform {
     const name = path.basename(vinylObj.path);
     const data = vinylObj.contents;
     const headers = {
-      'Content-Length': result.size,
-      'Content-Type': 'application/octet-stream',
-      'X-File-Type': 'application/octet-stream',
-      'X-File-Size': result.size,
-      'X-File-Name': name,
+      "Content-Length": result.size,
+      "Content-Type": "application/octet-stream",
+      "X-File-Type": "application/octet-stream",
+      "X-File-Size": result.size,
+      "X-File-Name": name,
     };
     const output = {
       data,

@@ -1,16 +1,18 @@
-import path from 'path';
-import gulp from 'gulp';
-import { z } from 'zod';
-import LsTo from './helpers/ls-to.js';
-import LsFrom from './helpers/ls-from.js';
-import CatTo from './helpers/cat-to.js';
-import CatFrom from './helpers/cat-from.js';
-import WriteFrom from './helpers/write-from.js';
-import WriteTo from './helpers/write-to.js';
+import path from "path";
+import gulp from "gulp";
+import { z } from "zod";
+import LsTo from "./helpers/ls-to.js";
+import LsFrom from "./helpers/ls-from.js";
+import CatTo from "./helpers/cat-to.js";
+import CatFrom from "./helpers/cat-from.js";
+import WriteFrom from "./helpers/write-from.js";
+import WriteTo from "./helpers/write-to.js";
 
-const FoldersGulpOptions = z.object({
-  provider: z.string().optional().default('ftp'),
-}).passthrough();
+const FoldersGulpOptions = z
+  .object({
+    provider: z.string().optional().default("ftp"),
+  })
+  .passthrough();
 
 class FoldersGulp {
   constructor(prefix, options) {

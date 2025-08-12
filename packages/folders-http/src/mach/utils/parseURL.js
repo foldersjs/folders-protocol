@@ -1,4 +1,4 @@
-import { parse as urlParse } from 'url';
+import { parse as urlParse } from "url";
 
 function parseURL(url) {
   var parsed = urlParse(url);
@@ -10,7 +10,7 @@ function parseURL(url) {
     port: parsed.port,
     pathname: parsed.pathname,
     search: parsed.search,
-    hash: parsed.hash
+    hash: parsed.hash,
   };
 }
 

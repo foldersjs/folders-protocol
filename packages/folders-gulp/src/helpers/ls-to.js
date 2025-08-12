@@ -1,9 +1,9 @@
-import path from 'path';
-import Vinyl from 'vinyl';
-import { Readable } from 'stream';
+import path from "path";
+import Vinyl from "vinyl";
+import { Readable } from "stream";
 
 class LsTo extends Readable {
-  constructor(filePath = '.', provider = 'ftp', options = {}) {
+  constructor(filePath = ".", provider = "ftp", options = {}) {
     options.objectMode = true;
     super(options);
 
@@ -28,7 +28,7 @@ class LsTo extends Readable {
         size,
         mtime,
       },
-      cwd: '/',
+      cwd: "/",
       base: path.dirname(base),
       path: base,
       contents: stream,
@@ -44,7 +44,7 @@ class LsTo extends Readable {
       if (!this.items.length) {
         this.provider.ls(this.path, (err, result) => {
           if (err) {
-            this.emit('error', err);
+            this.emit("error", err);
             return;
           }
           if (result) {
@@ -56,7 +56,7 @@ class LsTo extends Readable {
         this.pushItems();
       }
     } catch (err) {
-      this.emit('error', err);
+      this.emit("error", err);
     }
   }
 

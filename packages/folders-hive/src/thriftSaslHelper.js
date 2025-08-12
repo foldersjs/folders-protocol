@@ -14,10 +14,12 @@ const bufferify = function (val) {
 };
 
 const wrapSaslMessage = function (status, payload) {
-  if (!payload) payload = '';
+  if (!payload) payload = "";
   payload = bufferify(payload);
 
-  const message = Buffer.alloc(STATUS_BYTES + PAYLOAD_LENGTH_BYTES + payload.length);
+  const message = Buffer.alloc(
+    STATUS_BYTES + PAYLOAD_LENGTH_BYTES + payload.length,
+  );
   message[0] = status;
   message.writeInt32BE(payload.length, STATUS_BYTES);
   payload.copy(message, STATUS_BYTES + PAYLOAD_LENGTH_BYTES);
@@ -51,10 +53,12 @@ const parseSaslMessage = function (dataBuf) {
   const payload = dataBuf.slice(STATUS_BYTES + PAYLOAD_LENGTH_BYTES);
 
   if (status == NegotiationStatus.BAD || status == NegotiationStatus.ERROR) {
-    console.error('Peer indicated failure: ', payload.toString());
+    console.error("Peer indicated failure: ", payload.toString());
   }
 
-  responseBuffer = responseBuffer.slice(STATUS_BYTES + PAYLOAD_LENGTH_BYTES + payloadLength);
+  responseBuffer = responseBuffer.slice(
+    STATUS_BYTES + PAYLOAD_LENGTH_BYTES + payloadLength,
+  );
 
   return {
     status: status,
@@ -63,12 +67,12 @@ const parseSaslMessage = function (dataBuf) {
 };
 
 const saslPlainHandleShake = function (connection, options, cb) {
-  const dataListeners = connection.listeners('data');
-  connection.removeAllListeners('data');
+  const dataListeners = connection.listeners("data");
+  connection.removeAllListeners("data");
 
   const callback = function (error) {
     for (let i = 0; i < dataListeners.length; i++) {
-      connection.addListener('data', dataListeners[i]);
+      connection.addListener("data", dataListeners[i]);
     }
     cb(error);
   };
@@ -79,25 +83,31 @@ const saslPlainHandleShake = function (connection, options, cb) {
       if (response.status == NegotiationStatus.OK) {
         // FIXME not expected OK in PLAIN sasl
       } else if (response.status == NegotiationStatus.COMPLETE) {
-        console.log('[ThriftSaslHelper] COMPLETE message received, PLAIN SASL handshaked success');
-        connection.removeListener('data', authRspListener);
+        console.log(
+          "[ThriftSaslHelper] COMPLETE message received, PLAIN SASL handshaked success",
+        );
+        connection.removeListener("data", authRspListener);
         callback(null);
       } else {
-        console.error('error status code, ', response.status, response.payload.toString());
-        connection.removeListener('data', authRspListener);
+        console.error(
+          "error status code, ",
+          response.status,
+          response.payload.toString(),
+        );
+        connection.removeListener("data", authRspListener);
         callback(response.payload.toString());
       }
       response = parseSaslMessage(responseBuffer);
     }
   };
 
-  connection.on('data', authRspListener);
+  connection.on("data", authRspListener);
 
-  console.log('[ThriftSaslHelper] send START Message,');
-  connection.write(wrapSaslMessage(NegotiationStatus.START, 'PLAIN'));
+  console.log("[ThriftSaslHelper] send START Message,");
+  connection.write(wrapSaslMessage(NegotiationStatus.START, "PLAIN"));
 
-  const authStr = '\0' + options.username + '\0' + options.password;
-  console.log('[ThriftSaslHelper] send PLAIN SASL auth Message,');
+  const authStr = "\0" + options.username + "\0" + options.password;
+  console.log("[ThriftSaslHelper] send PLAIN SASL auth Message,");
   connection.write(wrapSaslMessage(NegotiationStatus.COMPLETE, authStr));
 };
 

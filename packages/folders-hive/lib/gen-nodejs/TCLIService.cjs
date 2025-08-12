@@ -3,15 +3,14 @@
 //
 // DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
 //
-var thrift = require('thrift');
+var thrift = require("thrift");
 var Thrift = thrift.Thrift;
 var Q = thrift.Q;
 
-
-var ttypes = require('./TCLIService_types');
+var ttypes = require("./TCLIService_types.cjs");
 //HELPER FUNCTIONS AND STRUCTURES
 
-var TCLIService_OpenSession_args = function(args) {
+var TCLIService_OpenSession_args = function (args) {
   this.req = null;
   if (args) {
     if (args.req !== undefined && args.req !== null) {
@@ -20,10 +19,9 @@ var TCLIService_OpenSession_args = function(args) {
   }
 };
 TCLIService_OpenSession_args.prototype = {};
-TCLIService_OpenSession_args.prototype.read = function(input) {
+TCLIService_OpenSession_args.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -31,16 +29,15 @@ TCLIService_OpenSession_args.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 1:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.req = new ttypes.TOpenSessionReq();
-        this.req.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.req = new ttypes.TOpenSessionReq();
+          this.req.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -53,10 +50,10 @@ TCLIService_OpenSession_args.prototype.read = function(input) {
   return;
 };
 
-TCLIService_OpenSession_args.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_OpenSession_args');
+TCLIService_OpenSession_args.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_OpenSession_args");
   if (this.req !== null && this.req !== undefined) {
-    output.writeFieldBegin('req', Thrift.Type.STRUCT, 1);
+    output.writeFieldBegin("req", Thrift.Type.STRUCT, 1);
     this.req.write(output);
     output.writeFieldEnd();
   }
@@ -65,7 +62,7 @@ TCLIService_OpenSession_args.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_OpenSession_result = function(args) {
+var TCLIService_OpenSession_result = function (args) {
   this.success = null;
   if (args) {
     if (args.success !== undefined && args.success !== null) {
@@ -74,10 +71,9 @@ var TCLIService_OpenSession_result = function(args) {
   }
 };
 TCLIService_OpenSession_result.prototype = {};
-TCLIService_OpenSession_result.prototype.read = function(input) {
+TCLIService_OpenSession_result.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -85,16 +81,15 @@ TCLIService_OpenSession_result.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 0:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.success = new ttypes.TOpenSessionResp();
-        this.success.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.success = new ttypes.TOpenSessionResp();
+          this.success.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -107,10 +102,10 @@ TCLIService_OpenSession_result.prototype.read = function(input) {
   return;
 };
 
-TCLIService_OpenSession_result.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_OpenSession_result');
+TCLIService_OpenSession_result.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_OpenSession_result");
   if (this.success !== null && this.success !== undefined) {
-    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+    output.writeFieldBegin("success", Thrift.Type.STRUCT, 0);
     this.success.write(output);
     output.writeFieldEnd();
   }
@@ -119,7 +114,7 @@ TCLIService_OpenSession_result.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_CloseSession_args = function(args) {
+var TCLIService_CloseSession_args = function (args) {
   this.req = null;
   if (args) {
     if (args.req !== undefined && args.req !== null) {
@@ -128,10 +123,9 @@ var TCLIService_CloseSession_args = function(args) {
   }
 };
 TCLIService_CloseSession_args.prototype = {};
-TCLIService_CloseSession_args.prototype.read = function(input) {
+TCLIService_CloseSession_args.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -139,16 +133,15 @@ TCLIService_CloseSession_args.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 1:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.req = new ttypes.TCloseSessionReq();
-        this.req.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.req = new ttypes.TCloseSessionReq();
+          this.req.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -161,10 +154,10 @@ TCLIService_CloseSession_args.prototype.read = function(input) {
   return;
 };
 
-TCLIService_CloseSession_args.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_CloseSession_args');
+TCLIService_CloseSession_args.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_CloseSession_args");
   if (this.req !== null && this.req !== undefined) {
-    output.writeFieldBegin('req', Thrift.Type.STRUCT, 1);
+    output.writeFieldBegin("req", Thrift.Type.STRUCT, 1);
     this.req.write(output);
     output.writeFieldEnd();
   }
@@ -173,7 +166,7 @@ TCLIService_CloseSession_args.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_CloseSession_result = function(args) {
+var TCLIService_CloseSession_result = function (args) {
   this.success = null;
   if (args) {
     if (args.success !== undefined && args.success !== null) {
@@ -182,10 +175,9 @@ var TCLIService_CloseSession_result = function(args) {
   }
 };
 TCLIService_CloseSession_result.prototype = {};
-TCLIService_CloseSession_result.prototype.read = function(input) {
+TCLIService_CloseSession_result.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -193,16 +185,15 @@ TCLIService_CloseSession_result.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 0:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.success = new ttypes.TCloseSessionResp();
-        this.success.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.success = new ttypes.TCloseSessionResp();
+          this.success.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -215,10 +206,10 @@ TCLIService_CloseSession_result.prototype.read = function(input) {
   return;
 };
 
-TCLIService_CloseSession_result.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_CloseSession_result');
+TCLIService_CloseSession_result.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_CloseSession_result");
   if (this.success !== null && this.success !== undefined) {
-    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+    output.writeFieldBegin("success", Thrift.Type.STRUCT, 0);
     this.success.write(output);
     output.writeFieldEnd();
   }
@@ -227,7 +218,7 @@ TCLIService_CloseSession_result.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_GetInfo_args = function(args) {
+var TCLIService_GetInfo_args = function (args) {
   this.req = null;
   if (args) {
     if (args.req !== undefined && args.req !== null) {
@@ -236,10 +227,9 @@ var TCLIService_GetInfo_args = function(args) {
   }
 };
 TCLIService_GetInfo_args.prototype = {};
-TCLIService_GetInfo_args.prototype.read = function(input) {
+TCLIService_GetInfo_args.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -247,16 +237,15 @@ TCLIService_GetInfo_args.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 1:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.req = new ttypes.TGetInfoReq();
-        this.req.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.req = new ttypes.TGetInfoReq();
+          this.req.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -269,10 +258,10 @@ TCLIService_GetInfo_args.prototype.read = function(input) {
   return;
 };
 
-TCLIService_GetInfo_args.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_GetInfo_args');
+TCLIService_GetInfo_args.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_GetInfo_args");
   if (this.req !== null && this.req !== undefined) {
-    output.writeFieldBegin('req', Thrift.Type.STRUCT, 1);
+    output.writeFieldBegin("req", Thrift.Type.STRUCT, 1);
     this.req.write(output);
     output.writeFieldEnd();
   }
@@ -281,7 +270,7 @@ TCLIService_GetInfo_args.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_GetInfo_result = function(args) {
+var TCLIService_GetInfo_result = function (args) {
   this.success = null;
   if (args) {
     if (args.success !== undefined && args.success !== null) {
@@ -290,10 +279,9 @@ var TCLIService_GetInfo_result = function(args) {
   }
 };
 TCLIService_GetInfo_result.prototype = {};
-TCLIService_GetInfo_result.prototype.read = function(input) {
+TCLIService_GetInfo_result.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -301,16 +289,15 @@ TCLIService_GetInfo_result.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 0:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.success = new ttypes.TGetInfoResp();
-        this.success.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.success = new ttypes.TGetInfoResp();
+          this.success.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -323,10 +310,10 @@ TCLIService_GetInfo_result.prototype.read = function(input) {
   return;
 };
 
-TCLIService_GetInfo_result.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_GetInfo_result');
+TCLIService_GetInfo_result.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_GetInfo_result");
   if (this.success !== null && this.success !== undefined) {
-    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+    output.writeFieldBegin("success", Thrift.Type.STRUCT, 0);
     this.success.write(output);
     output.writeFieldEnd();
   }
@@ -335,7 +322,7 @@ TCLIService_GetInfo_result.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_ExecuteStatement_args = function(args) {
+var TCLIService_ExecuteStatement_args = function (args) {
   this.req = null;
   if (args) {
     if (args.req !== undefined && args.req !== null) {
@@ -344,10 +331,9 @@ var TCLIService_ExecuteStatement_args = function(args) {
   }
 };
 TCLIService_ExecuteStatement_args.prototype = {};
-TCLIService_ExecuteStatement_args.prototype.read = function(input) {
+TCLIService_ExecuteStatement_args.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -355,16 +341,15 @@ TCLIService_ExecuteStatement_args.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 1:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.req = new ttypes.TExecuteStatementReq();
-        this.req.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.req = new ttypes.TExecuteStatementReq();
+          this.req.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -377,10 +362,10 @@ TCLIService_ExecuteStatement_args.prototype.read = function(input) {
   return;
 };
 
-TCLIService_ExecuteStatement_args.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_ExecuteStatement_args');
+TCLIService_ExecuteStatement_args.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_ExecuteStatement_args");
   if (this.req !== null && this.req !== undefined) {
-    output.writeFieldBegin('req', Thrift.Type.STRUCT, 1);
+    output.writeFieldBegin("req", Thrift.Type.STRUCT, 1);
     this.req.write(output);
     output.writeFieldEnd();
   }
@@ -389,7 +374,7 @@ TCLIService_ExecuteStatement_args.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_ExecuteStatement_result = function(args) {
+var TCLIService_ExecuteStatement_result = function (args) {
   this.success = null;
   if (args) {
     if (args.success !== undefined && args.success !== null) {
@@ -398,10 +383,9 @@ var TCLIService_ExecuteStatement_result = function(args) {
   }
 };
 TCLIService_ExecuteStatement_result.prototype = {};
-TCLIService_ExecuteStatement_result.prototype.read = function(input) {
+TCLIService_ExecuteStatement_result.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -409,16 +393,15 @@ TCLIService_ExecuteStatement_result.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 0:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.success = new ttypes.TExecuteStatementResp();
-        this.success.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.success = new ttypes.TExecuteStatementResp();
+          this.success.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -431,10 +414,10 @@ TCLIService_ExecuteStatement_result.prototype.read = function(input) {
   return;
 };
 
-TCLIService_ExecuteStatement_result.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_ExecuteStatement_result');
+TCLIService_ExecuteStatement_result.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_ExecuteStatement_result");
   if (this.success !== null && this.success !== undefined) {
-    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+    output.writeFieldBegin("success", Thrift.Type.STRUCT, 0);
     this.success.write(output);
     output.writeFieldEnd();
   }
@@ -443,7 +426,7 @@ TCLIService_ExecuteStatement_result.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_GetTypeInfo_args = function(args) {
+var TCLIService_GetTypeInfo_args = function (args) {
   this.req = null;
   if (args) {
     if (args.req !== undefined && args.req !== null) {
@@ -452,10 +435,9 @@ var TCLIService_GetTypeInfo_args = function(args) {
   }
 };
 TCLIService_GetTypeInfo_args.prototype = {};
-TCLIService_GetTypeInfo_args.prototype.read = function(input) {
+TCLIService_GetTypeInfo_args.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -463,16 +445,15 @@ TCLIService_GetTypeInfo_args.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 1:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.req = new ttypes.TGetTypeInfoReq();
-        this.req.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.req = new ttypes.TGetTypeInfoReq();
+          this.req.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -485,10 +466,10 @@ TCLIService_GetTypeInfo_args.prototype.read = function(input) {
   return;
 };
 
-TCLIService_GetTypeInfo_args.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_GetTypeInfo_args');
+TCLIService_GetTypeInfo_args.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_GetTypeInfo_args");
   if (this.req !== null && this.req !== undefined) {
-    output.writeFieldBegin('req', Thrift.Type.STRUCT, 1);
+    output.writeFieldBegin("req", Thrift.Type.STRUCT, 1);
     this.req.write(output);
     output.writeFieldEnd();
   }
@@ -497,7 +478,7 @@ TCLIService_GetTypeInfo_args.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_GetTypeInfo_result = function(args) {
+var TCLIService_GetTypeInfo_result = function (args) {
   this.success = null;
   if (args) {
     if (args.success !== undefined && args.success !== null) {
@@ -506,10 +487,9 @@ var TCLIService_GetTypeInfo_result = function(args) {
   }
 };
 TCLIService_GetTypeInfo_result.prototype = {};
-TCLIService_GetTypeInfo_result.prototype.read = function(input) {
+TCLIService_GetTypeInfo_result.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -517,16 +497,15 @@ TCLIService_GetTypeInfo_result.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 0:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.success = new ttypes.TGetTypeInfoResp();
-        this.success.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.success = new ttypes.TGetTypeInfoResp();
+          this.success.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -539,10 +518,10 @@ TCLIService_GetTypeInfo_result.prototype.read = function(input) {
   return;
 };
 
-TCLIService_GetTypeInfo_result.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_GetTypeInfo_result');
+TCLIService_GetTypeInfo_result.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_GetTypeInfo_result");
   if (this.success !== null && this.success !== undefined) {
-    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+    output.writeFieldBegin("success", Thrift.Type.STRUCT, 0);
     this.success.write(output);
     output.writeFieldEnd();
   }
@@ -551,7 +530,7 @@ TCLIService_GetTypeInfo_result.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_GetCatalogs_args = function(args) {
+var TCLIService_GetCatalogs_args = function (args) {
   this.req = null;
   if (args) {
     if (args.req !== undefined && args.req !== null) {
@@ -560,10 +539,9 @@ var TCLIService_GetCatalogs_args = function(args) {
   }
 };
 TCLIService_GetCatalogs_args.prototype = {};
-TCLIService_GetCatalogs_args.prototype.read = function(input) {
+TCLIService_GetCatalogs_args.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -571,16 +549,15 @@ TCLIService_GetCatalogs_args.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 1:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.req = new ttypes.TGetCatalogsReq();
-        this.req.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.req = new ttypes.TGetCatalogsReq();
+          this.req.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -593,10 +570,10 @@ TCLIService_GetCatalogs_args.prototype.read = function(input) {
   return;
 };
 
-TCLIService_GetCatalogs_args.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_GetCatalogs_args');
+TCLIService_GetCatalogs_args.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_GetCatalogs_args");
   if (this.req !== null && this.req !== undefined) {
-    output.writeFieldBegin('req', Thrift.Type.STRUCT, 1);
+    output.writeFieldBegin("req", Thrift.Type.STRUCT, 1);
     this.req.write(output);
     output.writeFieldEnd();
   }
@@ -605,7 +582,7 @@ TCLIService_GetCatalogs_args.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_GetCatalogs_result = function(args) {
+var TCLIService_GetCatalogs_result = function (args) {
   this.success = null;
   if (args) {
     if (args.success !== undefined && args.success !== null) {
@@ -614,10 +591,9 @@ var TCLIService_GetCatalogs_result = function(args) {
   }
 };
 TCLIService_GetCatalogs_result.prototype = {};
-TCLIService_GetCatalogs_result.prototype.read = function(input) {
+TCLIService_GetCatalogs_result.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -625,16 +601,15 @@ TCLIService_GetCatalogs_result.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 0:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.success = new ttypes.TGetCatalogsResp();
-        this.success.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.success = new ttypes.TGetCatalogsResp();
+          this.success.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -647,10 +622,10 @@ TCLIService_GetCatalogs_result.prototype.read = function(input) {
   return;
 };
 
-TCLIService_GetCatalogs_result.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_GetCatalogs_result');
+TCLIService_GetCatalogs_result.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_GetCatalogs_result");
   if (this.success !== null && this.success !== undefined) {
-    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+    output.writeFieldBegin("success", Thrift.Type.STRUCT, 0);
     this.success.write(output);
     output.writeFieldEnd();
   }
@@ -659,7 +634,7 @@ TCLIService_GetCatalogs_result.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_GetSchemas_args = function(args) {
+var TCLIService_GetSchemas_args = function (args) {
   this.req = null;
   if (args) {
     if (args.req !== undefined && args.req !== null) {
@@ -668,10 +643,9 @@ var TCLIService_GetSchemas_args = function(args) {
   }
 };
 TCLIService_GetSchemas_args.prototype = {};
-TCLIService_GetSchemas_args.prototype.read = function(input) {
+TCLIService_GetSchemas_args.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -679,16 +653,15 @@ TCLIService_GetSchemas_args.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 1:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.req = new ttypes.TGetSchemasReq();
-        this.req.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.req = new ttypes.TGetSchemasReq();
+          this.req.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -701,10 +674,10 @@ TCLIService_GetSchemas_args.prototype.read = function(input) {
   return;
 };
 
-TCLIService_GetSchemas_args.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_GetSchemas_args');
+TCLIService_GetSchemas_args.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_GetSchemas_args");
   if (this.req !== null && this.req !== undefined) {
-    output.writeFieldBegin('req', Thrift.Type.STRUCT, 1);
+    output.writeFieldBegin("req", Thrift.Type.STRUCT, 1);
     this.req.write(output);
     output.writeFieldEnd();
   }
@@ -713,7 +686,7 @@ TCLIService_GetSchemas_args.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_GetSchemas_result = function(args) {
+var TCLIService_GetSchemas_result = function (args) {
   this.success = null;
   if (args) {
     if (args.success !== undefined && args.success !== null) {
@@ -722,10 +695,9 @@ var TCLIService_GetSchemas_result = function(args) {
   }
 };
 TCLIService_GetSchemas_result.prototype = {};
-TCLIService_GetSchemas_result.prototype.read = function(input) {
+TCLIService_GetSchemas_result.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -733,16 +705,15 @@ TCLIService_GetSchemas_result.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 0:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.success = new ttypes.TGetSchemasResp();
-        this.success.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.success = new ttypes.TGetSchemasResp();
+          this.success.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -755,10 +726,10 @@ TCLIService_GetSchemas_result.prototype.read = function(input) {
   return;
 };
 
-TCLIService_GetSchemas_result.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_GetSchemas_result');
+TCLIService_GetSchemas_result.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_GetSchemas_result");
   if (this.success !== null && this.success !== undefined) {
-    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+    output.writeFieldBegin("success", Thrift.Type.STRUCT, 0);
     this.success.write(output);
     output.writeFieldEnd();
   }
@@ -767,7 +738,7 @@ TCLIService_GetSchemas_result.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_GetTables_args = function(args) {
+var TCLIService_GetTables_args = function (args) {
   this.req = null;
   if (args) {
     if (args.req !== undefined && args.req !== null) {
@@ -776,10 +747,9 @@ var TCLIService_GetTables_args = function(args) {
   }
 };
 TCLIService_GetTables_args.prototype = {};
-TCLIService_GetTables_args.prototype.read = function(input) {
+TCLIService_GetTables_args.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -787,16 +757,15 @@ TCLIService_GetTables_args.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 1:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.req = new ttypes.TGetTablesReq();
-        this.req.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.req = new ttypes.TGetTablesReq();
+          this.req.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -809,10 +778,10 @@ TCLIService_GetTables_args.prototype.read = function(input) {
   return;
 };
 
-TCLIService_GetTables_args.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_GetTables_args');
+TCLIService_GetTables_args.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_GetTables_args");
   if (this.req !== null && this.req !== undefined) {
-    output.writeFieldBegin('req', Thrift.Type.STRUCT, 1);
+    output.writeFieldBegin("req", Thrift.Type.STRUCT, 1);
     this.req.write(output);
     output.writeFieldEnd();
   }
@@ -821,7 +790,7 @@ TCLIService_GetTables_args.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_GetTables_result = function(args) {
+var TCLIService_GetTables_result = function (args) {
   this.success = null;
   if (args) {
     if (args.success !== undefined && args.success !== null) {
@@ -830,10 +799,9 @@ var TCLIService_GetTables_result = function(args) {
   }
 };
 TCLIService_GetTables_result.prototype = {};
-TCLIService_GetTables_result.prototype.read = function(input) {
+TCLIService_GetTables_result.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -841,16 +809,15 @@ TCLIService_GetTables_result.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 0:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.success = new ttypes.TGetTablesResp();
-        this.success.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.success = new ttypes.TGetTablesResp();
+          this.success.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -863,10 +830,10 @@ TCLIService_GetTables_result.prototype.read = function(input) {
   return;
 };
 
-TCLIService_GetTables_result.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_GetTables_result');
+TCLIService_GetTables_result.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_GetTables_result");
   if (this.success !== null && this.success !== undefined) {
-    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+    output.writeFieldBegin("success", Thrift.Type.STRUCT, 0);
     this.success.write(output);
     output.writeFieldEnd();
   }
@@ -875,7 +842,7 @@ TCLIService_GetTables_result.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_GetTableTypes_args = function(args) {
+var TCLIService_GetTableTypes_args = function (args) {
   this.req = null;
   if (args) {
     if (args.req !== undefined && args.req !== null) {
@@ -884,10 +851,9 @@ var TCLIService_GetTableTypes_args = function(args) {
   }
 };
 TCLIService_GetTableTypes_args.prototype = {};
-TCLIService_GetTableTypes_args.prototype.read = function(input) {
+TCLIService_GetTableTypes_args.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -895,16 +861,15 @@ TCLIService_GetTableTypes_args.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 1:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.req = new ttypes.TGetTableTypesReq();
-        this.req.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.req = new ttypes.TGetTableTypesReq();
+          this.req.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -917,10 +882,10 @@ TCLIService_GetTableTypes_args.prototype.read = function(input) {
   return;
 };
 
-TCLIService_GetTableTypes_args.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_GetTableTypes_args');
+TCLIService_GetTableTypes_args.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_GetTableTypes_args");
   if (this.req !== null && this.req !== undefined) {
-    output.writeFieldBegin('req', Thrift.Type.STRUCT, 1);
+    output.writeFieldBegin("req", Thrift.Type.STRUCT, 1);
     this.req.write(output);
     output.writeFieldEnd();
   }
@@ -929,7 +894,7 @@ TCLIService_GetTableTypes_args.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_GetTableTypes_result = function(args) {
+var TCLIService_GetTableTypes_result = function (args) {
   this.success = null;
   if (args) {
     if (args.success !== undefined && args.success !== null) {
@@ -938,10 +903,9 @@ var TCLIService_GetTableTypes_result = function(args) {
   }
 };
 TCLIService_GetTableTypes_result.prototype = {};
-TCLIService_GetTableTypes_result.prototype.read = function(input) {
+TCLIService_GetTableTypes_result.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -949,16 +913,15 @@ TCLIService_GetTableTypes_result.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 0:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.success = new ttypes.TGetTableTypesResp();
-        this.success.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.success = new ttypes.TGetTableTypesResp();
+          this.success.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -971,10 +934,10 @@ TCLIService_GetTableTypes_result.prototype.read = function(input) {
   return;
 };
 
-TCLIService_GetTableTypes_result.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_GetTableTypes_result');
+TCLIService_GetTableTypes_result.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_GetTableTypes_result");
   if (this.success !== null && this.success !== undefined) {
-    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+    output.writeFieldBegin("success", Thrift.Type.STRUCT, 0);
     this.success.write(output);
     output.writeFieldEnd();
   }
@@ -983,7 +946,7 @@ TCLIService_GetTableTypes_result.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_GetColumns_args = function(args) {
+var TCLIService_GetColumns_args = function (args) {
   this.req = null;
   if (args) {
     if (args.req !== undefined && args.req !== null) {
@@ -992,10 +955,9 @@ var TCLIService_GetColumns_args = function(args) {
   }
 };
 TCLIService_GetColumns_args.prototype = {};
-TCLIService_GetColumns_args.prototype.read = function(input) {
+TCLIService_GetColumns_args.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -1003,16 +965,15 @@ TCLIService_GetColumns_args.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 1:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.req = new ttypes.TGetColumnsReq();
-        this.req.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.req = new ttypes.TGetColumnsReq();
+          this.req.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -1025,10 +986,10 @@ TCLIService_GetColumns_args.prototype.read = function(input) {
   return;
 };
 
-TCLIService_GetColumns_args.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_GetColumns_args');
+TCLIService_GetColumns_args.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_GetColumns_args");
   if (this.req !== null && this.req !== undefined) {
-    output.writeFieldBegin('req', Thrift.Type.STRUCT, 1);
+    output.writeFieldBegin("req", Thrift.Type.STRUCT, 1);
     this.req.write(output);
     output.writeFieldEnd();
   }
@@ -1037,7 +998,7 @@ TCLIService_GetColumns_args.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_GetColumns_result = function(args) {
+var TCLIService_GetColumns_result = function (args) {
   this.success = null;
   if (args) {
     if (args.success !== undefined && args.success !== null) {
@@ -1046,10 +1007,9 @@ var TCLIService_GetColumns_result = function(args) {
   }
 };
 TCLIService_GetColumns_result.prototype = {};
-TCLIService_GetColumns_result.prototype.read = function(input) {
+TCLIService_GetColumns_result.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -1057,16 +1017,15 @@ TCLIService_GetColumns_result.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 0:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.success = new ttypes.TGetColumnsResp();
-        this.success.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.success = new ttypes.TGetColumnsResp();
+          this.success.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -1079,10 +1038,10 @@ TCLIService_GetColumns_result.prototype.read = function(input) {
   return;
 };
 
-TCLIService_GetColumns_result.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_GetColumns_result');
+TCLIService_GetColumns_result.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_GetColumns_result");
   if (this.success !== null && this.success !== undefined) {
-    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+    output.writeFieldBegin("success", Thrift.Type.STRUCT, 0);
     this.success.write(output);
     output.writeFieldEnd();
   }
@@ -1091,7 +1050,7 @@ TCLIService_GetColumns_result.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_GetFunctions_args = function(args) {
+var TCLIService_GetFunctions_args = function (args) {
   this.req = null;
   if (args) {
     if (args.req !== undefined && args.req !== null) {
@@ -1100,10 +1059,9 @@ var TCLIService_GetFunctions_args = function(args) {
   }
 };
 TCLIService_GetFunctions_args.prototype = {};
-TCLIService_GetFunctions_args.prototype.read = function(input) {
+TCLIService_GetFunctions_args.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -1111,16 +1069,15 @@ TCLIService_GetFunctions_args.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 1:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.req = new ttypes.TGetFunctionsReq();
-        this.req.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.req = new ttypes.TGetFunctionsReq();
+          this.req.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -1133,10 +1090,10 @@ TCLIService_GetFunctions_args.prototype.read = function(input) {
   return;
 };
 
-TCLIService_GetFunctions_args.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_GetFunctions_args');
+TCLIService_GetFunctions_args.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_GetFunctions_args");
   if (this.req !== null && this.req !== undefined) {
-    output.writeFieldBegin('req', Thrift.Type.STRUCT, 1);
+    output.writeFieldBegin("req", Thrift.Type.STRUCT, 1);
     this.req.write(output);
     output.writeFieldEnd();
   }
@@ -1145,7 +1102,7 @@ TCLIService_GetFunctions_args.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_GetFunctions_result = function(args) {
+var TCLIService_GetFunctions_result = function (args) {
   this.success = null;
   if (args) {
     if (args.success !== undefined && args.success !== null) {
@@ -1154,10 +1111,9 @@ var TCLIService_GetFunctions_result = function(args) {
   }
 };
 TCLIService_GetFunctions_result.prototype = {};
-TCLIService_GetFunctions_result.prototype.read = function(input) {
+TCLIService_GetFunctions_result.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -1165,16 +1121,15 @@ TCLIService_GetFunctions_result.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 0:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.success = new ttypes.TGetFunctionsResp();
-        this.success.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.success = new ttypes.TGetFunctionsResp();
+          this.success.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -1187,10 +1142,10 @@ TCLIService_GetFunctions_result.prototype.read = function(input) {
   return;
 };
 
-TCLIService_GetFunctions_result.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_GetFunctions_result');
+TCLIService_GetFunctions_result.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_GetFunctions_result");
   if (this.success !== null && this.success !== undefined) {
-    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+    output.writeFieldBegin("success", Thrift.Type.STRUCT, 0);
     this.success.write(output);
     output.writeFieldEnd();
   }
@@ -1199,7 +1154,7 @@ TCLIService_GetFunctions_result.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_GetOperationStatus_args = function(args) {
+var TCLIService_GetOperationStatus_args = function (args) {
   this.req = null;
   if (args) {
     if (args.req !== undefined && args.req !== null) {
@@ -1208,10 +1163,9 @@ var TCLIService_GetOperationStatus_args = function(args) {
   }
 };
 TCLIService_GetOperationStatus_args.prototype = {};
-TCLIService_GetOperationStatus_args.prototype.read = function(input) {
+TCLIService_GetOperationStatus_args.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -1219,16 +1173,15 @@ TCLIService_GetOperationStatus_args.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 1:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.req = new ttypes.TGetOperationStatusReq();
-        this.req.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.req = new ttypes.TGetOperationStatusReq();
+          this.req.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -1241,10 +1194,10 @@ TCLIService_GetOperationStatus_args.prototype.read = function(input) {
   return;
 };
 
-TCLIService_GetOperationStatus_args.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_GetOperationStatus_args');
+TCLIService_GetOperationStatus_args.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_GetOperationStatus_args");
   if (this.req !== null && this.req !== undefined) {
-    output.writeFieldBegin('req', Thrift.Type.STRUCT, 1);
+    output.writeFieldBegin("req", Thrift.Type.STRUCT, 1);
     this.req.write(output);
     output.writeFieldEnd();
   }
@@ -1253,7 +1206,7 @@ TCLIService_GetOperationStatus_args.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_GetOperationStatus_result = function(args) {
+var TCLIService_GetOperationStatus_result = function (args) {
   this.success = null;
   if (args) {
     if (args.success !== undefined && args.success !== null) {
@@ -1262,10 +1215,9 @@ var TCLIService_GetOperationStatus_result = function(args) {
   }
 };
 TCLIService_GetOperationStatus_result.prototype = {};
-TCLIService_GetOperationStatus_result.prototype.read = function(input) {
+TCLIService_GetOperationStatus_result.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -1273,16 +1225,15 @@ TCLIService_GetOperationStatus_result.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 0:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.success = new ttypes.TGetOperationStatusResp();
-        this.success.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.success = new ttypes.TGetOperationStatusResp();
+          this.success.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -1295,10 +1246,10 @@ TCLIService_GetOperationStatus_result.prototype.read = function(input) {
   return;
 };
 
-TCLIService_GetOperationStatus_result.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_GetOperationStatus_result');
+TCLIService_GetOperationStatus_result.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_GetOperationStatus_result");
   if (this.success !== null && this.success !== undefined) {
-    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+    output.writeFieldBegin("success", Thrift.Type.STRUCT, 0);
     this.success.write(output);
     output.writeFieldEnd();
   }
@@ -1307,7 +1258,7 @@ TCLIService_GetOperationStatus_result.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_CancelOperation_args = function(args) {
+var TCLIService_CancelOperation_args = function (args) {
   this.req = null;
   if (args) {
     if (args.req !== undefined && args.req !== null) {
@@ -1316,10 +1267,9 @@ var TCLIService_CancelOperation_args = function(args) {
   }
 };
 TCLIService_CancelOperation_args.prototype = {};
-TCLIService_CancelOperation_args.prototype.read = function(input) {
+TCLIService_CancelOperation_args.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -1327,16 +1277,15 @@ TCLIService_CancelOperation_args.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 1:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.req = new ttypes.TCancelOperationReq();
-        this.req.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.req = new ttypes.TCancelOperationReq();
+          this.req.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -1349,10 +1298,10 @@ TCLIService_CancelOperation_args.prototype.read = function(input) {
   return;
 };
 
-TCLIService_CancelOperation_args.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_CancelOperation_args');
+TCLIService_CancelOperation_args.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_CancelOperation_args");
   if (this.req !== null && this.req !== undefined) {
-    output.writeFieldBegin('req', Thrift.Type.STRUCT, 1);
+    output.writeFieldBegin("req", Thrift.Type.STRUCT, 1);
     this.req.write(output);
     output.writeFieldEnd();
   }
@@ -1361,7 +1310,7 @@ TCLIService_CancelOperation_args.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_CancelOperation_result = function(args) {
+var TCLIService_CancelOperation_result = function (args) {
   this.success = null;
   if (args) {
     if (args.success !== undefined && args.success !== null) {
@@ -1370,10 +1319,9 @@ var TCLIService_CancelOperation_result = function(args) {
   }
 };
 TCLIService_CancelOperation_result.prototype = {};
-TCLIService_CancelOperation_result.prototype.read = function(input) {
+TCLIService_CancelOperation_result.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -1381,16 +1329,15 @@ TCLIService_CancelOperation_result.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 0:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.success = new ttypes.TCancelOperationResp();
-        this.success.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.success = new ttypes.TCancelOperationResp();
+          this.success.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -1403,10 +1350,10 @@ TCLIService_CancelOperation_result.prototype.read = function(input) {
   return;
 };
 
-TCLIService_CancelOperation_result.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_CancelOperation_result');
+TCLIService_CancelOperation_result.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_CancelOperation_result");
   if (this.success !== null && this.success !== undefined) {
-    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+    output.writeFieldBegin("success", Thrift.Type.STRUCT, 0);
     this.success.write(output);
     output.writeFieldEnd();
   }
@@ -1415,7 +1362,7 @@ TCLIService_CancelOperation_result.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_CloseOperation_args = function(args) {
+var TCLIService_CloseOperation_args = function (args) {
   this.req = null;
   if (args) {
     if (args.req !== undefined && args.req !== null) {
@@ -1424,10 +1371,9 @@ var TCLIService_CloseOperation_args = function(args) {
   }
 };
 TCLIService_CloseOperation_args.prototype = {};
-TCLIService_CloseOperation_args.prototype.read = function(input) {
+TCLIService_CloseOperation_args.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -1435,16 +1381,15 @@ TCLIService_CloseOperation_args.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 1:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.req = new ttypes.TCloseOperationReq();
-        this.req.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.req = new ttypes.TCloseOperationReq();
+          this.req.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -1457,10 +1402,10 @@ TCLIService_CloseOperation_args.prototype.read = function(input) {
   return;
 };
 
-TCLIService_CloseOperation_args.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_CloseOperation_args');
+TCLIService_CloseOperation_args.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_CloseOperation_args");
   if (this.req !== null && this.req !== undefined) {
-    output.writeFieldBegin('req', Thrift.Type.STRUCT, 1);
+    output.writeFieldBegin("req", Thrift.Type.STRUCT, 1);
     this.req.write(output);
     output.writeFieldEnd();
   }
@@ -1469,7 +1414,7 @@ TCLIService_CloseOperation_args.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_CloseOperation_result = function(args) {
+var TCLIService_CloseOperation_result = function (args) {
   this.success = null;
   if (args) {
     if (args.success !== undefined && args.success !== null) {
@@ -1478,10 +1423,9 @@ var TCLIService_CloseOperation_result = function(args) {
   }
 };
 TCLIService_CloseOperation_result.prototype = {};
-TCLIService_CloseOperation_result.prototype.read = function(input) {
+TCLIService_CloseOperation_result.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -1489,16 +1433,15 @@ TCLIService_CloseOperation_result.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 0:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.success = new ttypes.TCloseOperationResp();
-        this.success.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.success = new ttypes.TCloseOperationResp();
+          this.success.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -1511,10 +1454,10 @@ TCLIService_CloseOperation_result.prototype.read = function(input) {
   return;
 };
 
-TCLIService_CloseOperation_result.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_CloseOperation_result');
+TCLIService_CloseOperation_result.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_CloseOperation_result");
   if (this.success !== null && this.success !== undefined) {
-    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+    output.writeFieldBegin("success", Thrift.Type.STRUCT, 0);
     this.success.write(output);
     output.writeFieldEnd();
   }
@@ -1523,7 +1466,7 @@ TCLIService_CloseOperation_result.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_GetResultSetMetadata_args = function(args) {
+var TCLIService_GetResultSetMetadata_args = function (args) {
   this.req = null;
   if (args) {
     if (args.req !== undefined && args.req !== null) {
@@ -1532,10 +1475,9 @@ var TCLIService_GetResultSetMetadata_args = function(args) {
   }
 };
 TCLIService_GetResultSetMetadata_args.prototype = {};
-TCLIService_GetResultSetMetadata_args.prototype.read = function(input) {
+TCLIService_GetResultSetMetadata_args.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -1543,16 +1485,15 @@ TCLIService_GetResultSetMetadata_args.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 1:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.req = new ttypes.TGetResultSetMetadataReq();
-        this.req.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.req = new ttypes.TGetResultSetMetadataReq();
+          this.req.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -1565,10 +1506,10 @@ TCLIService_GetResultSetMetadata_args.prototype.read = function(input) {
   return;
 };
 
-TCLIService_GetResultSetMetadata_args.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_GetResultSetMetadata_args');
+TCLIService_GetResultSetMetadata_args.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_GetResultSetMetadata_args");
   if (this.req !== null && this.req !== undefined) {
-    output.writeFieldBegin('req', Thrift.Type.STRUCT, 1);
+    output.writeFieldBegin("req", Thrift.Type.STRUCT, 1);
     this.req.write(output);
     output.writeFieldEnd();
   }
@@ -1577,7 +1518,7 @@ TCLIService_GetResultSetMetadata_args.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_GetResultSetMetadata_result = function(args) {
+var TCLIService_GetResultSetMetadata_result = function (args) {
   this.success = null;
   if (args) {
     if (args.success !== undefined && args.success !== null) {
@@ -1586,10 +1527,9 @@ var TCLIService_GetResultSetMetadata_result = function(args) {
   }
 };
 TCLIService_GetResultSetMetadata_result.prototype = {};
-TCLIService_GetResultSetMetadata_result.prototype.read = function(input) {
+TCLIService_GetResultSetMetadata_result.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -1597,16 +1537,15 @@ TCLIService_GetResultSetMetadata_result.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 0:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.success = new ttypes.TGetResultSetMetadataResp();
-        this.success.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.success = new ttypes.TGetResultSetMetadataResp();
+          this.success.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -1619,10 +1558,10 @@ TCLIService_GetResultSetMetadata_result.prototype.read = function(input) {
   return;
 };
 
-TCLIService_GetResultSetMetadata_result.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_GetResultSetMetadata_result');
+TCLIService_GetResultSetMetadata_result.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_GetResultSetMetadata_result");
   if (this.success !== null && this.success !== undefined) {
-    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+    output.writeFieldBegin("success", Thrift.Type.STRUCT, 0);
     this.success.write(output);
     output.writeFieldEnd();
   }
@@ -1631,7 +1570,7 @@ TCLIService_GetResultSetMetadata_result.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_FetchResults_args = function(args) {
+var TCLIService_FetchResults_args = function (args) {
   this.req = null;
   if (args) {
     if (args.req !== undefined && args.req !== null) {
@@ -1640,10 +1579,9 @@ var TCLIService_FetchResults_args = function(args) {
   }
 };
 TCLIService_FetchResults_args.prototype = {};
-TCLIService_FetchResults_args.prototype.read = function(input) {
+TCLIService_FetchResults_args.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -1651,16 +1589,15 @@ TCLIService_FetchResults_args.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 1:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.req = new ttypes.TFetchResultsReq();
-        this.req.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.req = new ttypes.TFetchResultsReq();
+          this.req.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -1673,10 +1610,10 @@ TCLIService_FetchResults_args.prototype.read = function(input) {
   return;
 };
 
-TCLIService_FetchResults_args.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_FetchResults_args');
+TCLIService_FetchResults_args.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_FetchResults_args");
   if (this.req !== null && this.req !== undefined) {
-    output.writeFieldBegin('req', Thrift.Type.STRUCT, 1);
+    output.writeFieldBegin("req", Thrift.Type.STRUCT, 1);
     this.req.write(output);
     output.writeFieldEnd();
   }
@@ -1685,7 +1622,7 @@ TCLIService_FetchResults_args.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_FetchResults_result = function(args) {
+var TCLIService_FetchResults_result = function (args) {
   this.success = null;
   if (args) {
     if (args.success !== undefined && args.success !== null) {
@@ -1694,10 +1631,9 @@ var TCLIService_FetchResults_result = function(args) {
   }
 };
 TCLIService_FetchResults_result.prototype = {};
-TCLIService_FetchResults_result.prototype.read = function(input) {
+TCLIService_FetchResults_result.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -1705,16 +1641,15 @@ TCLIService_FetchResults_result.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 0:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.success = new ttypes.TFetchResultsResp();
-        this.success.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.success = new ttypes.TFetchResultsResp();
+          this.success.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -1727,10 +1662,10 @@ TCLIService_FetchResults_result.prototype.read = function(input) {
   return;
 };
 
-TCLIService_FetchResults_result.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_FetchResults_result');
+TCLIService_FetchResults_result.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_FetchResults_result");
   if (this.success !== null && this.success !== undefined) {
-    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+    output.writeFieldBegin("success", Thrift.Type.STRUCT, 0);
     this.success.write(output);
     output.writeFieldEnd();
   }
@@ -1739,7 +1674,7 @@ TCLIService_FetchResults_result.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_GetDelegationToken_args = function(args) {
+var TCLIService_GetDelegationToken_args = function (args) {
   this.req = null;
   if (args) {
     if (args.req !== undefined && args.req !== null) {
@@ -1748,10 +1683,9 @@ var TCLIService_GetDelegationToken_args = function(args) {
   }
 };
 TCLIService_GetDelegationToken_args.prototype = {};
-TCLIService_GetDelegationToken_args.prototype.read = function(input) {
+TCLIService_GetDelegationToken_args.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -1759,16 +1693,15 @@ TCLIService_GetDelegationToken_args.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 1:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.req = new ttypes.TGetDelegationTokenReq();
-        this.req.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.req = new ttypes.TGetDelegationTokenReq();
+          this.req.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -1781,10 +1714,10 @@ TCLIService_GetDelegationToken_args.prototype.read = function(input) {
   return;
 };
 
-TCLIService_GetDelegationToken_args.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_GetDelegationToken_args');
+TCLIService_GetDelegationToken_args.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_GetDelegationToken_args");
   if (this.req !== null && this.req !== undefined) {
-    output.writeFieldBegin('req', Thrift.Type.STRUCT, 1);
+    output.writeFieldBegin("req", Thrift.Type.STRUCT, 1);
     this.req.write(output);
     output.writeFieldEnd();
   }
@@ -1793,7 +1726,7 @@ TCLIService_GetDelegationToken_args.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_GetDelegationToken_result = function(args) {
+var TCLIService_GetDelegationToken_result = function (args) {
   this.success = null;
   if (args) {
     if (args.success !== undefined && args.success !== null) {
@@ -1802,10 +1735,9 @@ var TCLIService_GetDelegationToken_result = function(args) {
   }
 };
 TCLIService_GetDelegationToken_result.prototype = {};
-TCLIService_GetDelegationToken_result.prototype.read = function(input) {
+TCLIService_GetDelegationToken_result.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -1813,16 +1745,15 @@ TCLIService_GetDelegationToken_result.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 0:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.success = new ttypes.TGetDelegationTokenResp();
-        this.success.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.success = new ttypes.TGetDelegationTokenResp();
+          this.success.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -1835,10 +1766,10 @@ TCLIService_GetDelegationToken_result.prototype.read = function(input) {
   return;
 };
 
-TCLIService_GetDelegationToken_result.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_GetDelegationToken_result');
+TCLIService_GetDelegationToken_result.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_GetDelegationToken_result");
   if (this.success !== null && this.success !== undefined) {
-    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+    output.writeFieldBegin("success", Thrift.Type.STRUCT, 0);
     this.success.write(output);
     output.writeFieldEnd();
   }
@@ -1847,7 +1778,7 @@ TCLIService_GetDelegationToken_result.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_CancelDelegationToken_args = function(args) {
+var TCLIService_CancelDelegationToken_args = function (args) {
   this.req = null;
   if (args) {
     if (args.req !== undefined && args.req !== null) {
@@ -1856,10 +1787,9 @@ var TCLIService_CancelDelegationToken_args = function(args) {
   }
 };
 TCLIService_CancelDelegationToken_args.prototype = {};
-TCLIService_CancelDelegationToken_args.prototype.read = function(input) {
+TCLIService_CancelDelegationToken_args.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -1867,16 +1797,15 @@ TCLIService_CancelDelegationToken_args.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 1:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.req = new ttypes.TCancelDelegationTokenReq();
-        this.req.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.req = new ttypes.TCancelDelegationTokenReq();
+          this.req.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -1889,10 +1818,10 @@ TCLIService_CancelDelegationToken_args.prototype.read = function(input) {
   return;
 };
 
-TCLIService_CancelDelegationToken_args.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_CancelDelegationToken_args');
+TCLIService_CancelDelegationToken_args.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_CancelDelegationToken_args");
   if (this.req !== null && this.req !== undefined) {
-    output.writeFieldBegin('req', Thrift.Type.STRUCT, 1);
+    output.writeFieldBegin("req", Thrift.Type.STRUCT, 1);
     this.req.write(output);
     output.writeFieldEnd();
   }
@@ -1901,7 +1830,7 @@ TCLIService_CancelDelegationToken_args.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_CancelDelegationToken_result = function(args) {
+var TCLIService_CancelDelegationToken_result = function (args) {
   this.success = null;
   if (args) {
     if (args.success !== undefined && args.success !== null) {
@@ -1910,10 +1839,9 @@ var TCLIService_CancelDelegationToken_result = function(args) {
   }
 };
 TCLIService_CancelDelegationToken_result.prototype = {};
-TCLIService_CancelDelegationToken_result.prototype.read = function(input) {
+TCLIService_CancelDelegationToken_result.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -1921,16 +1849,15 @@ TCLIService_CancelDelegationToken_result.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 0:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.success = new ttypes.TCancelDelegationTokenResp();
-        this.success.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.success = new ttypes.TCancelDelegationTokenResp();
+          this.success.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -1943,10 +1870,10 @@ TCLIService_CancelDelegationToken_result.prototype.read = function(input) {
   return;
 };
 
-TCLIService_CancelDelegationToken_result.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_CancelDelegationToken_result');
+TCLIService_CancelDelegationToken_result.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_CancelDelegationToken_result");
   if (this.success !== null && this.success !== undefined) {
-    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+    output.writeFieldBegin("success", Thrift.Type.STRUCT, 0);
     this.success.write(output);
     output.writeFieldEnd();
   }
@@ -1955,7 +1882,7 @@ TCLIService_CancelDelegationToken_result.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_RenewDelegationToken_args = function(args) {
+var TCLIService_RenewDelegationToken_args = function (args) {
   this.req = null;
   if (args) {
     if (args.req !== undefined && args.req !== null) {
@@ -1964,10 +1891,9 @@ var TCLIService_RenewDelegationToken_args = function(args) {
   }
 };
 TCLIService_RenewDelegationToken_args.prototype = {};
-TCLIService_RenewDelegationToken_args.prototype.read = function(input) {
+TCLIService_RenewDelegationToken_args.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -1975,16 +1901,15 @@ TCLIService_RenewDelegationToken_args.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 1:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.req = new ttypes.TRenewDelegationTokenReq();
-        this.req.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.req = new ttypes.TRenewDelegationTokenReq();
+          this.req.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -1997,10 +1922,10 @@ TCLIService_RenewDelegationToken_args.prototype.read = function(input) {
   return;
 };
 
-TCLIService_RenewDelegationToken_args.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_RenewDelegationToken_args');
+TCLIService_RenewDelegationToken_args.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_RenewDelegationToken_args");
   if (this.req !== null && this.req !== undefined) {
-    output.writeFieldBegin('req', Thrift.Type.STRUCT, 1);
+    output.writeFieldBegin("req", Thrift.Type.STRUCT, 1);
     this.req.write(output);
     output.writeFieldEnd();
   }
@@ -2009,7 +1934,7 @@ TCLIService_RenewDelegationToken_args.prototype.write = function(output) {
   return;
 };
 
-var TCLIService_RenewDelegationToken_result = function(args) {
+var TCLIService_RenewDelegationToken_result = function (args) {
   this.success = null;
   if (args) {
     if (args.success !== undefined && args.success !== null) {
@@ -2018,10 +1943,9 @@ var TCLIService_RenewDelegationToken_result = function(args) {
   }
 };
 TCLIService_RenewDelegationToken_result.prototype = {};
-TCLIService_RenewDelegationToken_result.prototype.read = function(input) {
+TCLIService_RenewDelegationToken_result.prototype.read = function (input) {
   input.readStructBegin();
-  while (true)
-  {
+  while (true) {
     var ret = input.readFieldBegin();
     var fname = ret.fname;
     var ftype = ret.ftype;
@@ -2029,16 +1953,15 @@ TCLIService_RenewDelegationToken_result.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    switch (fid)
-    {
+    switch (fid) {
       case 0:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.success = new ttypes.TRenewDelegationTokenResp();
-        this.success.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
+        if (ftype == Thrift.Type.STRUCT) {
+          this.success = new ttypes.TRenewDelegationTokenResp();
+          this.success.read(input);
+        } else {
+          input.skip(ftype);
+        }
+        break;
       case 0:
         input.skip(ftype);
         break;
@@ -2051,10 +1974,10 @@ TCLIService_RenewDelegationToken_result.prototype.read = function(input) {
   return;
 };
 
-TCLIService_RenewDelegationToken_result.prototype.write = function(output) {
-  output.writeStructBegin('TCLIService_RenewDelegationToken_result');
+TCLIService_RenewDelegationToken_result.prototype.write = function (output) {
+  output.writeStructBegin("TCLIService_RenewDelegationToken_result");
   if (this.success !== null && this.success !== undefined) {
-    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+    output.writeFieldBegin("success", Thrift.Type.STRUCT, 0);
     this.success.write(output);
     output.writeFieldEnd();
   }
@@ -2063,20 +1986,24 @@ TCLIService_RenewDelegationToken_result.prototype.write = function(output) {
   return;
 };
 
-var TCLIServiceClient = exports.Client = function(output, pClass) {
-    this.output = output;
-    this.pClass = pClass;
-    this._seqid = 0;
-    this._reqs = {};
-};
+var TCLIServiceClient = (exports.Client = function (output, pClass) {
+  this.output = output;
+  this.pClass = pClass;
+  this._seqid = 0;
+  this._reqs = {};
+});
 TCLIServiceClient.prototype = {};
-TCLIServiceClient.prototype.seqid = function() { return this._seqid; }
-TCLIServiceClient.prototype.new_seqid = function() { return this._seqid += 1; }
-TCLIServiceClient.prototype.OpenSession = function(req, callback) {
+TCLIServiceClient.prototype.seqid = function () {
+  return this._seqid;
+};
+TCLIServiceClient.prototype.new_seqid = function () {
+  return (this._seqid += 1);
+};
+TCLIServiceClient.prototype.OpenSession = function (req, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
-    this._reqs[this.seqid()] = function(error, result) {
+    this._reqs[this.seqid()] = function (error, result) {
       if (error) {
         _defer.reject(error);
       } else {
@@ -2091,9 +2018,13 @@ TCLIServiceClient.prototype.OpenSession = function(req, callback) {
   }
 };
 
-TCLIServiceClient.prototype.send_OpenSession = function(req) {
+TCLIServiceClient.prototype.send_OpenSession = function (req) {
   var output = new this.pClass(this.output);
-  output.writeMessageBegin('OpenSession', Thrift.MessageType.CALL, this.seqid());
+  output.writeMessageBegin(
+    "OpenSession",
+    Thrift.MessageType.CALL,
+    this.seqid(),
+  );
   var args = new TCLIService_OpenSession_args();
   args.req = req;
   args.write(output);
@@ -2101,8 +2032,8 @@ TCLIServiceClient.prototype.send_OpenSession = function(req) {
   return this.output.flush();
 };
 
-TCLIServiceClient.prototype.recv_OpenSession = function(input,mtype,rseqid) {
-  var callback = this._reqs[rseqid] || function() {};
+TCLIServiceClient.prototype.recv_OpenSession = function (input, mtype, rseqid) {
+  var callback = this._reqs[rseqid] || function () {};
   delete this._reqs[rseqid];
   if (mtype == Thrift.MessageType.EXCEPTION) {
     var x = new Thrift.TApplicationException();
@@ -2117,13 +2048,13 @@ TCLIServiceClient.prototype.recv_OpenSession = function(input,mtype,rseqid) {
   if (null !== result.success) {
     return callback(null, result.success);
   }
-  return callback('OpenSession failed: unknown result');
+  return callback("OpenSession failed: unknown result");
 };
-TCLIServiceClient.prototype.CloseSession = function(req, callback) {
+TCLIServiceClient.prototype.CloseSession = function (req, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
-    this._reqs[this.seqid()] = function(error, result) {
+    this._reqs[this.seqid()] = function (error, result) {
       if (error) {
         _defer.reject(error);
       } else {
@@ -2138,9 +2069,13 @@ TCLIServiceClient.prototype.CloseSession = function(req, callback) {
   }
 };
 
-TCLIServiceClient.prototype.send_CloseSession = function(req) {
+TCLIServiceClient.prototype.send_CloseSession = function (req) {
   var output = new this.pClass(this.output);
-  output.writeMessageBegin('CloseSession', Thrift.MessageType.CALL, this.seqid());
+  output.writeMessageBegin(
+    "CloseSession",
+    Thrift.MessageType.CALL,
+    this.seqid(),
+  );
   var args = new TCLIService_CloseSession_args();
   args.req = req;
   args.write(output);
@@ -2148,8 +2083,12 @@ TCLIServiceClient.prototype.send_CloseSession = function(req) {
   return this.output.flush();
 };
 
-TCLIServiceClient.prototype.recv_CloseSession = function(input,mtype,rseqid) {
-  var callback = this._reqs[rseqid] || function() {};
+TCLIServiceClient.prototype.recv_CloseSession = function (
+  input,
+  mtype,
+  rseqid,
+) {
+  var callback = this._reqs[rseqid] || function () {};
   delete this._reqs[rseqid];
   if (mtype == Thrift.MessageType.EXCEPTION) {
     var x = new Thrift.TApplicationException();
@@ -2164,13 +2103,13 @@ TCLIServiceClient.prototype.recv_CloseSession = function(input,mtype,rseqid) {
   if (null !== result.success) {
     return callback(null, result.success);
   }
-  return callback('CloseSession failed: unknown result');
+  return callback("CloseSession failed: unknown result");
 };
-TCLIServiceClient.prototype.GetInfo = function(req, callback) {
+TCLIServiceClient.prototype.GetInfo = function (req, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
-    this._reqs[this.seqid()] = function(error, result) {
+    this._reqs[this.seqid()] = function (error, result) {
       if (error) {
         _defer.reject(error);
       } else {
@@ -2185,9 +2124,9 @@ TCLIServiceClient.prototype.GetInfo = function(req, callback) {
   }
 };
 
-TCLIServiceClient.prototype.send_GetInfo = function(req) {
+TCLIServiceClient.prototype.send_GetInfo = function (req) {
   var output = new this.pClass(this.output);
-  output.writeMessageBegin('GetInfo', Thrift.MessageType.CALL, this.seqid());
+  output.writeMessageBegin("GetInfo", Thrift.MessageType.CALL, this.seqid());
   var args = new TCLIService_GetInfo_args();
   args.req = req;
   args.write(output);
@@ -2195,8 +2134,8 @@ TCLIServiceClient.prototype.send_GetInfo = function(req) {
   return this.output.flush();
 };
 
-TCLIServiceClient.prototype.recv_GetInfo = function(input,mtype,rseqid) {
-  var callback = this._reqs[rseqid] || function() {};
+TCLIServiceClient.prototype.recv_GetInfo = function (input, mtype, rseqid) {
+  var callback = this._reqs[rseqid] || function () {};
   delete this._reqs[rseqid];
   if (mtype == Thrift.MessageType.EXCEPTION) {
     var x = new Thrift.TApplicationException();
@@ -2211,13 +2150,13 @@ TCLIServiceClient.prototype.recv_GetInfo = function(input,mtype,rseqid) {
   if (null !== result.success) {
     return callback(null, result.success);
   }
-  return callback('GetInfo failed: unknown result');
+  return callback("GetInfo failed: unknown result");
 };
-TCLIServiceClient.prototype.ExecuteStatement = function(req, callback) {
+TCLIServiceClient.prototype.ExecuteStatement = function (req, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
-    this._reqs[this.seqid()] = function(error, result) {
+    this._reqs[this.seqid()] = function (error, result) {
       if (error) {
         _defer.reject(error);
       } else {
@@ -2232,9 +2171,13 @@ TCLIServiceClient.prototype.ExecuteStatement = function(req, callback) {
   }
 };
 
-TCLIServiceClient.prototype.send_ExecuteStatement = function(req) {
+TCLIServiceClient.prototype.send_ExecuteStatement = function (req) {
   var output = new this.pClass(this.output);
-  output.writeMessageBegin('ExecuteStatement', Thrift.MessageType.CALL, this.seqid());
+  output.writeMessageBegin(
+    "ExecuteStatement",
+    Thrift.MessageType.CALL,
+    this.seqid(),
+  );
   var args = new TCLIService_ExecuteStatement_args();
   args.req = req;
   args.write(output);
@@ -2242,8 +2185,12 @@ TCLIServiceClient.prototype.send_ExecuteStatement = function(req) {
   return this.output.flush();
 };
 
-TCLIServiceClient.prototype.recv_ExecuteStatement = function(input,mtype,rseqid) {
-  var callback = this._reqs[rseqid] || function() {};
+TCLIServiceClient.prototype.recv_ExecuteStatement = function (
+  input,
+  mtype,
+  rseqid,
+) {
+  var callback = this._reqs[rseqid] || function () {};
   delete this._reqs[rseqid];
   if (mtype == Thrift.MessageType.EXCEPTION) {
     var x = new Thrift.TApplicationException();
@@ -2258,13 +2205,13 @@ TCLIServiceClient.prototype.recv_ExecuteStatement = function(input,mtype,rseqid)
   if (null !== result.success) {
     return callback(null, result.success);
   }
-  return callback('ExecuteStatement failed: unknown result');
+  return callback("ExecuteStatement failed: unknown result");
 };
-TCLIServiceClient.prototype.GetTypeInfo = function(req, callback) {
+TCLIServiceClient.prototype.GetTypeInfo = function (req, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
-    this._reqs[this.seqid()] = function(error, result) {
+    this._reqs[this.seqid()] = function (error, result) {
       if (error) {
         _defer.reject(error);
       } else {
@@ -2279,9 +2226,13 @@ TCLIServiceClient.prototype.GetTypeInfo = function(req, callback) {
   }
 };
 
-TCLIServiceClient.prototype.send_GetTypeInfo = function(req) {
+TCLIServiceClient.prototype.send_GetTypeInfo = function (req) {
   var output = new this.pClass(this.output);
-  output.writeMessageBegin('GetTypeInfo', Thrift.MessageType.CALL, this.seqid());
+  output.writeMessageBegin(
+    "GetTypeInfo",
+    Thrift.MessageType.CALL,
+    this.seqid(),
+  );
   var args = new TCLIService_GetTypeInfo_args();
   args.req = req;
   args.write(output);
@@ -2289,8 +2240,8 @@ TCLIServiceClient.prototype.send_GetTypeInfo = function(req) {
   return this.output.flush();
 };
 
-TCLIServiceClient.prototype.recv_GetTypeInfo = function(input,mtype,rseqid) {
-  var callback = this._reqs[rseqid] || function() {};
+TCLIServiceClient.prototype.recv_GetTypeInfo = function (input, mtype, rseqid) {
+  var callback = this._reqs[rseqid] || function () {};
   delete this._reqs[rseqid];
   if (mtype == Thrift.MessageType.EXCEPTION) {
     var x = new Thrift.TApplicationException();
@@ -2305,13 +2256,13 @@ TCLIServiceClient.prototype.recv_GetTypeInfo = function(input,mtype,rseqid) {
   if (null !== result.success) {
     return callback(null, result.success);
   }
-  return callback('GetTypeInfo failed: unknown result');
+  return callback("GetTypeInfo failed: unknown result");
 };
-TCLIServiceClient.prototype.GetCatalogs = function(req, callback) {
+TCLIServiceClient.prototype.GetCatalogs = function (req, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
-    this._reqs[this.seqid()] = function(error, result) {
+    this._reqs[this.seqid()] = function (error, result) {
       if (error) {
         _defer.reject(error);
       } else {
@@ -2326,9 +2277,13 @@ TCLIServiceClient.prototype.GetCatalogs = function(req, callback) {
   }
 };
 
-TCLIServiceClient.prototype.send_GetCatalogs = function(req) {
+TCLIServiceClient.prototype.send_GetCatalogs = function (req) {
   var output = new this.pClass(this.output);
-  output.writeMessageBegin('GetCatalogs', Thrift.MessageType.CALL, this.seqid());
+  output.writeMessageBegin(
+    "GetCatalogs",
+    Thrift.MessageType.CALL,
+    this.seqid(),
+  );
   var args = new TCLIService_GetCatalogs_args();
   args.req = req;
   args.write(output);
@@ -2336,8 +2291,8 @@ TCLIServiceClient.prototype.send_GetCatalogs = function(req) {
   return this.output.flush();
 };
 
-TCLIServiceClient.prototype.recv_GetCatalogs = function(input,mtype,rseqid) {
-  var callback = this._reqs[rseqid] || function() {};
+TCLIServiceClient.prototype.recv_GetCatalogs = function (input, mtype, rseqid) {
+  var callback = this._reqs[rseqid] || function () {};
   delete this._reqs[rseqid];
   if (mtype == Thrift.MessageType.EXCEPTION) {
     var x = new Thrift.TApplicationException();
@@ -2352,13 +2307,13 @@ TCLIServiceClient.prototype.recv_GetCatalogs = function(input,mtype,rseqid) {
   if (null !== result.success) {
     return callback(null, result.success);
   }
-  return callback('GetCatalogs failed: unknown result');
+  return callback("GetCatalogs failed: unknown result");
 };
-TCLIServiceClient.prototype.GetSchemas = function(req, callback) {
+TCLIServiceClient.prototype.GetSchemas = function (req, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
-    this._reqs[this.seqid()] = function(error, result) {
+    this._reqs[this.seqid()] = function (error, result) {
       if (error) {
         _defer.reject(error);
       } else {
@@ -2373,9 +2328,9 @@ TCLIServiceClient.prototype.GetSchemas = function(req, callback) {
   }
 };
 
-TCLIServiceClient.prototype.send_GetSchemas = function(req) {
+TCLIServiceClient.prototype.send_GetSchemas = function (req) {
   var output = new this.pClass(this.output);
-  output.writeMessageBegin('GetSchemas', Thrift.MessageType.CALL, this.seqid());
+  output.writeMessageBegin("GetSchemas", Thrift.MessageType.CALL, this.seqid());
   var args = new TCLIService_GetSchemas_args();
   args.req = req;
   args.write(output);
@@ -2383,8 +2338,8 @@ TCLIServiceClient.prototype.send_GetSchemas = function(req) {
   return this.output.flush();
 };
 
-TCLIServiceClient.prototype.recv_GetSchemas = function(input,mtype,rseqid) {
-  var callback = this._reqs[rseqid] || function() {};
+TCLIServiceClient.prototype.recv_GetSchemas = function (input, mtype, rseqid) {
+  var callback = this._reqs[rseqid] || function () {};
   delete this._reqs[rseqid];
   if (mtype == Thrift.MessageType.EXCEPTION) {
     var x = new Thrift.TApplicationException();
@@ -2399,13 +2354,13 @@ TCLIServiceClient.prototype.recv_GetSchemas = function(input,mtype,rseqid) {
   if (null !== result.success) {
     return callback(null, result.success);
   }
-  return callback('GetSchemas failed: unknown result');
+  return callback("GetSchemas failed: unknown result");
 };
-TCLIServiceClient.prototype.GetTables = function(req, callback) {
+TCLIServiceClient.prototype.GetTables = function (req, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
-    this._reqs[this.seqid()] = function(error, result) {
+    this._reqs[this.seqid()] = function (error, result) {
       if (error) {
         _defer.reject(error);
       } else {
@@ -2420,9 +2375,9 @@ TCLIServiceClient.prototype.GetTables = function(req, callback) {
   }
 };
 
-TCLIServiceClient.prototype.send_GetTables = function(req) {
+TCLIServiceClient.prototype.send_GetTables = function (req) {
   var output = new this.pClass(this.output);
-  output.writeMessageBegin('GetTables', Thrift.MessageType.CALL, this.seqid());
+  output.writeMessageBegin("GetTables", Thrift.MessageType.CALL, this.seqid());
   var args = new TCLIService_GetTables_args();
   args.req = req;
   args.write(output);
@@ -2430,8 +2385,8 @@ TCLIServiceClient.prototype.send_GetTables = function(req) {
   return this.output.flush();
 };
 
-TCLIServiceClient.prototype.recv_GetTables = function(input,mtype,rseqid) {
-  var callback = this._reqs[rseqid] || function() {};
+TCLIServiceClient.prototype.recv_GetTables = function (input, mtype, rseqid) {
+  var callback = this._reqs[rseqid] || function () {};
   delete this._reqs[rseqid];
   if (mtype == Thrift.MessageType.EXCEPTION) {
     var x = new Thrift.TApplicationException();
@@ -2446,13 +2401,13 @@ TCLIServiceClient.prototype.recv_GetTables = function(input,mtype,rseqid) {
   if (null !== result.success) {
     return callback(null, result.success);
   }
-  return callback('GetTables failed: unknown result');
+  return callback("GetTables failed: unknown result");
 };
-TCLIServiceClient.prototype.GetTableTypes = function(req, callback) {
+TCLIServiceClient.prototype.GetTableTypes = function (req, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
-    this._reqs[this.seqid()] = function(error, result) {
+    this._reqs[this.seqid()] = function (error, result) {
       if (error) {
         _defer.reject(error);
       } else {
@@ -2467,9 +2422,13 @@ TCLIServiceClient.prototype.GetTableTypes = function(req, callback) {
   }
 };
 
-TCLIServiceClient.prototype.send_GetTableTypes = function(req) {
+TCLIServiceClient.prototype.send_GetTableTypes = function (req) {
   var output = new this.pClass(this.output);
-  output.writeMessageBegin('GetTableTypes', Thrift.MessageType.CALL, this.seqid());
+  output.writeMessageBegin(
+    "GetTableTypes",
+    Thrift.MessageType.CALL,
+    this.seqid(),
+  );
   var args = new TCLIService_GetTableTypes_args();
   args.req = req;
   args.write(output);
@@ -2477,8 +2436,12 @@ TCLIServiceClient.prototype.send_GetTableTypes = function(req) {
   return this.output.flush();
 };
 
-TCLIServiceClient.prototype.recv_GetTableTypes = function(input,mtype,rseqid) {
-  var callback = this._reqs[rseqid] || function() {};
+TCLIServiceClient.prototype.recv_GetTableTypes = function (
+  input,
+  mtype,
+  rseqid,
+) {
+  var callback = this._reqs[rseqid] || function () {};
   delete this._reqs[rseqid];
   if (mtype == Thrift.MessageType.EXCEPTION) {
     var x = new Thrift.TApplicationException();
@@ -2493,13 +2456,13 @@ TCLIServiceClient.prototype.recv_GetTableTypes = function(input,mtype,rseqid) {
   if (null !== result.success) {
     return callback(null, result.success);
   }
-  return callback('GetTableTypes failed: unknown result');
+  return callback("GetTableTypes failed: unknown result");
 };
-TCLIServiceClient.prototype.GetColumns = function(req, callback) {
+TCLIServiceClient.prototype.GetColumns = function (req, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
-    this._reqs[this.seqid()] = function(error, result) {
+    this._reqs[this.seqid()] = function (error, result) {
       if (error) {
         _defer.reject(error);
       } else {
@@ -2514,9 +2477,9 @@ TCLIServiceClient.prototype.GetColumns = function(req, callback) {
   }
 };
 
-TCLIServiceClient.prototype.send_GetColumns = function(req) {
+TCLIServiceClient.prototype.send_GetColumns = function (req) {
   var output = new this.pClass(this.output);
-  output.writeMessageBegin('GetColumns', Thrift.MessageType.CALL, this.seqid());
+  output.writeMessageBegin("GetColumns", Thrift.MessageType.CALL, this.seqid());
   var args = new TCLIService_GetColumns_args();
   args.req = req;
   args.write(output);
@@ -2524,8 +2487,8 @@ TCLIServiceClient.prototype.send_GetColumns = function(req) {
   return this.output.flush();
 };
 
-TCLIServiceClient.prototype.recv_GetColumns = function(input,mtype,rseqid) {
-  var callback = this._reqs[rseqid] || function() {};
+TCLIServiceClient.prototype.recv_GetColumns = function (input, mtype, rseqid) {
+  var callback = this._reqs[rseqid] || function () {};
   delete this._reqs[rseqid];
   if (mtype == Thrift.MessageType.EXCEPTION) {
     var x = new Thrift.TApplicationException();
@@ -2540,13 +2503,13 @@ TCLIServiceClient.prototype.recv_GetColumns = function(input,mtype,rseqid) {
   if (null !== result.success) {
     return callback(null, result.success);
   }
-  return callback('GetColumns failed: unknown result');
+  return callback("GetColumns failed: unknown result");
 };
-TCLIServiceClient.prototype.GetFunctions = function(req, callback) {
+TCLIServiceClient.prototype.GetFunctions = function (req, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
-    this._reqs[this.seqid()] = function(error, result) {
+    this._reqs[this.seqid()] = function (error, result) {
       if (error) {
         _defer.reject(error);
       } else {
@@ -2561,9 +2524,13 @@ TCLIServiceClient.prototype.GetFunctions = function(req, callback) {
   }
 };
 
-TCLIServiceClient.prototype.send_GetFunctions = function(req) {
+TCLIServiceClient.prototype.send_GetFunctions = function (req) {
   var output = new this.pClass(this.output);
-  output.writeMessageBegin('GetFunctions', Thrift.MessageType.CALL, this.seqid());
+  output.writeMessageBegin(
+    "GetFunctions",
+    Thrift.MessageType.CALL,
+    this.seqid(),
+  );
   var args = new TCLIService_GetFunctions_args();
   args.req = req;
   args.write(output);
@@ -2571,8 +2538,12 @@ TCLIServiceClient.prototype.send_GetFunctions = function(req) {
   return this.output.flush();
 };
 
-TCLIServiceClient.prototype.recv_GetFunctions = function(input,mtype,rseqid) {
-  var callback = this._reqs[rseqid] || function() {};
+TCLIServiceClient.prototype.recv_GetFunctions = function (
+  input,
+  mtype,
+  rseqid,
+) {
+  var callback = this._reqs[rseqid] || function () {};
   delete this._reqs[rseqid];
   if (mtype == Thrift.MessageType.EXCEPTION) {
     var x = new Thrift.TApplicationException();
@@ -2587,13 +2558,13 @@ TCLIServiceClient.prototype.recv_GetFunctions = function(input,mtype,rseqid) {
   if (null !== result.success) {
     return callback(null, result.success);
   }
-  return callback('GetFunctions failed: unknown result');
+  return callback("GetFunctions failed: unknown result");
 };
-TCLIServiceClient.prototype.GetOperationStatus = function(req, callback) {
+TCLIServiceClient.prototype.GetOperationStatus = function (req, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
-    this._reqs[this.seqid()] = function(error, result) {
+    this._reqs[this.seqid()] = function (error, result) {
       if (error) {
         _defer.reject(error);
       } else {
@@ -2608,9 +2579,13 @@ TCLIServiceClient.prototype.GetOperationStatus = function(req, callback) {
   }
 };
 
-TCLIServiceClient.prototype.send_GetOperationStatus = function(req) {
+TCLIServiceClient.prototype.send_GetOperationStatus = function (req) {
   var output = new this.pClass(this.output);
-  output.writeMessageBegin('GetOperationStatus', Thrift.MessageType.CALL, this.seqid());
+  output.writeMessageBegin(
+    "GetOperationStatus",
+    Thrift.MessageType.CALL,
+    this.seqid(),
+  );
   var args = new TCLIService_GetOperationStatus_args();
   args.req = req;
   args.write(output);
@@ -2618,8 +2593,12 @@ TCLIServiceClient.prototype.send_GetOperationStatus = function(req) {
   return this.output.flush();
 };
 
-TCLIServiceClient.prototype.recv_GetOperationStatus = function(input,mtype,rseqid) {
-  var callback = this._reqs[rseqid] || function() {};
+TCLIServiceClient.prototype.recv_GetOperationStatus = function (
+  input,
+  mtype,
+  rseqid,
+) {
+  var callback = this._reqs[rseqid] || function () {};
   delete this._reqs[rseqid];
   if (mtype == Thrift.MessageType.EXCEPTION) {
     var x = new Thrift.TApplicationException();
@@ -2634,13 +2613,13 @@ TCLIServiceClient.prototype.recv_GetOperationStatus = function(input,mtype,rseqi
   if (null !== result.success) {
     return callback(null, result.success);
   }
-  return callback('GetOperationStatus failed: unknown result');
+  return callback("GetOperationStatus failed: unknown result");
 };
-TCLIServiceClient.prototype.CancelOperation = function(req, callback) {
+TCLIServiceClient.prototype.CancelOperation = function (req, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
-    this._reqs[this.seqid()] = function(error, result) {
+    this._reqs[this.seqid()] = function (error, result) {
       if (error) {
         _defer.reject(error);
       } else {
@@ -2655,9 +2634,13 @@ TCLIServiceClient.prototype.CancelOperation = function(req, callback) {
   }
 };
 
-TCLIServiceClient.prototype.send_CancelOperation = function(req) {
+TCLIServiceClient.prototype.send_CancelOperation = function (req) {
   var output = new this.pClass(this.output);
-  output.writeMessageBegin('CancelOperation', Thrift.MessageType.CALL, this.seqid());
+  output.writeMessageBegin(
+    "CancelOperation",
+    Thrift.MessageType.CALL,
+    this.seqid(),
+  );
   var args = new TCLIService_CancelOperation_args();
   args.req = req;
   args.write(output);
@@ -2665,8 +2648,12 @@ TCLIServiceClient.prototype.send_CancelOperation = function(req) {
   return this.output.flush();
 };
 
-TCLIServiceClient.prototype.recv_CancelOperation = function(input,mtype,rseqid) {
-  var callback = this._reqs[rseqid] || function() {};
+TCLIServiceClient.prototype.recv_CancelOperation = function (
+  input,
+  mtype,
+  rseqid,
+) {
+  var callback = this._reqs[rseqid] || function () {};
   delete this._reqs[rseqid];
   if (mtype == Thrift.MessageType.EXCEPTION) {
     var x = new Thrift.TApplicationException();
@@ -2681,13 +2668,13 @@ TCLIServiceClient.prototype.recv_CancelOperation = function(input,mtype,rseqid) 
   if (null !== result.success) {
     return callback(null, result.success);
   }
-  return callback('CancelOperation failed: unknown result');
+  return callback("CancelOperation failed: unknown result");
 };
-TCLIServiceClient.prototype.CloseOperation = function(req, callback) {
+TCLIServiceClient.prototype.CloseOperation = function (req, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
-    this._reqs[this.seqid()] = function(error, result) {
+    this._reqs[this.seqid()] = function (error, result) {
       if (error) {
         _defer.reject(error);
       } else {
@@ -2702,9 +2689,13 @@ TCLIServiceClient.prototype.CloseOperation = function(req, callback) {
   }
 };
 
-TCLIServiceClient.prototype.send_CloseOperation = function(req) {
+TCLIServiceClient.prototype.send_CloseOperation = function (req) {
   var output = new this.pClass(this.output);
-  output.writeMessageBegin('CloseOperation', Thrift.MessageType.CALL, this.seqid());
+  output.writeMessageBegin(
+    "CloseOperation",
+    Thrift.MessageType.CALL,
+    this.seqid(),
+  );
   var args = new TCLIService_CloseOperation_args();
   args.req = req;
   args.write(output);
@@ -2712,8 +2703,12 @@ TCLIServiceClient.prototype.send_CloseOperation = function(req) {
   return this.output.flush();
 };
 
-TCLIServiceClient.prototype.recv_CloseOperation = function(input,mtype,rseqid) {
-  var callback = this._reqs[rseqid] || function() {};
+TCLIServiceClient.prototype.recv_CloseOperation = function (
+  input,
+  mtype,
+  rseqid,
+) {
+  var callback = this._reqs[rseqid] || function () {};
   delete this._reqs[rseqid];
   if (mtype == Thrift.MessageType.EXCEPTION) {
     var x = new Thrift.TApplicationException();
@@ -2728,13 +2723,13 @@ TCLIServiceClient.prototype.recv_CloseOperation = function(input,mtype,rseqid) {
   if (null !== result.success) {
     return callback(null, result.success);
   }
-  return callback('CloseOperation failed: unknown result');
+  return callback("CloseOperation failed: unknown result");
 };
-TCLIServiceClient.prototype.GetResultSetMetadata = function(req, callback) {
+TCLIServiceClient.prototype.GetResultSetMetadata = function (req, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
-    this._reqs[this.seqid()] = function(error, result) {
+    this._reqs[this.seqid()] = function (error, result) {
       if (error) {
         _defer.reject(error);
       } else {
@@ -2749,9 +2744,13 @@ TCLIServiceClient.prototype.GetResultSetMetadata = function(req, callback) {
   }
 };
 
-TCLIServiceClient.prototype.send_GetResultSetMetadata = function(req) {
+TCLIServiceClient.prototype.send_GetResultSetMetadata = function (req) {
   var output = new this.pClass(this.output);
-  output.writeMessageBegin('GetResultSetMetadata', Thrift.MessageType.CALL, this.seqid());
+  output.writeMessageBegin(
+    "GetResultSetMetadata",
+    Thrift.MessageType.CALL,
+    this.seqid(),
+  );
   var args = new TCLIService_GetResultSetMetadata_args();
   args.req = req;
   args.write(output);
@@ -2759,8 +2758,12 @@ TCLIServiceClient.prototype.send_GetResultSetMetadata = function(req) {
   return this.output.flush();
 };
 
-TCLIServiceClient.prototype.recv_GetResultSetMetadata = function(input,mtype,rseqid) {
-  var callback = this._reqs[rseqid] || function() {};
+TCLIServiceClient.prototype.recv_GetResultSetMetadata = function (
+  input,
+  mtype,
+  rseqid,
+) {
+  var callback = this._reqs[rseqid] || function () {};
   delete this._reqs[rseqid];
   if (mtype == Thrift.MessageType.EXCEPTION) {
     var x = new Thrift.TApplicationException();
@@ -2775,13 +2778,13 @@ TCLIServiceClient.prototype.recv_GetResultSetMetadata = function(input,mtype,rse
   if (null !== result.success) {
     return callback(null, result.success);
   }
-  return callback('GetResultSetMetadata failed: unknown result');
+  return callback("GetResultSetMetadata failed: unknown result");
 };
-TCLIServiceClient.prototype.FetchResults = function(req, callback) {
+TCLIServiceClient.prototype.FetchResults = function (req, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
-    this._reqs[this.seqid()] = function(error, result) {
+    this._reqs[this.seqid()] = function (error, result) {
       if (error) {
         _defer.reject(error);
       } else {
@@ -2796,9 +2799,13 @@ TCLIServiceClient.prototype.FetchResults = function(req, callback) {
   }
 };
 
-TCLIServiceClient.prototype.send_FetchResults = function(req) {
+TCLIServiceClient.prototype.send_FetchResults = function (req) {
   var output = new this.pClass(this.output);
-  output.writeMessageBegin('FetchResults', Thrift.MessageType.CALL, this.seqid());
+  output.writeMessageBegin(
+    "FetchResults",
+    Thrift.MessageType.CALL,
+    this.seqid(),
+  );
   var args = new TCLIService_FetchResults_args();
   args.req = req;
   args.write(output);
@@ -2806,8 +2813,12 @@ TCLIServiceClient.prototype.send_FetchResults = function(req) {
   return this.output.flush();
 };
 
-TCLIServiceClient.prototype.recv_FetchResults = function(input,mtype,rseqid) {
-  var callback = this._reqs[rseqid] || function() {};
+TCLIServiceClient.prototype.recv_FetchResults = function (
+  input,
+  mtype,
+  rseqid,
+) {
+  var callback = this._reqs[rseqid] || function () {};
   delete this._reqs[rseqid];
   if (mtype == Thrift.MessageType.EXCEPTION) {
     var x = new Thrift.TApplicationException();
@@ -2822,13 +2833,13 @@ TCLIServiceClient.prototype.recv_FetchResults = function(input,mtype,rseqid) {
   if (null !== result.success) {
     return callback(null, result.success);
   }
-  return callback('FetchResults failed: unknown result');
+  return callback("FetchResults failed: unknown result");
 };
-TCLIServiceClient.prototype.GetDelegationToken = function(req, callback) {
+TCLIServiceClient.prototype.GetDelegationToken = function (req, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
-    this._reqs[this.seqid()] = function(error, result) {
+    this._reqs[this.seqid()] = function (error, result) {
       if (error) {
         _defer.reject(error);
       } else {
@@ -2843,9 +2854,13 @@ TCLIServiceClient.prototype.GetDelegationToken = function(req, callback) {
   }
 };
 
-TCLIServiceClient.prototype.send_GetDelegationToken = function(req) {
+TCLIServiceClient.prototype.send_GetDelegationToken = function (req) {
   var output = new this.pClass(this.output);
-  output.writeMessageBegin('GetDelegationToken', Thrift.MessageType.CALL, this.seqid());
+  output.writeMessageBegin(
+    "GetDelegationToken",
+    Thrift.MessageType.CALL,
+    this.seqid(),
+  );
   var args = new TCLIService_GetDelegationToken_args();
   args.req = req;
   args.write(output);
@@ -2853,8 +2868,12 @@ TCLIServiceClient.prototype.send_GetDelegationToken = function(req) {
   return this.output.flush();
 };
 
-TCLIServiceClient.prototype.recv_GetDelegationToken = function(input,mtype,rseqid) {
-  var callback = this._reqs[rseqid] || function() {};
+TCLIServiceClient.prototype.recv_GetDelegationToken = function (
+  input,
+  mtype,
+  rseqid,
+) {
+  var callback = this._reqs[rseqid] || function () {};
   delete this._reqs[rseqid];
   if (mtype == Thrift.MessageType.EXCEPTION) {
     var x = new Thrift.TApplicationException();
@@ -2869,13 +2888,13 @@ TCLIServiceClient.prototype.recv_GetDelegationToken = function(input,mtype,rseqi
   if (null !== result.success) {
     return callback(null, result.success);
   }
-  return callback('GetDelegationToken failed: unknown result');
+  return callback("GetDelegationToken failed: unknown result");
 };
-TCLIServiceClient.prototype.CancelDelegationToken = function(req, callback) {
+TCLIServiceClient.prototype.CancelDelegationToken = function (req, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
-    this._reqs[this.seqid()] = function(error, result) {
+    this._reqs[this.seqid()] = function (error, result) {
       if (error) {
         _defer.reject(error);
       } else {
@@ -2890,9 +2909,13 @@ TCLIServiceClient.prototype.CancelDelegationToken = function(req, callback) {
   }
 };
 
-TCLIServiceClient.prototype.send_CancelDelegationToken = function(req) {
+TCLIServiceClient.prototype.send_CancelDelegationToken = function (req) {
   var output = new this.pClass(this.output);
-  output.writeMessageBegin('CancelDelegationToken', Thrift.MessageType.CALL, this.seqid());
+  output.writeMessageBegin(
+    "CancelDelegationToken",
+    Thrift.MessageType.CALL,
+    this.seqid(),
+  );
   var args = new TCLIService_CancelDelegationToken_args();
   args.req = req;
   args.write(output);
@@ -2900,8 +2923,12 @@ TCLIServiceClient.prototype.send_CancelDelegationToken = function(req) {
   return this.output.flush();
 };
 
-TCLIServiceClient.prototype.recv_CancelDelegationToken = function(input,mtype,rseqid) {
-  var callback = this._reqs[rseqid] || function() {};
+TCLIServiceClient.prototype.recv_CancelDelegationToken = function (
+  input,
+  mtype,
+  rseqid,
+) {
+  var callback = this._reqs[rseqid] || function () {};
   delete this._reqs[rseqid];
   if (mtype == Thrift.MessageType.EXCEPTION) {
     var x = new Thrift.TApplicationException();
@@ -2916,13 +2943,13 @@ TCLIServiceClient.prototype.recv_CancelDelegationToken = function(input,mtype,rs
   if (null !== result.success) {
     return callback(null, result.success);
   }
-  return callback('CancelDelegationToken failed: unknown result');
+  return callback("CancelDelegationToken failed: unknown result");
 };
-TCLIServiceClient.prototype.RenewDelegationToken = function(req, callback) {
+TCLIServiceClient.prototype.RenewDelegationToken = function (req, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
-    this._reqs[this.seqid()] = function(error, result) {
+    this._reqs[this.seqid()] = function (error, result) {
       if (error) {
         _defer.reject(error);
       } else {
@@ -2937,9 +2964,13 @@ TCLIServiceClient.prototype.RenewDelegationToken = function(req, callback) {
   }
 };
 
-TCLIServiceClient.prototype.send_RenewDelegationToken = function(req) {
+TCLIServiceClient.prototype.send_RenewDelegationToken = function (req) {
   var output = new this.pClass(this.output);
-  output.writeMessageBegin('RenewDelegationToken', Thrift.MessageType.CALL, this.seqid());
+  output.writeMessageBegin(
+    "RenewDelegationToken",
+    Thrift.MessageType.CALL,
+    this.seqid(),
+  );
   var args = new TCLIService_RenewDelegationToken_args();
   args.req = req;
   args.write(output);
@@ -2947,8 +2978,12 @@ TCLIServiceClient.prototype.send_RenewDelegationToken = function(req) {
   return this.output.flush();
 };
 
-TCLIServiceClient.prototype.recv_RenewDelegationToken = function(input,mtype,rseqid) {
-  var callback = this._reqs[rseqid] || function() {};
+TCLIServiceClient.prototype.recv_RenewDelegationToken = function (
+  input,
+  mtype,
+  rseqid,
+) {
+  var callback = this._reqs[rseqid] || function () {};
   delete this._reqs[rseqid];
   if (mtype == Thrift.MessageType.EXCEPTION) {
     var x = new Thrift.TApplicationException();
@@ -2963,687 +2998,1242 @@ TCLIServiceClient.prototype.recv_RenewDelegationToken = function(input,mtype,rse
   if (null !== result.success) {
     return callback(null, result.success);
   }
-  return callback('RenewDelegationToken failed: unknown result');
+  return callback("RenewDelegationToken failed: unknown result");
 };
-var TCLIServiceProcessor = exports.Processor = function(handler) {
-  this._handler = handler
-}
-TCLIServiceProcessor.prototype.process = function(input, output) {
+var TCLIServiceProcessor = (exports.Processor = function (handler) {
+  this._handler = handler;
+});
+TCLIServiceProcessor.prototype.process = function (input, output) {
   var r = input.readMessageBegin();
-  if (this['process_' + r.fname]) {
-    return this['process_' + r.fname].call(this, r.rseqid, input, output);
+  if (this["process_" + r.fname]) {
+    return this["process_" + r.fname].call(this, r.rseqid, input, output);
   } else {
     input.skip(Thrift.Type.STRUCT);
     input.readMessageEnd();
-    var x = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN_METHOD, 'Unknown function ' + r.fname);
+    var x = new Thrift.TApplicationException(
+      Thrift.TApplicationExceptionType.UNKNOWN_METHOD,
+      "Unknown function " + r.fname,
+    );
     output.writeMessageBegin(r.fname, Thrift.MessageType.EXCEPTION, r.rseqid);
     x.write(output);
     output.writeMessageEnd();
     output.flush();
   }
-}
+};
 
-TCLIServiceProcessor.prototype.process_OpenSession = function(seqid, input, output) {
+TCLIServiceProcessor.prototype.process_OpenSession = function (
+  seqid,
+  input,
+  output,
+) {
   var args = new TCLIService_OpenSession_args();
   args.read(input);
   input.readMessageEnd();
   if (this._handler.OpenSession.length === 1) {
-    Q.fcall(this._handler.OpenSession, args.req)
-      .then(function(result) {
-        var result = new TCLIService_OpenSession_result({success: result});
-        output.writeMessageBegin("OpenSession", Thrift.MessageType.REPLY, seqid);
+    Q.fcall(this._handler.OpenSession, args.req).then(
+      function (result) {
+        var result = new TCLIService_OpenSession_result({ success: result });
+        output.writeMessageBegin(
+          "OpenSession",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      }, function (err) {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("OpenSession", Thrift.MessageType.EXCEPTION, seqid);
+      },
+      function (err) {
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "OpenSession",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      });
+      },
+    );
   } else {
     this._handler.OpenSession(args.req, function (err, result) {
       if (err == null) {
-        var result = new TCLIService_OpenSession_result((err != null ? err : {success: result}));
-        output.writeMessageBegin("OpenSession", Thrift.MessageType.REPLY, seqid);
+        var result = new TCLIService_OpenSession_result(
+          err != null ? err : { success: result },
+        );
+        output.writeMessageBegin(
+          "OpenSession",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
       } else {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("OpenSession", Thrift.MessageType.EXCEPTION, seqid);
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "OpenSession",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
       }
       result.write(output);
       output.writeMessageEnd();
       output.flush();
     });
   }
-}
+};
 
-TCLIServiceProcessor.prototype.process_CloseSession = function(seqid, input, output) {
+TCLIServiceProcessor.prototype.process_CloseSession = function (
+  seqid,
+  input,
+  output,
+) {
   var args = new TCLIService_CloseSession_args();
   args.read(input);
   input.readMessageEnd();
   if (this._handler.CloseSession.length === 1) {
-    Q.fcall(this._handler.CloseSession, args.req)
-      .then(function(result) {
-        var result = new TCLIService_CloseSession_result({success: result});
-        output.writeMessageBegin("CloseSession", Thrift.MessageType.REPLY, seqid);
+    Q.fcall(this._handler.CloseSession, args.req).then(
+      function (result) {
+        var result = new TCLIService_CloseSession_result({ success: result });
+        output.writeMessageBegin(
+          "CloseSession",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      }, function (err) {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("CloseSession", Thrift.MessageType.EXCEPTION, seqid);
+      },
+      function (err) {
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "CloseSession",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      });
+      },
+    );
   } else {
     this._handler.CloseSession(args.req, function (err, result) {
       if (err == null) {
-        var result = new TCLIService_CloseSession_result((err != null ? err : {success: result}));
-        output.writeMessageBegin("CloseSession", Thrift.MessageType.REPLY, seqid);
+        var result = new TCLIService_CloseSession_result(
+          err != null ? err : { success: result },
+        );
+        output.writeMessageBegin(
+          "CloseSession",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
       } else {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("CloseSession", Thrift.MessageType.EXCEPTION, seqid);
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "CloseSession",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
       }
       result.write(output);
       output.writeMessageEnd();
       output.flush();
     });
   }
-}
+};
 
-TCLIServiceProcessor.prototype.process_GetInfo = function(seqid, input, output) {
+TCLIServiceProcessor.prototype.process_GetInfo = function (
+  seqid,
+  input,
+  output,
+) {
   var args = new TCLIService_GetInfo_args();
   args.read(input);
   input.readMessageEnd();
   if (this._handler.GetInfo.length === 1) {
-    Q.fcall(this._handler.GetInfo, args.req)
-      .then(function(result) {
-        var result = new TCLIService_GetInfo_result({success: result});
+    Q.fcall(this._handler.GetInfo, args.req).then(
+      function (result) {
+        var result = new TCLIService_GetInfo_result({ success: result });
         output.writeMessageBegin("GetInfo", Thrift.MessageType.REPLY, seqid);
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      }, function (err) {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("GetInfo", Thrift.MessageType.EXCEPTION, seqid);
+      },
+      function (err) {
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "GetInfo",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      });
+      },
+    );
   } else {
     this._handler.GetInfo(args.req, function (err, result) {
       if (err == null) {
-        var result = new TCLIService_GetInfo_result((err != null ? err : {success: result}));
+        var result = new TCLIService_GetInfo_result(
+          err != null ? err : { success: result },
+        );
         output.writeMessageBegin("GetInfo", Thrift.MessageType.REPLY, seqid);
       } else {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("GetInfo", Thrift.MessageType.EXCEPTION, seqid);
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "GetInfo",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
       }
       result.write(output);
       output.writeMessageEnd();
       output.flush();
     });
   }
-}
+};
 
-TCLIServiceProcessor.prototype.process_ExecuteStatement = function(seqid, input, output) {
+TCLIServiceProcessor.prototype.process_ExecuteStatement = function (
+  seqid,
+  input,
+  output,
+) {
   var args = new TCLIService_ExecuteStatement_args();
   args.read(input);
   input.readMessageEnd();
   if (this._handler.ExecuteStatement.length === 1) {
-    Q.fcall(this._handler.ExecuteStatement, args.req)
-      .then(function(result) {
-        var result = new TCLIService_ExecuteStatement_result({success: result});
-        output.writeMessageBegin("ExecuteStatement", Thrift.MessageType.REPLY, seqid);
+    Q.fcall(this._handler.ExecuteStatement, args.req).then(
+      function (result) {
+        var result = new TCLIService_ExecuteStatement_result({
+          success: result,
+        });
+        output.writeMessageBegin(
+          "ExecuteStatement",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      }, function (err) {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("ExecuteStatement", Thrift.MessageType.EXCEPTION, seqid);
+      },
+      function (err) {
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "ExecuteStatement",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      });
+      },
+    );
   } else {
     this._handler.ExecuteStatement(args.req, function (err, result) {
       if (err == null) {
-        var result = new TCLIService_ExecuteStatement_result((err != null ? err : {success: result}));
-        output.writeMessageBegin("ExecuteStatement", Thrift.MessageType.REPLY, seqid);
+        var result = new TCLIService_ExecuteStatement_result(
+          err != null ? err : { success: result },
+        );
+        output.writeMessageBegin(
+          "ExecuteStatement",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
       } else {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("ExecuteStatement", Thrift.MessageType.EXCEPTION, seqid);
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "ExecuteStatement",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
       }
       result.write(output);
       output.writeMessageEnd();
       output.flush();
     });
   }
-}
+};
 
-TCLIServiceProcessor.prototype.process_GetTypeInfo = function(seqid, input, output) {
+TCLIServiceProcessor.prototype.process_GetTypeInfo = function (
+  seqid,
+  input,
+  output,
+) {
   var args = new TCLIService_GetTypeInfo_args();
   args.read(input);
   input.readMessageEnd();
   if (this._handler.GetTypeInfo.length === 1) {
-    Q.fcall(this._handler.GetTypeInfo, args.req)
-      .then(function(result) {
-        var result = new TCLIService_GetTypeInfo_result({success: result});
-        output.writeMessageBegin("GetTypeInfo", Thrift.MessageType.REPLY, seqid);
+    Q.fcall(this._handler.GetTypeInfo, args.req).then(
+      function (result) {
+        var result = new TCLIService_GetTypeInfo_result({ success: result });
+        output.writeMessageBegin(
+          "GetTypeInfo",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      }, function (err) {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("GetTypeInfo", Thrift.MessageType.EXCEPTION, seqid);
+      },
+      function (err) {
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "GetTypeInfo",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      });
+      },
+    );
   } else {
     this._handler.GetTypeInfo(args.req, function (err, result) {
       if (err == null) {
-        var result = new TCLIService_GetTypeInfo_result((err != null ? err : {success: result}));
-        output.writeMessageBegin("GetTypeInfo", Thrift.MessageType.REPLY, seqid);
+        var result = new TCLIService_GetTypeInfo_result(
+          err != null ? err : { success: result },
+        );
+        output.writeMessageBegin(
+          "GetTypeInfo",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
       } else {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("GetTypeInfo", Thrift.MessageType.EXCEPTION, seqid);
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "GetTypeInfo",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
       }
       result.write(output);
       output.writeMessageEnd();
       output.flush();
     });
   }
-}
+};
 
-TCLIServiceProcessor.prototype.process_GetCatalogs = function(seqid, input, output) {
+TCLIServiceProcessor.prototype.process_GetCatalogs = function (
+  seqid,
+  input,
+  output,
+) {
   var args = new TCLIService_GetCatalogs_args();
   args.read(input);
   input.readMessageEnd();
   if (this._handler.GetCatalogs.length === 1) {
-    Q.fcall(this._handler.GetCatalogs, args.req)
-      .then(function(result) {
-        var result = new TCLIService_GetCatalogs_result({success: result});
-        output.writeMessageBegin("GetCatalogs", Thrift.MessageType.REPLY, seqid);
+    Q.fcall(this._handler.GetCatalogs, args.req).then(
+      function (result) {
+        var result = new TCLIService_GetCatalogs_result({ success: result });
+        output.writeMessageBegin(
+          "GetCatalogs",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      }, function (err) {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("GetCatalogs", Thrift.MessageType.EXCEPTION, seqid);
+      },
+      function (err) {
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "GetCatalogs",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      });
+      },
+    );
   } else {
     this._handler.GetCatalogs(args.req, function (err, result) {
       if (err == null) {
-        var result = new TCLIService_GetCatalogs_result((err != null ? err : {success: result}));
-        output.writeMessageBegin("GetCatalogs", Thrift.MessageType.REPLY, seqid);
+        var result = new TCLIService_GetCatalogs_result(
+          err != null ? err : { success: result },
+        );
+        output.writeMessageBegin(
+          "GetCatalogs",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
       } else {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("GetCatalogs", Thrift.MessageType.EXCEPTION, seqid);
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "GetCatalogs",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
       }
       result.write(output);
       output.writeMessageEnd();
       output.flush();
     });
   }
-}
+};
 
-TCLIServiceProcessor.prototype.process_GetSchemas = function(seqid, input, output) {
+TCLIServiceProcessor.prototype.process_GetSchemas = function (
+  seqid,
+  input,
+  output,
+) {
   var args = new TCLIService_GetSchemas_args();
   args.read(input);
   input.readMessageEnd();
   if (this._handler.GetSchemas.length === 1) {
-    Q.fcall(this._handler.GetSchemas, args.req)
-      .then(function(result) {
-        var result = new TCLIService_GetSchemas_result({success: result});
+    Q.fcall(this._handler.GetSchemas, args.req).then(
+      function (result) {
+        var result = new TCLIService_GetSchemas_result({ success: result });
         output.writeMessageBegin("GetSchemas", Thrift.MessageType.REPLY, seqid);
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      }, function (err) {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("GetSchemas", Thrift.MessageType.EXCEPTION, seqid);
+      },
+      function (err) {
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "GetSchemas",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      });
+      },
+    );
   } else {
     this._handler.GetSchemas(args.req, function (err, result) {
       if (err == null) {
-        var result = new TCLIService_GetSchemas_result((err != null ? err : {success: result}));
+        var result = new TCLIService_GetSchemas_result(
+          err != null ? err : { success: result },
+        );
         output.writeMessageBegin("GetSchemas", Thrift.MessageType.REPLY, seqid);
       } else {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("GetSchemas", Thrift.MessageType.EXCEPTION, seqid);
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "GetSchemas",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
       }
       result.write(output);
       output.writeMessageEnd();
       output.flush();
     });
   }
-}
+};
 
-TCLIServiceProcessor.prototype.process_GetTables = function(seqid, input, output) {
+TCLIServiceProcessor.prototype.process_GetTables = function (
+  seqid,
+  input,
+  output,
+) {
   var args = new TCLIService_GetTables_args();
   args.read(input);
   input.readMessageEnd();
   if (this._handler.GetTables.length === 1) {
-    Q.fcall(this._handler.GetTables, args.req)
-      .then(function(result) {
-        var result = new TCLIService_GetTables_result({success: result});
+    Q.fcall(this._handler.GetTables, args.req).then(
+      function (result) {
+        var result = new TCLIService_GetTables_result({ success: result });
         output.writeMessageBegin("GetTables", Thrift.MessageType.REPLY, seqid);
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      }, function (err) {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("GetTables", Thrift.MessageType.EXCEPTION, seqid);
+      },
+      function (err) {
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "GetTables",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      });
+      },
+    );
   } else {
     this._handler.GetTables(args.req, function (err, result) {
       if (err == null) {
-        var result = new TCLIService_GetTables_result((err != null ? err : {success: result}));
+        var result = new TCLIService_GetTables_result(
+          err != null ? err : { success: result },
+        );
         output.writeMessageBegin("GetTables", Thrift.MessageType.REPLY, seqid);
       } else {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("GetTables", Thrift.MessageType.EXCEPTION, seqid);
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "GetTables",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
       }
       result.write(output);
       output.writeMessageEnd();
       output.flush();
     });
   }
-}
+};
 
-TCLIServiceProcessor.prototype.process_GetTableTypes = function(seqid, input, output) {
+TCLIServiceProcessor.prototype.process_GetTableTypes = function (
+  seqid,
+  input,
+  output,
+) {
   var args = new TCLIService_GetTableTypes_args();
   args.read(input);
   input.readMessageEnd();
   if (this._handler.GetTableTypes.length === 1) {
-    Q.fcall(this._handler.GetTableTypes, args.req)
-      .then(function(result) {
-        var result = new TCLIService_GetTableTypes_result({success: result});
-        output.writeMessageBegin("GetTableTypes", Thrift.MessageType.REPLY, seqid);
+    Q.fcall(this._handler.GetTableTypes, args.req).then(
+      function (result) {
+        var result = new TCLIService_GetTableTypes_result({ success: result });
+        output.writeMessageBegin(
+          "GetTableTypes",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      }, function (err) {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("GetTableTypes", Thrift.MessageType.EXCEPTION, seqid);
+      },
+      function (err) {
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "GetTableTypes",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      });
+      },
+    );
   } else {
     this._handler.GetTableTypes(args.req, function (err, result) {
       if (err == null) {
-        var result = new TCLIService_GetTableTypes_result((err != null ? err : {success: result}));
-        output.writeMessageBegin("GetTableTypes", Thrift.MessageType.REPLY, seqid);
+        var result = new TCLIService_GetTableTypes_result(
+          err != null ? err : { success: result },
+        );
+        output.writeMessageBegin(
+          "GetTableTypes",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
       } else {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("GetTableTypes", Thrift.MessageType.EXCEPTION, seqid);
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "GetTableTypes",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
       }
       result.write(output);
       output.writeMessageEnd();
       output.flush();
     });
   }
-}
+};
 
-TCLIServiceProcessor.prototype.process_GetColumns = function(seqid, input, output) {
+TCLIServiceProcessor.prototype.process_GetColumns = function (
+  seqid,
+  input,
+  output,
+) {
   var args = new TCLIService_GetColumns_args();
   args.read(input);
   input.readMessageEnd();
   if (this._handler.GetColumns.length === 1) {
-    Q.fcall(this._handler.GetColumns, args.req)
-      .then(function(result) {
-        var result = new TCLIService_GetColumns_result({success: result});
+    Q.fcall(this._handler.GetColumns, args.req).then(
+      function (result) {
+        var result = new TCLIService_GetColumns_result({ success: result });
         output.writeMessageBegin("GetColumns", Thrift.MessageType.REPLY, seqid);
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      }, function (err) {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("GetColumns", Thrift.MessageType.EXCEPTION, seqid);
+      },
+      function (err) {
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "GetColumns",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      });
+      },
+    );
   } else {
     this._handler.GetColumns(args.req, function (err, result) {
       if (err == null) {
-        var result = new TCLIService_GetColumns_result((err != null ? err : {success: result}));
+        var result = new TCLIService_GetColumns_result(
+          err != null ? err : { success: result },
+        );
         output.writeMessageBegin("GetColumns", Thrift.MessageType.REPLY, seqid);
       } else {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("GetColumns", Thrift.MessageType.EXCEPTION, seqid);
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "GetColumns",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
       }
       result.write(output);
       output.writeMessageEnd();
       output.flush();
     });
   }
-}
+};
 
-TCLIServiceProcessor.prototype.process_GetFunctions = function(seqid, input, output) {
+TCLIServiceProcessor.prototype.process_GetFunctions = function (
+  seqid,
+  input,
+  output,
+) {
   var args = new TCLIService_GetFunctions_args();
   args.read(input);
   input.readMessageEnd();
   if (this._handler.GetFunctions.length === 1) {
-    Q.fcall(this._handler.GetFunctions, args.req)
-      .then(function(result) {
-        var result = new TCLIService_GetFunctions_result({success: result});
-        output.writeMessageBegin("GetFunctions", Thrift.MessageType.REPLY, seqid);
+    Q.fcall(this._handler.GetFunctions, args.req).then(
+      function (result) {
+        var result = new TCLIService_GetFunctions_result({ success: result });
+        output.writeMessageBegin(
+          "GetFunctions",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      }, function (err) {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("GetFunctions", Thrift.MessageType.EXCEPTION, seqid);
+      },
+      function (err) {
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "GetFunctions",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      });
+      },
+    );
   } else {
     this._handler.GetFunctions(args.req, function (err, result) {
       if (err == null) {
-        var result = new TCLIService_GetFunctions_result((err != null ? err : {success: result}));
-        output.writeMessageBegin("GetFunctions", Thrift.MessageType.REPLY, seqid);
+        var result = new TCLIService_GetFunctions_result(
+          err != null ? err : { success: result },
+        );
+        output.writeMessageBegin(
+          "GetFunctions",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
       } else {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("GetFunctions", Thrift.MessageType.EXCEPTION, seqid);
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "GetFunctions",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
       }
       result.write(output);
       output.writeMessageEnd();
       output.flush();
     });
   }
-}
+};
 
-TCLIServiceProcessor.prototype.process_GetOperationStatus = function(seqid, input, output) {
+TCLIServiceProcessor.prototype.process_GetOperationStatus = function (
+  seqid,
+  input,
+  output,
+) {
   var args = new TCLIService_GetOperationStatus_args();
   args.read(input);
   input.readMessageEnd();
   if (this._handler.GetOperationStatus.length === 1) {
-    Q.fcall(this._handler.GetOperationStatus, args.req)
-      .then(function(result) {
-        var result = new TCLIService_GetOperationStatus_result({success: result});
-        output.writeMessageBegin("GetOperationStatus", Thrift.MessageType.REPLY, seqid);
+    Q.fcall(this._handler.GetOperationStatus, args.req).then(
+      function (result) {
+        var result = new TCLIService_GetOperationStatus_result({
+          success: result,
+        });
+        output.writeMessageBegin(
+          "GetOperationStatus",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      }, function (err) {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("GetOperationStatus", Thrift.MessageType.EXCEPTION, seqid);
+      },
+      function (err) {
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "GetOperationStatus",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      });
+      },
+    );
   } else {
     this._handler.GetOperationStatus(args.req, function (err, result) {
       if (err == null) {
-        var result = new TCLIService_GetOperationStatus_result((err != null ? err : {success: result}));
-        output.writeMessageBegin("GetOperationStatus", Thrift.MessageType.REPLY, seqid);
+        var result = new TCLIService_GetOperationStatus_result(
+          err != null ? err : { success: result },
+        );
+        output.writeMessageBegin(
+          "GetOperationStatus",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
       } else {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("GetOperationStatus", Thrift.MessageType.EXCEPTION, seqid);
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "GetOperationStatus",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
       }
       result.write(output);
       output.writeMessageEnd();
       output.flush();
     });
   }
-}
+};
 
-TCLIServiceProcessor.prototype.process_CancelOperation = function(seqid, input, output) {
+TCLIServiceProcessor.prototype.process_CancelOperation = function (
+  seqid,
+  input,
+  output,
+) {
   var args = new TCLIService_CancelOperation_args();
   args.read(input);
   input.readMessageEnd();
   if (this._handler.CancelOperation.length === 1) {
-    Q.fcall(this._handler.CancelOperation, args.req)
-      .then(function(result) {
-        var result = new TCLIService_CancelOperation_result({success: result});
-        output.writeMessageBegin("CancelOperation", Thrift.MessageType.REPLY, seqid);
+    Q.fcall(this._handler.CancelOperation, args.req).then(
+      function (result) {
+        var result = new TCLIService_CancelOperation_result({
+          success: result,
+        });
+        output.writeMessageBegin(
+          "CancelOperation",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      }, function (err) {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("CancelOperation", Thrift.MessageType.EXCEPTION, seqid);
+      },
+      function (err) {
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "CancelOperation",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      });
+      },
+    );
   } else {
     this._handler.CancelOperation(args.req, function (err, result) {
       if (err == null) {
-        var result = new TCLIService_CancelOperation_result((err != null ? err : {success: result}));
-        output.writeMessageBegin("CancelOperation", Thrift.MessageType.REPLY, seqid);
+        var result = new TCLIService_CancelOperation_result(
+          err != null ? err : { success: result },
+        );
+        output.writeMessageBegin(
+          "CancelOperation",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
       } else {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("CancelOperation", Thrift.MessageType.EXCEPTION, seqid);
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "CancelOperation",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
       }
       result.write(output);
       output.writeMessageEnd();
       output.flush();
     });
   }
-}
+};
 
-TCLIServiceProcessor.prototype.process_CloseOperation = function(seqid, input, output) {
+TCLIServiceProcessor.prototype.process_CloseOperation = function (
+  seqid,
+  input,
+  output,
+) {
   var args = new TCLIService_CloseOperation_args();
   args.read(input);
   input.readMessageEnd();
   if (this._handler.CloseOperation.length === 1) {
-    Q.fcall(this._handler.CloseOperation, args.req)
-      .then(function(result) {
-        var result = new TCLIService_CloseOperation_result({success: result});
-        output.writeMessageBegin("CloseOperation", Thrift.MessageType.REPLY, seqid);
+    Q.fcall(this._handler.CloseOperation, args.req).then(
+      function (result) {
+        var result = new TCLIService_CloseOperation_result({ success: result });
+        output.writeMessageBegin(
+          "CloseOperation",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      }, function (err) {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("CloseOperation", Thrift.MessageType.EXCEPTION, seqid);
+      },
+      function (err) {
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "CloseOperation",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      });
+      },
+    );
   } else {
     this._handler.CloseOperation(args.req, function (err, result) {
       if (err == null) {
-        var result = new TCLIService_CloseOperation_result((err != null ? err : {success: result}));
-        output.writeMessageBegin("CloseOperation", Thrift.MessageType.REPLY, seqid);
+        var result = new TCLIService_CloseOperation_result(
+          err != null ? err : { success: result },
+        );
+        output.writeMessageBegin(
+          "CloseOperation",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
       } else {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("CloseOperation", Thrift.MessageType.EXCEPTION, seqid);
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "CloseOperation",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
       }
       result.write(output);
       output.writeMessageEnd();
       output.flush();
     });
   }
-}
+};
 
-TCLIServiceProcessor.prototype.process_GetResultSetMetadata = function(seqid, input, output) {
+TCLIServiceProcessor.prototype.process_GetResultSetMetadata = function (
+  seqid,
+  input,
+  output,
+) {
   var args = new TCLIService_GetResultSetMetadata_args();
   args.read(input);
   input.readMessageEnd();
   if (this._handler.GetResultSetMetadata.length === 1) {
-    Q.fcall(this._handler.GetResultSetMetadata, args.req)
-      .then(function(result) {
-        var result = new TCLIService_GetResultSetMetadata_result({success: result});
-        output.writeMessageBegin("GetResultSetMetadata", Thrift.MessageType.REPLY, seqid);
+    Q.fcall(this._handler.GetResultSetMetadata, args.req).then(
+      function (result) {
+        var result = new TCLIService_GetResultSetMetadata_result({
+          success: result,
+        });
+        output.writeMessageBegin(
+          "GetResultSetMetadata",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      }, function (err) {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("GetResultSetMetadata", Thrift.MessageType.EXCEPTION, seqid);
+      },
+      function (err) {
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "GetResultSetMetadata",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      });
+      },
+    );
   } else {
     this._handler.GetResultSetMetadata(args.req, function (err, result) {
       if (err == null) {
-        var result = new TCLIService_GetResultSetMetadata_result((err != null ? err : {success: result}));
-        output.writeMessageBegin("GetResultSetMetadata", Thrift.MessageType.REPLY, seqid);
+        var result = new TCLIService_GetResultSetMetadata_result(
+          err != null ? err : { success: result },
+        );
+        output.writeMessageBegin(
+          "GetResultSetMetadata",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
       } else {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("GetResultSetMetadata", Thrift.MessageType.EXCEPTION, seqid);
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "GetResultSetMetadata",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
       }
       result.write(output);
       output.writeMessageEnd();
       output.flush();
     });
   }
-}
+};
 
-TCLIServiceProcessor.prototype.process_FetchResults = function(seqid, input, output) {
+TCLIServiceProcessor.prototype.process_FetchResults = function (
+  seqid,
+  input,
+  output,
+) {
   var args = new TCLIService_FetchResults_args();
   args.read(input);
   input.readMessageEnd();
   if (this._handler.FetchResults.length === 1) {
-    Q.fcall(this._handler.FetchResults, args.req)
-      .then(function(result) {
-        var result = new TCLIService_FetchResults_result({success: result});
-        output.writeMessageBegin("FetchResults", Thrift.MessageType.REPLY, seqid);
+    Q.fcall(this._handler.FetchResults, args.req).then(
+      function (result) {
+        var result = new TCLIService_FetchResults_result({ success: result });
+        output.writeMessageBegin(
+          "FetchResults",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      }, function (err) {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("FetchResults", Thrift.MessageType.EXCEPTION, seqid);
+      },
+      function (err) {
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "FetchResults",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      });
+      },
+    );
   } else {
     this._handler.FetchResults(args.req, function (err, result) {
       if (err == null) {
-        var result = new TCLIService_FetchResults_result((err != null ? err : {success: result}));
-        output.writeMessageBegin("FetchResults", Thrift.MessageType.REPLY, seqid);
+        var result = new TCLIService_FetchResults_result(
+          err != null ? err : { success: result },
+        );
+        output.writeMessageBegin(
+          "FetchResults",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
       } else {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("FetchResults", Thrift.MessageType.EXCEPTION, seqid);
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "FetchResults",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
       }
       result.write(output);
       output.writeMessageEnd();
       output.flush();
     });
   }
-}
+};
 
-TCLIServiceProcessor.prototype.process_GetDelegationToken = function(seqid, input, output) {
+TCLIServiceProcessor.prototype.process_GetDelegationToken = function (
+  seqid,
+  input,
+  output,
+) {
   var args = new TCLIService_GetDelegationToken_args();
   args.read(input);
   input.readMessageEnd();
   if (this._handler.GetDelegationToken.length === 1) {
-    Q.fcall(this._handler.GetDelegationToken, args.req)
-      .then(function(result) {
-        var result = new TCLIService_GetDelegationToken_result({success: result});
-        output.writeMessageBegin("GetDelegationToken", Thrift.MessageType.REPLY, seqid);
+    Q.fcall(this._handler.GetDelegationToken, args.req).then(
+      function (result) {
+        var result = new TCLIService_GetDelegationToken_result({
+          success: result,
+        });
+        output.writeMessageBegin(
+          "GetDelegationToken",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      }, function (err) {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("GetDelegationToken", Thrift.MessageType.EXCEPTION, seqid);
+      },
+      function (err) {
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "GetDelegationToken",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      });
+      },
+    );
   } else {
     this._handler.GetDelegationToken(args.req, function (err, result) {
       if (err == null) {
-        var result = new TCLIService_GetDelegationToken_result((err != null ? err : {success: result}));
-        output.writeMessageBegin("GetDelegationToken", Thrift.MessageType.REPLY, seqid);
+        var result = new TCLIService_GetDelegationToken_result(
+          err != null ? err : { success: result },
+        );
+        output.writeMessageBegin(
+          "GetDelegationToken",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
       } else {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("GetDelegationToken", Thrift.MessageType.EXCEPTION, seqid);
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "GetDelegationToken",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
       }
       result.write(output);
       output.writeMessageEnd();
       output.flush();
     });
   }
-}
+};
 
-TCLIServiceProcessor.prototype.process_CancelDelegationToken = function(seqid, input, output) {
+TCLIServiceProcessor.prototype.process_CancelDelegationToken = function (
+  seqid,
+  input,
+  output,
+) {
   var args = new TCLIService_CancelDelegationToken_args();
   args.read(input);
   input.readMessageEnd();
   if (this._handler.CancelDelegationToken.length === 1) {
-    Q.fcall(this._handler.CancelDelegationToken, args.req)
-      .then(function(result) {
-        var result = new TCLIService_CancelDelegationToken_result({success: result});
-        output.writeMessageBegin("CancelDelegationToken", Thrift.MessageType.REPLY, seqid);
+    Q.fcall(this._handler.CancelDelegationToken, args.req).then(
+      function (result) {
+        var result = new TCLIService_CancelDelegationToken_result({
+          success: result,
+        });
+        output.writeMessageBegin(
+          "CancelDelegationToken",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      }, function (err) {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("CancelDelegationToken", Thrift.MessageType.EXCEPTION, seqid);
+      },
+      function (err) {
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "CancelDelegationToken",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      });
+      },
+    );
   } else {
     this._handler.CancelDelegationToken(args.req, function (err, result) {
       if (err == null) {
-        var result = new TCLIService_CancelDelegationToken_result((err != null ? err : {success: result}));
-        output.writeMessageBegin("CancelDelegationToken", Thrift.MessageType.REPLY, seqid);
+        var result = new TCLIService_CancelDelegationToken_result(
+          err != null ? err : { success: result },
+        );
+        output.writeMessageBegin(
+          "CancelDelegationToken",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
       } else {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("CancelDelegationToken", Thrift.MessageType.EXCEPTION, seqid);
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "CancelDelegationToken",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
       }
       result.write(output);
       output.writeMessageEnd();
       output.flush();
     });
   }
-}
+};
 
-TCLIServiceProcessor.prototype.process_RenewDelegationToken = function(seqid, input, output) {
+TCLIServiceProcessor.prototype.process_RenewDelegationToken = function (
+  seqid,
+  input,
+  output,
+) {
   var args = new TCLIService_RenewDelegationToken_args();
   args.read(input);
   input.readMessageEnd();
   if (this._handler.RenewDelegationToken.length === 1) {
-    Q.fcall(this._handler.RenewDelegationToken, args.req)
-      .then(function(result) {
-        var result = new TCLIService_RenewDelegationToken_result({success: result});
-        output.writeMessageBegin("RenewDelegationToken", Thrift.MessageType.REPLY, seqid);
+    Q.fcall(this._handler.RenewDelegationToken, args.req).then(
+      function (result) {
+        var result = new TCLIService_RenewDelegationToken_result({
+          success: result,
+        });
+        output.writeMessageBegin(
+          "RenewDelegationToken",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      }, function (err) {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("RenewDelegationToken", Thrift.MessageType.EXCEPTION, seqid);
+      },
+      function (err) {
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "RenewDelegationToken",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
         result.write(output);
         output.writeMessageEnd();
         output.flush();
-      });
+      },
+    );
   } else {
     this._handler.RenewDelegationToken(args.req, function (err, result) {
       if (err == null) {
-        var result = new TCLIService_RenewDelegationToken_result((err != null ? err : {success: result}));
-        output.writeMessageBegin("RenewDelegationToken", Thrift.MessageType.REPLY, seqid);
+        var result = new TCLIService_RenewDelegationToken_result(
+          err != null ? err : { success: result },
+        );
+        output.writeMessageBegin(
+          "RenewDelegationToken",
+          Thrift.MessageType.REPLY,
+          seqid,
+        );
       } else {
-        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("RenewDelegationToken", Thrift.MessageType.EXCEPTION, seqid);
+        var result = new Thrift.TApplicationException(
+          Thrift.TApplicationExceptionType.UNKNOWN,
+          err.message,
+        );
+        output.writeMessageBegin(
+          "RenewDelegationToken",
+          Thrift.MessageType.EXCEPTION,
+          seqid,
+        );
       }
       result.write(output);
       output.writeMessageEnd();
       output.flush();
     });
   }
-}
+};

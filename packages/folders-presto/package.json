@@ -15,9 +15,9 @@
   "main": "./src/folders-presto.js",
   "homepage": "https://github.com/foldersjs/folders-presto",
   "dependencies": {
-    "markdown-table": "^3.0.3",
-    "presto-client": "^0.8.0",
-    "zod": "^3.22.4"
+    "markdown-table": "^3.0.4",
+    "presto-client": "^1.1.0",
+    "zod": "^4.0.17"
   },
   "scripts": {
     "test": "node --test"

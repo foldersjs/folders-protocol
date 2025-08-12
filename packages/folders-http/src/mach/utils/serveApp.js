@@ -35,8 +35,7 @@ var DEFAULT_PORT = 8090;
  * Returns the node HTTP server instance.
  */
 
-
- function serveApp(app, options) {
+function serveApp(app, options) {
   options = options || {};
 
   if (typeof options === "number") {
@@ -77,7 +76,8 @@ var DEFAULT_PORT = 8090;
 
     if (!options.quiet) {
       var address = nodeServer.address();
-      var message = ">> folders.io server started on node " + process.versions.node + "\n";
+      var message =
+        ">> folders.io server started on node " + process.versions.node + "\n";
 
       if (typeof address === "string") {
         message += ">> Listening on " + address;

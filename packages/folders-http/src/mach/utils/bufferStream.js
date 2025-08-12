@@ -1,6 +1,6 @@
-import bodec from 'bodec';
-import Promise from './Promise.js';
-import MaxLengthExceededError from './MaxLengthExceededError.js';
+import bodec from "bodec";
+import Promise from "./Promise.js";
+import MaxLengthExceededError from "./MaxLengthExceededError.js";
 
 /**
  * Returns a promise for a buffer of all content in the given stream up to
@@ -10,15 +10,15 @@ function bufferStream(stream, maxLength) {
   maxLength = maxLength || Infinity;
 
   if (!stream.readable)
-    throw new Error('Cannot buffer stream that is not readable');
+    throw new Error("Cannot buffer stream that is not readable");
 
   return new Promise(function (resolve, reject) {
     var chunks = [];
     var length = 0;
 
-    stream.on('error', reject);
+    stream.on("error", reject);
 
-    stream.on('data', function (chunk) {
+    stream.on("data", function (chunk) {
       length += chunk.length;
 
       if (length > maxLength) {
@@ -28,12 +28,11 @@ function bufferStream(stream, maxLength) {
       }
     });
 
-    stream.on('end', function () {
+    stream.on("end", function () {
       resolve(bodec.join(chunks));
     });
 
-    if (typeof stream.resume === 'function')
-      stream.resume();
+    if (typeof stream.resume === "function") stream.resume();
   });
 }
 
