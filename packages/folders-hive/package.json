@@ -15,8 +15,11 @@
   "main": "./src/folders-hive.js",
   "homepage": "https://github.com/foldersjs/folders-hive",
   "dependencies": {
-    "markdown-table": "^0.4.0",
-    "thrift": "^0.9.3",
-    "zod": "^3.0.0"
+    "markdown-table": "^3.0.4",
+    "thrift": "^0.22.0",
+    "zod": "^4.0.17"
+  },
+  "scripts": {
+    "test": "node --test src/test/folders-hive.test.js"
   }
 }

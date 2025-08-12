@@ -1,4 +1,4 @@
-import IrregularHeaderNames from './IrregularHeaderNames.js';
+import IrregularHeaderNames from "./IrregularHeaderNames.js";
 
 /**
  * Normalizes HTTP header names according to RFC 2616.

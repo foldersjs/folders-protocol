@@ -1,2 +1,2 @@
-import { parse } from 'qs';
+import { parse } from "qs";
 export default parse;

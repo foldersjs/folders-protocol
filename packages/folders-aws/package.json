@@ -16,7 +16,7 @@
   "homepage": "https://github.com/foldersjs/folders-aws",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.500.0",
-    "mime": "^3.0.0",
+    "mime": "^4.0.7",
     "zod": "^4.0.17"
   },
   "devDependencies": {

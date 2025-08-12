@@ -1,16 +1,16 @@
-import Connection from '../Connection.js';
-import Location from '../Location.js';
+import Connection from "../Connection.js";
+import Location from "../Location.js";
 
 /**
  * Standard ports for HTTP protocols.
  */
 var STANDARD_PORTS = {
-  'http:': '80',
-  'https:': '443'
+  "http:": "80",
+  "https:": "443",
 };
 
 function ensureTrailingColon(string) {
-  return string[string.length - 1] === ':' ? string : string + ':';
+  return string[string.length - 1] === ":" ? string : string + ":";
 }
 
 /**
@@ -20,37 +20,43 @@ function createLocation(nodeRequest) {
   var headers = nodeRequest.headers;
 
   var protocol;
-  if (process.env.HTTPS === 'on' || headers['x-forwarded-ssl'] === 'on' || headers['font-end-https'] === 'on') {
-    protocol = 'https:';
-  } else if (headers['x-url-scheme']) {
-    protocol = ensureTrailingColon(headers['x-url-scheme']);
-  } else if (headers['x-forwarded-protocol']) {
-    protocol = ensureTrailingColon(headers['x-forwarded-protocol'].split(',')[0]);
-  } else if (headers['x-forwarded-proto']) {
-    protocol = ensureTrailingColon(headers['x-forwarded-proto'].split(',')[0]);
+  if (
+    process.env.HTTPS === "on" ||
+    headers["x-forwarded-ssl"] === "on" ||
+    headers["font-end-https"] === "on"
+  ) {
+    protocol = "https:";
+  } else if (headers["x-url-scheme"]) {
+    protocol = ensureTrailingColon(headers["x-url-scheme"]);
+  } else if (headers["x-forwarded-protocol"]) {
+    protocol = ensureTrailingColon(
+      headers["x-forwarded-protocol"].split(",")[0],
+    );
+  } else if (headers["x-forwarded-proto"]) {
+    protocol = ensureTrailingColon(headers["x-forwarded-proto"].split(",")[0]);
   } else {
-    protocol = 'http:';
+    protocol = "http:";
   }
 
   var host;
-  if (headers['x-forwarded-host']) {
-    var hosts = headers['x-forwarded-host'].split(/,\s?/);
+  if (headers["x-forwarded-host"]) {
+    var hosts = headers["x-forwarded-host"].split(/,\s?/);
     host = hosts[hosts.length - 1];
-  } else if (headers['host']) {
-    host = headers['host'];
+  } else if (headers["host"]) {
+    host = headers["host"];
   } else if (process.env.SERVER_NAME) {
     host = process.env.SERVER_NAME;
   }
 
-  var hostParts = host.split(':', 2);
+  var hostParts = host.split(":", 2);
   var hostname = hostParts[0];
-  var port = hostParts[1] || headers['x-forwarded-port'];
+  var port = hostParts[1] || headers["x-forwarded-port"];
 
   if (port == null) {
-    if (headers['x-forwarded-host']) {
+    if (headers["x-forwarded-host"]) {
       port = STANDARD_PORTS[protocol];
-    } else if (headers['x-forwarded-proto']) {
-      port = STANDARD_PORTS[headers['x-forwarded-proto'].split(',')[0]];
+    } else if (headers["x-forwarded-proto"]) {
+      port = STANDARD_PORTS[headers["x-forwarded-proto"].split(",")[0]];
     }
   }
 
@@ -60,7 +66,7 @@ function createLocation(nodeRequest) {
     protocol: protocol,
     hostname: hostname,
     port: port,
-    path: path
+    path: path,
   });
 }
 
@@ -77,10 +83,10 @@ function createConnection(nodeRequest) {
     headers: nodeRequest.headers,
     content: nodeRequest,
     remoteHost: nodeRequest.connection.remoteAddress,
-    remotePort: nodeRequest.connection.remotePort
+    remotePort: nodeRequest.connection.remotePort,
   });
 
-  nodeRequest.on('close', function () {
+  nodeRequest.on("close", function () {
     conn.onClose();
   });
 

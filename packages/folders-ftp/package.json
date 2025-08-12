@@ -17,7 +17,7 @@
   "dependencies": {
     "ftpd": "^0.2.16",
     "jsftp": "^2.1.3",
-    "zod": "^3.22.4"
+    "zod": "^4.0.17"
   },
   "scripts": {
     "test": "node --test"

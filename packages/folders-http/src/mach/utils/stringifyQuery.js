@@ -1,2 +1,2 @@
-import { stringify } from 'qs';
+import { stringify } from "qs";
 export default stringify;

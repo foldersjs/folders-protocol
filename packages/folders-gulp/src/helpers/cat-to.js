@@ -1,9 +1,9 @@
-import path from 'path';
-import Vinyl from 'vinyl';
-import { Readable } from 'stream';
+import path from "path";
+import Vinyl from "vinyl";
+import { Readable } from "stream";
 
 class CatTo extends Readable {
-  constructor(filePath, provider = 'ftp', options = {}) {
+  constructor(filePath, provider = "ftp", options = {}) {
     options.objectMode = true;
     super(options);
 
@@ -22,23 +22,23 @@ class CatTo extends Readable {
     const headerMap = blobStream.headers;
     if (headerMap) {
       for (const header of headerMap) {
-        const [key, value] = header.split(':', 2);
+        const [key, value] = header.split(":", 2);
         headers[key] = value;
       }
     }
-    const size = headers['X-File-Size'];
-    const name = headers['X-File-Name'];
+    const size = headers["X-File-Size"];
+    const name = headers["X-File-Name"];
     let stream = blobStream.data;
-    if (typeof stream === 'string') {
+    if (typeof stream === "string") {
       stream = Buffer.from(stream);
     }
     const output = new Vinyl({
       stat: {
         size: size,
       },
-      cwd: '/',
-      base: '/',
-      path: '/' + name,
+      cwd: "/",
+      base: "/",
+      path: "/" + name,
       contents: stream,
     });
     return output;
@@ -49,7 +49,7 @@ class CatTo extends Readable {
       await this.ready;
       this.provider.cat(this.path, (err, result) => {
         if (err) {
-          this.emit('error', err);
+          this.emit("error", err);
           return;
         }
         if (result) {
@@ -59,7 +59,7 @@ class CatTo extends Readable {
         this.push(null);
       });
     } catch (err) {
-      this.emit('error', err);
+      this.emit("error", err);
     }
   }
 }

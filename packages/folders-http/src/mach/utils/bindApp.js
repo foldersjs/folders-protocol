@@ -9,7 +9,7 @@ function bindApp(app, nodeServer) {
   //var requestHandler = createRequestHandler(app);
   //nodeServer.on('request', requestHandler);
   //return requestHandler;
-  nodeServer.on('request', app);
+  nodeServer.on("request", app);
 }
 
 export default bindApp;

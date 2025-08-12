@@ -1,4 +1,4 @@
-import ldap from 'ldapjs';
+import ldap from "ldapjs";
 
 class LdapServer {
   constructor(credentials) {
@@ -17,15 +17,15 @@ class LdapServer {
     const config = this.ldapCredentials || {};
     this.ldapServer = ldapServer;
 
-    console.log('start the LDAP Embedded server: ', config);
+    console.log("start the LDAP Embedded server: ", config);
     ldapServer.listen(config.port || 1389, function () {
-      console.log('ldapjs listening at ' + ldapServer.url);
+      console.log("ldapjs listening at " + ldapServer.url);
     });
 
-    ldapServer.search('dc=example', function (req, res, next) {
-      backend.ls('.', function (err, data) {
+    ldapServer.search("dc=example", function (req, res, next) {
+      backend.ls(".", function (err, data) {
         if (err) {
-          console.log('DERP!!!', err);
+          console.log("DERP!!!", err);
           next(new ldap.OperationsError(JSON.stringify(err)));
           return;
         }
@@ -34,8 +34,8 @@ class LdapServer {
           const obj = {
             dn: req.dn.toString(),
             attributes: {
-              objectclass: ['organization', 'top'],
-              o: 'example',
+              objectclass: ["organization", "top"],
+              o: "example",
               foldersio: JSON.stringify(data[i]),
             },
           };

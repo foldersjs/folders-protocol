@@ -1,15 +1,15 @@
-import bodec from 'bodec';
-import d from 'describe-property';
-import Stream from 'bufferedstream';
-import bufferStream from './utils/bufferStream.js';
-import normalizeHeaderName from './utils/normalizeHeaderName.js';
-import parseCookie from './utils/parseCookie.js';
-import parseQuery from './utils/parseQuery.js';
+import bodec from "bodec";
+import d from "describe-property";
+import Stream from "bufferedstream";
+import bufferStream from "./utils/bufferStream.js";
+import normalizeHeaderName from "./utils/normalizeHeaderName.js";
+import parseCookie from "./utils/parseCookie.js";
+import parseQuery from "./utils/parseQuery.js";
 
 /**
  * The default content to use for new messages.
  */
-var DEFAULT_CONTENT = bodec.fromString('');
+var DEFAULT_CONTENT = bodec.fromString("");
 
 /**
  * The default maximum length (in bytes) to use in Message#parseContent.
@@ -17,7 +17,7 @@ var DEFAULT_CONTENT = bodec.fromString('');
 var DEFAULT_MAX_CONTENT_LENGTH = Math.pow(2, 20); // 1M
 
 var HEADERS_LINE_SEPARATOR = /\r?\n/;
-var HEADER_SEPARATOR = ': ';
+var HEADER_SEPARATOR = ": ";
 
 function defaultParser(message, maxLength) {
   return message.stringifyContent(maxLength);
@@ -32,47 +32,49 @@ function Message(content, headers) {
 }
 
 Object.defineProperties(Message, {
-
   PARSERS: d({
     enumerable: true,
     value: {
-      'application/json': function (message, maxLength) {
+      "application/json": function (message, maxLength) {
         return message.stringifyContent(maxLength).then(JSON.parse);
       },
-      'application/x-www-form-urlencoded': function (message, maxLength) {
+      "application/x-www-form-urlencoded": function (message, maxLength) {
         return message.stringifyContent(maxLength).then(parseQuery);
-      }
-    }
-  })
-
+      },
+    },
+  }),
 });
 
 Object.defineProperties(Message.prototype, {
-
   /**
    * The headers of this message as { headerName, value }.
    */
-  headers: d.gs(function () {
+  headers: d.gs(
+    function () {
+      return this._headers;
+    },
+    function (value) {
+      this._headers = {};
 
-    return this._headers;
-  }, function (value) {
-    this._headers = {};
-
-    if (typeof value === 'string') {
-      value.split(HEADERS_LINE_SEPARATOR).forEach(function (line) {
-        var index = line.indexOf(HEADER_SEPARATOR);
-        if (index === -1) {
-          this.addHeader(line, true);
-        } else {
-          this.addHeader(line.substring(0, index), line.substring(index + HEADER_SEPARATOR.length));
-        }
-      }, this);
-    } else if (value != null) {
-      for (var headerName in value)
-        if (value.hasOwnProperty(headerName))
-          this.addHeader(headerName, value[headerName]);
-    }
-  }),
+      if (typeof value === "string") {
+        value.split(HEADERS_LINE_SEPARATOR).forEach(function (line) {
+          var index = line.indexOf(HEADER_SEPARATOR);
+          if (index === -1) {
+            this.addHeader(line, true);
+          } else {
+            this.addHeader(
+              line.substring(0, index),
+              line.substring(index + HEADER_SEPARATOR.length),
+            );
+          }
+        }, this);
+      } else if (value != null) {
+        for (var headerName in value)
+          if (value.hasOwnProperty(headerName))
+            this.addHeader(headerName, value[headerName]);
+      }
+    },
+  ),
 
   /**
    * Returns the value of the header with the given name.
@@ -99,7 +101,7 @@ Object.defineProperties(Message.prototype, {
       if (Array.isArray(headers[headerName])) {
         headers[headerName].push(value);
       } else {
-        headers[headerName] = [ headers[headerName], value ];
+        headers[headerName] = [headers[headerName], value];
       }
     } else {
       headers[headerName] = value;
@@ -111,7 +113,7 @@ Object.defineProperties(Message.prototype, {
    */
   cookies: d.gs(function () {
     if (!this._cookies) {
-      var header = this.headers['Cookie'];
+      var header = this.headers["Cookie"];
 
       if (header) {
         var cookies = parseCookie(header);
@@ -123,7 +125,7 @@ Object.defineProperties(Message.prototype, {
         // attributes (e.g., Domain) is unspecified.
         for (var cookieName in cookies)
           if (Array.isArray(cookies[cookieName]))
-            cookies[cookieName] = cookies[cookieName][0] || '';
+            cookies[cookieName] = cookies[cookieName][0] || "";
 
         this._cookies = cookies;
       } else {
@@ -137,11 +139,14 @@ Object.defineProperties(Message.prototype, {
   /**
    * Gets/sets the value of the Content-Type header.
    */
-  contentType: d.gs(function () {
-    return this.headers['Content-Type'];
-  }, function (value) {
-    this.headers['Content-Type'] = value;
-  }),
+  contentType: d.gs(
+    function () {
+      return this.headers["Content-Type"];
+    },
+    function (value) {
+      this.headers["Content-Type"] = value;
+    },
+  ),
 
   /**
    * The media type (type/subtype) portion of the Content-Type header without any
@@ -150,13 +155,20 @@ Object.defineProperties(Message.prototype, {
    *
    * See http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.7
    */
-  mediaType: d.gs(function () {
-    var contentType = this.contentType, match;
-    return (contentType && (match = contentType.match(/^([^;,]+)/))) ? match[1].toLowerCase() : null;
-  }, function (value) {
-	  console.log(162);
-    this.contentType = value + (this.charset ? ';charset=' + this.charset : '');
-  }),
+  mediaType: d.gs(
+    function () {
+      var contentType = this.contentType,
+        match;
+      return contentType && (match = contentType.match(/^([^;,]+)/))
+        ? match[1].toLowerCase()
+        : null;
+    },
+    function (value) {
+      console.log(162);
+      this.contentType =
+        value + (this.charset ? ";charset=" + this.charset : "");
+    },
+  ),
 
   /**
    * Returns the character set used to encode the content of this message. e.g.
@@ -164,32 +176,40 @@ Object.defineProperties(Message.prototype, {
    *
    * See http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.4
    */
-  charset: d.gs(function () {
-    var contentType = this.contentType, match;
-    return (contentType && (match = contentType.match(/\bcharset=([\w-]+)/))) ? match[1] : null;
-  }, function (value) {
-	  console.log(175);
-    this.contentType = this.mediaType + (value ? ';charset=' + value : '');
-  }),
+  charset: d.gs(
+    function () {
+      var contentType = this.contentType,
+        match;
+      return contentType && (match = contentType.match(/\bcharset=([\w-]+)/))
+        ? match[1]
+        : null;
+    },
+    function (value) {
+      console.log(175);
+      this.contentType = this.mediaType + (value ? ";charset=" + value : "");
+    },
+  ),
 
   /**
    * The content of this message as a binary stream.
    */
-  content: d.gs(function () {
-    return this._content;
-  }, function (value) {
-    if (value == null)
-      value = DEFAULT_CONTENT;
+  content: d.gs(
+    function () {
+      return this._content;
+    },
+    function (value) {
+      if (value == null) value = DEFAULT_CONTENT;
 
-    if (value instanceof Stream) {
-      this._content = value;
-      value.pause();
-    } else {
-      this._content = new Stream(value);
-    }
+      if (value instanceof Stream) {
+        this._content = value;
+        value.pause();
+      } else {
+        this._content = new Stream(value);
+      }
 
-    delete this._bufferedContent;
-  }),
+      delete this._bufferedContent;
+    },
+  ),
 
   /**
    * True if the content of this message is buffered, false otherwise.
@@ -238,17 +258,14 @@ Object.defineProperties(Message.prototype, {
    * Note: 0 is a valid value for maxLength. It means "no limit".
    */
   parseContent: d(function (maxLength) {
-    if (this._parsedContent)
-      return this._parsedContent;
+    if (this._parsedContent) return this._parsedContent;
 
-    if (typeof maxLength !== 'number')
-      maxLength = DEFAULT_MAX_CONTENT_LENGTH;
+    if (typeof maxLength !== "number") maxLength = DEFAULT_MAX_CONTENT_LENGTH;
 
     var parser = Message.PARSERS[this.mediaType] || defaultParser;
     this._parsedContent = parser(this, maxLength);
     return this._parsedContent;
-  })
-
+  }),
 });
 
 export default Message;

@@ -1,6 +1,6 @@
-import path from 'path';
-import Vinyl from 'vinyl';
-import { Readable } from 'stream';
+import path from "path";
+import Vinyl from "vinyl";
+import { Readable } from "stream";
 
 class WriteTo extends Readable {
   constructor(path, provider, options) {

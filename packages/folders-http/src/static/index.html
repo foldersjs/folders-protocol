@@ -1,36 +1,40 @@
 <html>
-<title>node.js window</title>
-<head>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular.min.js"></script>
-<script src="https://cdn.firebase.com/js/client/1.0.17/firebase.js"></script>
-<script src="https://cdn.firebase.com/libs/angularfire/0.8.0/angularfire.js"></script>
-<script>
-var app = angular.module("nodeApp", ["firebase"]);
-app.controller("DirectoryList", ["$scope", "$firebase",
-  function($scope, $firebase) {
-// DirectoryListRequest
-    var ref = new Firebase("https://intense-inferno-1431.firebaseio.com/directoryList");
-    var sync = $firebase(ref);
-// structured data:
-    // $scope.data = sync.$asObject();
-    // var syncObject = sync.$asObject();
-    // syncObject.$bindTo($scope, "data");
-// Directory list
-  $scope.directoryList = sync.$asArray();
-  }
-]);
-</script>
-</head>
-<body ng-app="nodeApp">
-  <h3>Directory list</h3>
-  <div ng-controller="DirectoryList">
-    <ul>
-      <li ng-repeat="item in directoryList">
-        {{ item.name }} / {{ item.size }}
-        <!-- <input ng-model="message.text" ng-change="messages.$save(message)" /> -->
-        <!-- <button ng-click="messages.$remove(message)">X</button> -->
-      </li>
-    </ul>
-  </div>
-</body>
+  <title>node.js window</title>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular.min.js"></script>
+    <script src="https://cdn.firebase.com/js/client/1.0.17/firebase.js"></script>
+    <script src="https://cdn.firebase.com/libs/angularfire/0.8.0/angularfire.js"></script>
+    <script>
+      var app = angular.module("nodeApp", ["firebase"]);
+      app.controller("DirectoryList", [
+        "$scope",
+        "$firebase",
+        function ($scope, $firebase) {
+          // DirectoryListRequest
+          var ref = new Firebase(
+            "https://intense-inferno-1431.firebaseio.com/directoryList",
+          );
+          var sync = $firebase(ref);
+          // structured data:
+          // $scope.data = sync.$asObject();
+          // var syncObject = sync.$asObject();
+          // syncObject.$bindTo($scope, "data");
+          // Directory list
+          $scope.directoryList = sync.$asArray();
+        },
+      ]);
+    </script>
+  </head>
+  <body ng-app="nodeApp">
+    <h3>Directory list</h3>
+    <div ng-controller="DirectoryList">
+      <ul>
+        <li ng-repeat="item in directoryList">
+          {{ item.name }} / {{ item.size }}
+          <!-- <input ng-model="message.text" ng-change="messages.$save(message)" /> -->
+          <!-- <button ng-click="messages.$remove(message)">X</button> -->
+        </li>
+      </ul>
+    </div>
+  </body>
 </html>

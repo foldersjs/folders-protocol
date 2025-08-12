@@ -163,10 +163,7 @@ test("FoldersAws", async (t) => {
 
   await t.test("rmdir should delete a directory", async () => {
     const s3Response = {
-      Contents: [
-        { Key: "folder1/file1.txt" },
-        { Key: "folder1/image.jpg" },
-      ],
+      Contents: [{ Key: "folder1/file1.txt" }, { Key: "folder1/image.jpg" }],
     };
     mockSend.mock.mockImplementation(() => Promise.resolve(s3Response));
 
@@ -189,18 +186,21 @@ test("FoldersAws", async (t) => {
     });
   });
 
-  await t.test("rmdir should not call delete if directory is empty", async () => {
-    const s3Response = {
-      Contents: [],
-    };
-    mockSend.mock.mockImplementation(() => Promise.resolve(s3Response));
+  await t.test(
+    "rmdir should not call delete if directory is empty",
+    async () => {
+      const s3Response = {
+        Contents: [],
+      };
+      mockSend.mock.mockImplementation(() => Promise.resolve(s3Response));
 
-    await s3.rmdir("folder1/");
+      await s3.rmdir("folder1/");
 
-    assert.strictEqual(mockSend.mock.calls.length, 1);
-    const listCall = mockSend.mock.calls[0];
-    assert.ok(listCall.arguments[0] instanceof ListObjectsV2Command);
-  });
+      assert.strictEqual(mockSend.mock.calls.length, 1);
+      const listCall = mockSend.mock.calls[0];
+      assert.ok(listCall.arguments[0] instanceof ListObjectsV2Command);
+    },
+  );
 
   await t.test("mkdir should create a directory", async () => {
     await s3.mkdir("folder1/");
