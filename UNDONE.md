@@ -26,7 +26,7 @@ To address these issues, the following actions should be taken for each package:
 6.  **Clean Up Code:** Remove all `console.log` statements and address all `FIXME`/`TODO` comments.
 7.  **Standardize Error Handling:** Use a consistent error handling strategy, such as throwing exceptions or using a standard callback format (`(err, result)`).
 
-As a starting point, the `folders-ftp` package has been refactored to follow these guidelines. This can be used as a template for updating the other packages.
+As a starting point, the `folders-ftp`, `folders-s3`, `folders-ssh` and `folders-aws` packages has been refactored to follow these guidelines. This can be used as a template for updating the other packages.
 
 ## Testing
 
