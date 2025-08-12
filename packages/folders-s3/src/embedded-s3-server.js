@@ -1,11 +1,11 @@
-import S3rver from 's3rver';
+import S3rver from "s3rver";
 
 class Server {
   constructor(conn, debug) {
     this.S3Conn = conn;
     this.debug = debug || true;
     this.s3Server = null;
-    console.log('[S3 Server] : inin the S3 Server,');
+    console.log("[S3 Server] : inin the S3 Server,");
   }
 
   close() {
@@ -19,7 +19,7 @@ class Server {
       if (err) {
         console.log(err);
       }
-      console.log('aws s3 test server running at : ' + host + ':' + port);
+      console.log("aws s3 test server running at : " + host + ":" + port);
     });
   }
 }

@@ -1,110 +1,158 @@
-import { test, mock } from 'node:test';
-import assert from 'node:assert';
-import stream from 'node:stream';
-import FoldersS3 from '../folders-s3.js';
-import Server from '../embedded-s3-server.js';
+import { test, mock } from "node:test";
+import assert from "node:assert";
+import stream from "node:stream";
+import FoldersS3 from "../folders-s3.js";
+import Server from "../embedded-s3-server.js";
+import {
+  S3Client,
+  ListObjectsV2Command,
+  GetObjectCommand,
+  PutObjectCommand,
+} from "@aws-sdk/client-s3";
 
-test('FoldersS3', async (t) => {
+test("FoldersS3", async (t) => {
   let s3;
-  const mockS3Client = {
-    listObjects: () => ({
-      promise: () => Promise.resolve({ Contents: [] }),
-    }),
-    getObject: () => ({
-      promise: () =>
-        Promise.resolve({
-          Body: 'file content',
-          ContentLength: 12,
-        }),
-    }),
-    upload: () => ({
-      promise: () => Promise.resolve({}),
-    }),
-  };
+  let mockSend;
 
   t.beforeEach(() => {
     const options = {
-      connectionString: 's3://bucket',
-      enableEmbeddedServer: false,
+      connectionString: "s3://bucket",
+      accessKeyId: "test",
+      secretAccessKey: "test",
+      endpoint: "http://localhost:4568",
     };
-    s3 = new FoldersS3('test', options);
-    mock.method(s3, 'prepare', () => {
-      s3.client = mockS3Client;
-    });
+    s3 = new FoldersS3("test", options);
+
+    mockSend = mock.fn(() => Promise.resolve({}));
+    mock.method(S3Client.prototype, "send", mockSend);
   });
 
-  await t.test('ls should list files in a directory', async () => {
-    const files = [
-      { Key: 'folder1/file1.txt', Size: 123 },
-      { Key: 'folder1/image.jpg', Size: 456 },
-      { Key: 'folder1/folder2/', Size: 0 },
-    ];
-    mockS3Client.listObjects = () => ({
-      promise: () => Promise.resolve({ Contents: files }),
-    });
+  t.afterEach(() => {
+    mock.restoreAll();
+  });
 
-    const result = await s3.ls('folder1/');
+  await t.test("ls should list files and folders in a directory", async () => {
+    const s3Response = {
+      Contents: [
+        { Key: "folder1/file1.txt", Size: 123 },
+        { Key: "folder1/image.jpg", Size: 456 },
+      ],
+      CommonPrefixes: [{ Prefix: "folder1/folder2/" }],
+    };
+    mockSend.mock.mockImplementation(() => Promise.resolve(s3Response));
+
+    const result = await s3.ls("folder1/");
 
     assert.strictEqual(result.length, 3);
-    assert.strictEqual(result[0].name, 'file1.txt');
-    assert.strictEqual(result[0].extension, 'txt');
-    assert.strictEqual(result[0].type, 'text/plain');
-    assert.strictEqual(result[1].name, 'image.jpg');
-    assert.strictEqual(result[1].extension, 'jpg');
-    assert.strictEqual(result[1].type, 'image/jpeg');
-    assert.strictEqual(result[2].name, 'folder2');
-    assert.strictEqual(result[2].extension, '+folder');
-  });
-
-  await t.test('ls should return an error if listObjects fails', async () => {
-    const error = new Error('S3 error');
-    mockS3Client.listObjects = () => ({
-      promise: () => Promise.reject(error),
+    assert.deepStrictEqual(
+      result.find((r) => r.name === "folder2"),
+      {
+        name: "folder2",
+        fullPath: "folder1/folder2/",
+        meta: {},
+        uri: "folder1/folder2/",
+        size: 0,
+        extension: "+folder",
+        type: "",
+      },
+    );
+    assert.deepStrictEqual(
+      result.find((r) => r.name === "file1.txt"),
+      {
+        name: "file1.txt",
+        fullPath: "folder1/file1.txt",
+        meta: {},
+        uri: "folder1/file1.txt",
+        size: 123,
+        extension: "txt",
+        type: "application/octet-stream",
+      },
+    );
+    const sendCall = mockSend.mock.calls[0];
+    assert.ok(sendCall.arguments[0] instanceof ListObjectsV2Command);
+    assert.deepStrictEqual(sendCall.arguments[0].input, {
+      Bucket: "bucket",
+      Prefix: "folder1/",
+      Delimiter: "/",
     });
-    await assert.rejects(() => s3.ls('folder1/'), error);
   });
 
-  await t.test('cat should return a stream for a file', async () => {
-    const result = await s3.cat('folder1/file1.txt');
+  await t.test("ls should return an error if S3 call fails", async () => {
+    const error = new Error("S3 error");
+    mockSend.mock.mockImplementation(() => Promise.reject(error));
+    await assert.rejects(() => s3.ls("folder1/"), error);
+  });
+
+  await t.test("cat should return a stream for a file", async () => {
+    const body = new stream.Readable();
+    body.push("file content");
+    body.push(null);
+    const s3Response = {
+      Body: body,
+      ContentLength: 12,
+    };
+    mockSend.mock.mockImplementation(() => Promise.resolve(s3Response));
+
+    const result = await s3.cat("folder1/file1.txt");
+
     assert.ok(result.stream instanceof stream.Readable);
     assert.strictEqual(result.size, 12);
-    assert.strictEqual(result.name, 'file1.txt');
+    assert.strictEqual(result.name, "file1.txt");
+    const sendCall = mockSend.mock.calls[0];
+    assert.ok(sendCall.arguments[0] instanceof GetObjectCommand);
+    assert.deepStrictEqual(sendCall.arguments[0].input, {
+      Bucket: "bucket",
+      Key: "folder1/file1.txt",
+    });
   });
 
-  await t.test('upload should upload a file', async () => {
+  await t.test("cat should return an error if S3 call fails", async () => {
+    const error = new Error("S3 error");
+    mockSend.mock.mockImplementation(() => Promise.reject(error));
+    await assert.rejects(() => s3.cat("folder1/file1.txt"), error);
+  });
+
+  await t.test("write should upload a file", async () => {
     const data = new stream.Readable();
-    data.push('file content');
+    data.push("file content");
     data.push(null);
+    const s3Response = {
+      ETag: '"123"',
+      VersionId: "456",
+    };
+    mockSend.mock.mockImplementation(() => Promise.resolve(s3Response));
 
-    const result = await s3.upload('folder1/file1.txt', data);
-    assert.strictEqual(result, 'write uri success');
+    const result = await s3.write("folder1/file1.txt", data);
+
+    assert.deepStrictEqual(result, { ETag: '"123"', VersionId: "456" });
+    const sendCall = mockSend.mock.calls[0];
+    assert.ok(sendCall.arguments[0] instanceof PutObjectCommand);
+    assert.deepStrictEqual(sendCall.arguments[0].input, {
+      Bucket: "bucket",
+      Key: "folder1/file1.txt",
+      Body: data,
+    });
   });
 
-  await t.test('should start an embedded server', async () => {
+  await t.test("write should return an error if S3 call fails", async () => {
+    const error = new Error("S3 error");
+    mockSend.mock.mockImplementation(() => Promise.reject(error));
+    const data = new stream.Readable();
+    data.push("file content");
+    data.push(null);
+    await assert.rejects(() => s3.write("folder1/file1.txt", data), error);
+  });
+
+  await t.test("should start an embedded server", async () => {
     const startMock = mock.fn();
-    mock.method(Server.prototype, 'start', startMock);
+    mock.method(Server.prototype, "start", startMock);
 
     const options = {
+      connectionString: "s3://bucket",
       enableEmbeddedServer: true,
     };
-    new FoldersS3('test', options);
+    new FoldersS3("test", options);
 
     assert.strictEqual(startMock.mock.calls.length, 1);
-  });
-
-  await t.test('write should upload a file', async () => {
-    const data = new stream.Readable();
-    data.push('file content');
-    data.push(null);
-
-    const result = await s3.write('folder1/file1.txt', data);
-    assert.strictEqual(result, 'write uri success');
-  });
-
-  await t.test('download should return a stream for a file', async () => {
-    const result = await s3.download('folder1/file1.txt');
-    assert.ok(result.stream instanceof stream.Readable);
-    assert.strictEqual(result.size, 12);
-    assert.strictEqual(result.name, 'file1.txt');
   });
 });
