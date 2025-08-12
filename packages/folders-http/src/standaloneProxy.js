@@ -12,7 +12,7 @@ import stream from "event-stream";
 import index from "./util/watchfile.js";
 import serveapp from "./mach/utils/serveApp.js";
 import createConnection from "./mach/utils/createConnection.js";
-import stubApp from "./app/stubApp.js";
+import stubApp from "./test/stubApp.js";
 import restApp from "./app/restApp.js";
 import helpers from "./util/helpers.js";
 //var Fio = require('folders/src/handshake.js');

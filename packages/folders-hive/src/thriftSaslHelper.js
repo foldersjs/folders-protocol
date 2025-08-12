@@ -83,17 +83,9 @@ const saslPlainHandleShake = function (connection, options, cb) {
       if (response.status == NegotiationStatus.OK) {
         // FIXME not expected OK in PLAIN sasl
       } else if (response.status == NegotiationStatus.COMPLETE) {
-        console.log(
-          "[ThriftSaslHelper] COMPLETE message received, PLAIN SASL handshaked success",
-        );
         connection.removeListener("data", authRspListener);
         callback(null);
       } else {
-        console.error(
-          "error status code, ",
-          response.status,
-          response.payload.toString(),
-        );
         connection.removeListener("data", authRspListener);
         callback(response.payload.toString());
       }
@@ -103,11 +95,9 @@ const saslPlainHandleShake = function (connection, options, cb) {
 
   connection.on("data", authRspListener);
 
-  console.log("[ThriftSaslHelper] send START Message,");
   connection.write(wrapSaslMessage(NegotiationStatus.START, "PLAIN"));
 
   const authStr = "\0" + options.username + "\0" + options.password;
-  console.log("[ThriftSaslHelper] send PLAIN SASL auth Message,");
   connection.write(wrapSaslMessage(NegotiationStatus.COMPLETE, authStr));
 };
 

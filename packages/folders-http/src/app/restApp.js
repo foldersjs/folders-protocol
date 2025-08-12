@@ -31,7 +31,6 @@ export default function (conn, requestId, shareid) {
         path: path,
       },
     };
-    console.log("Requested URI", uri, DirectoryListRequest);
     return DirectoryListRequest;
   }
 
@@ -54,7 +53,6 @@ export default function (conn, requestId, shareid) {
       },
     };
 
-    console.log("Requested URI", uri, FileRequest);
     return FileRequest;
   }
 
@@ -70,7 +68,6 @@ export default function (conn, requestId, shareid) {
         data: [],
       },
     };
-    console.log("Requested URI", uri, SetFilesRequest);
     return SetFilesRequest;
   }
 
@@ -82,9 +79,6 @@ export default function (conn, requestId, shareid) {
       gw: "0",
       _: "1429695010939",
     };
-    console.log("Requested URI", uri, x);
     return x;
   }
-
-  console.log("Requested URI", uri);
 }

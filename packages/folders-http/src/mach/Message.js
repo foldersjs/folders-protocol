@@ -164,7 +164,6 @@ Object.defineProperties(Message.prototype, {
         : null;
     },
     function (value) {
-      console.log(162);
       this.contentType =
         value + (this.charset ? ";charset=" + this.charset : "");
     },
@@ -185,7 +184,6 @@ Object.defineProperties(Message.prototype, {
         : null;
     },
     function (value) {
-      console.log(175);
       this.contentType = this.mediaType + (value ? ";charset=" + value : "");
     },
   ),

@@ -87,7 +87,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-s3@npm:^3.500.0":
+"@aws-sdk/client-s3@npm:^3.864.0":
   version: 3.864.0
   resolution: "@aws-sdk/client-s3@npm:3.864.0"
   dependencies:
@@ -2655,7 +2655,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "folders-aws@workspace:packages/folders-aws"
   dependencies:
-    "@aws-sdk/client-s3": "npm:^3.500.0"
+    "@aws-sdk/client-s3": "npm:^3.864.0"
     mime: "npm:^4.0.7"
     s3rver: "npm:^3.7.1"
     zod: "npm:^4.0.17"
@@ -2748,7 +2748,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "folders-s3@workspace:packages/folders-s3"
   dependencies:
-    "@aws-sdk/client-s3": "npm:^3.500.0"
+    "@aws-sdk/client-s3": "npm:^3.864.0"
     s3rver: "npm:^3.7.1"
     zod: "npm:^4.0.17"
   languageName: unknown
@@ -2759,7 +2759,7 @@ __metadata:
   resolution: "folders-ssh@workspace:packages/folders-ssh"
   dependencies:
     mime: "npm:^4.0.7"
-    ssh2: "npm:^1.15.0"
+    ssh2: "npm:^1.16.0"
     zod: "npm:^4.0.17"
   languageName: unknown
   linkType: soft
@@ -5007,7 +5007,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ssh2@npm:^1.15.0":
+"ssh2@npm:^1.16.0":
   version: 1.16.0
   resolution: "ssh2@npm:1.16.0"
   dependencies:

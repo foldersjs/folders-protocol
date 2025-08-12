@@ -9,12 +9,10 @@
 export default function (o, channel) {
   var self = o;
   channel.subscribe("DirectoryListRequest", function (data, envelope) {
-    console.log("ready to list it", data);
     self.provider.onList(data);
   });
 
   channel.subscribe("FileRequest", function (data, envelope) {
-    console.log("ready to blob it", data);
     self.provider.onBlob(data);
   });
 

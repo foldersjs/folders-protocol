@@ -8,7 +8,6 @@ const __dirname = path.dirname(__filename);
 const sqlite3v = sqlite3.verbose();
 
 var dbFile = path.join(__dirname, "/../db/annotation.sqlite");
-console.log("dbFile: ", dbFile);
 var db = new sqlite3v.Database(dbFile);
 
 /* This class is used to add annotation on a give path */
@@ -23,7 +22,6 @@ var Annotation = function () {
       "CREATE TABLE if not exists notes (ID INTEGER PRIMARY KEY AUTOINCREMENT, path TEXT, note TEXT, view TEXT)",
       function (err) {
         if (err) {
-          console.log("Create table error: ", err);
         }
       },
     );
@@ -33,7 +31,6 @@ var Annotation = function () {
       "CREATE TABLE if not exists attachments (ID INTEGER PRIMARY KEY AUTOINCREMENT, path TEXT, file_name TEXT, file_size INTEGER, file_modifiedDate TEXT, saved_path TEXT)",
       function (err) {
         if (err) {
-          console.log("Create table error: ", err);
         }
       },
     );
@@ -42,7 +39,6 @@ var Annotation = function () {
       "CREATE TABLE if not exists filters (ID INTEGER PRIMARY KEY AUTOINCREMENT, path TEXT, filter TEXT)",
       function (err) {
         if (err) {
-          console.log("Create table error: ", err);
         }
       },
     );
@@ -87,7 +83,6 @@ var Annotation = function () {
       function (err) {
         if (typeof cb != "undefined") {
           if (err) {
-            console.log("setFilter error: ", err);
           }
           cb(err);
         }
@@ -97,7 +92,6 @@ var Annotation = function () {
 
   var getNote = function (path, cb) {
     db.all("SELECT * FROM notes WHERE path=?", path, function (err, rows) {
-      //console.log('found rows: ', rows.length, rows[0]);
       if (typeof cb != "undefined") {
         if (err) {
           //some error happened when querying database!
@@ -160,7 +154,6 @@ var Annotation = function () {
   /* Since the filename on the shadow file system is coded, use this to retrieve the origninal file name (and maybe modifiedDate, etc.) */
   /* This should return only one attachment file */
   var getAttachmentBySavedPath = function (saved_path, cb) {
-    console.log("getAttachmentBySavedPath ", saved_path);
     db.all(
       "SELECT * FROM attachments WHERE saved_path=?",
       saved_path,
@@ -178,12 +171,7 @@ var Annotation = function () {
 
   //for testing!
   var browse = function () {
-    console.log("Existing attachments:");
-
     db.each("SELECT * FROM attachments", function (err, rows) {
-      //console.log('Existing notes:')
-      console.log(rows);
-      //console.log(row.path + ': ' + row.note);
     });
   };
 
