@@ -24,9 +24,15 @@ import stringify from "./mach/utils/stringifyQuery.js";
  */
 var ForwardingProxy = function (argv) {
   //command line arguments are contained in argv object
-  // FIXME : code will break if --forward=inavlidvalue example number
   argv = argv || {};
-  this.baseHost = argv["forward"] || "https://folders.io";
+  if (typeof argv["forward"] !== "string" && argv["forward"] !== undefined) {
+    console.error(
+      "Invalid value for --forward, it must be a string. Using default.",
+    );
+    this.baseHost = "https://folders.io";
+  } else {
+    this.baseHost = argv["forward"] || "https://folders.io";
+  }
   this.port = argv["listen"] || 8090;
   this.shareId = argv["shareid"] || "";
   this.currentToken = argv["token"] || "";
@@ -36,10 +42,8 @@ var ForwardingProxy = function (argv) {
     case 1:
     case 2:
     case 3:
-      console.log(">> Proxy Server created In Mode : " + this.mode);
       break;
     default:
-      console.log(">> Proxy Server created In Default Mode ");
   }
 };
 
@@ -57,7 +61,6 @@ ForwardingProxy.prototype.startProxy = function () {
       //cb(null, err);
       return;
     }
-    console.log(">> index file read: " + data.length + " bytes");
     //this.routeHandler = routeHandler
   });
 
@@ -135,9 +138,6 @@ ForwardingProxy.prototype.mode2Handler = function (conn, response) {
                 .getHeader("set-cookie")[0]
                 .toString()
                 .split(";")[0];
-              console.log(
-                ">> " + o.shareId + " ---> " + self.sessions[o.shareId],
-              );
             }
           }
         };
@@ -229,8 +229,6 @@ var defaultFriendly = function (request, response) {
 };
 
 var RouteServer = function (proxy) {
-  console.log(">> forwarding to " + proxy.baseHost);
-
   this.simpleServer = function (nodeRequest, response) {
     // Allow a CORS
     helpers.corsFriendly(response);
@@ -247,7 +245,6 @@ var RouteServer = function (proxy) {
     // URL to Action:
     if (conn.method == "GET" || conn.method == "POST") {
       var uri = conn.location.path;
-      console.log(">> forwarding " + uri + " ---> " + proxy.baseHost + uri);
 
       switch (proxy.mode) {
         case 0:

@@ -7,6 +7,7 @@
 import uriParse from "url";
 import jsftp from "jsftp";
 import { z } from "zod";
+import util from "util";
 import Server from "./embedded-ftp-server.js";
 
 const OptionsSchema = z.object({
@@ -74,7 +75,7 @@ class FoldersFtp {
     return this.ftp;
   }
 
-  ls(path, cb) {
+  async ls(path) {
     let normalizedPath = path;
     if (normalizedPath !== ".") {
       if (normalizedPath.length && !normalizedPath.startsWith("/")) {
@@ -86,18 +87,12 @@ class FoldersFtp {
     }
 
     const ftp = this.prepare();
+    const cwdAsync = util.promisify(ftp.raw.cwd).bind(ftp.raw);
+    const lsAsync = util.promisify(ftp.ls).bind(ftp);
 
-    ftp.raw.cwd(normalizedPath, (err) => {
-      if (err) {
-        return cb(err);
-      }
-      ftp.ls(".", (err, content) => {
-        if (err) {
-          return cb(err);
-        }
-        cb(null, this.asFolders(normalizedPath, content));
-      });
-    });
+    await cwdAsync(normalizedPath);
+    const content = await lsAsync(".");
+    return this.asFolders(normalizedPath, content);
   }
 
   asFolders(dir, files) {
@@ -127,48 +122,39 @@ class FoldersFtp {
     });
   }
 
-  cat(path, cb) {
+  async cat(path) {
     const dirName = path.substring(0, path.lastIndexOf("/") + 1);
     const ftp = this.prepare();
+    const lsAsync = util.promisify(ftp.ls).bind(ftp);
+    const getAsync = util.promisify(ftp.get).bind(ftp);
 
-    ftp.ls(dirName, (err, content) => {
-      if (err) {
-        return cb(err);
-      }
+    const content = await lsAsync(dirName);
+    const files = this.asFolders(dirName, content);
+    const file = files.find((f) => f.fullPath === path);
 
-      const files = this.asFolders(dirName, content);
-      const file = files.find((f) => f.fullPath === path);
+    if (!file) {
+      throw new Error("File not found");
+    }
 
-      if (!file) {
-        return cb(new Error("File not found"));
-      }
-
-      ftp.get(path, (err, socket) => {
-        if (err) {
-          return cb(err);
-        }
-        socket.resume();
-        cb(null, {
-          stream: socket,
-          size: file.size,
-          name: file.name,
-        });
-      });
-    });
+    const socket = await getAsync(path);
+    socket.resume();
+    return {
+      stream: socket,
+      size: file.size,
+      name: file.name,
+    };
   }
 
-  write(uri, data, cb) {
+  async write(uri, data) {
     const ftp = this.prepare();
+    const putAsync = util.promisify(ftp.put).bind(ftp);
+
     data.on("data", (d) => {
       FoldersFtp.RXOK += d.length;
     });
 
-    ftp.put(data, uri, (err) => {
-      if (err) {
-        return cb(err);
-      }
-      cb(null, "write uri success");
-    });
+    await putAsync(data, uri);
+    return "write uri success";
   }
 
   dump() {

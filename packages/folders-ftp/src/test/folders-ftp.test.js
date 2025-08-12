@@ -19,7 +19,7 @@ test("FoldersFtp", async (t) => {
     mock.method(ftp, "prepare", () => mockFtp);
   });
 
-  await t.test("ls should list files in a directory", (t, done) => {
+  await t.test("ls should list files in a directory", async (t) => {
     const path = "/";
     const files = [
       { name: "file1.txt", type: "0", size: 123 },
@@ -29,40 +29,29 @@ test("FoldersFtp", async (t) => {
     mockFtp.raw.cwd = (p, cb) => cb(null);
     mockFtp.ls = (p, cb) => cb(null, files);
 
-    ftp.ls(path, (err, result) => {
-      assert.strictEqual(err, null);
-      assert.strictEqual(result.length, 2);
-      assert.strictEqual(result[0].name, "file1.txt");
-      assert.strictEqual(result[1].name, "folder1");
-      assert.strictEqual(result[1].extension, "+folder");
-      done();
-    });
+    const result = await ftp.ls(path);
+    assert.strictEqual(result.length, 2);
+    assert.strictEqual(result[0].name, "file1.txt");
+    assert.strictEqual(result[1].name, "folder1");
+    assert.strictEqual(result[1].extension, "+folder");
   });
 
-  await t.test("ls should return an error if cwd fails", (t, done) => {
+  await t.test("ls should return an error if cwd fails", async (t) => {
     const path = "/";
     const error = new Error("CWD failed");
 
     mockFtp.raw.cwd = (p, cb) => cb(error);
 
-    ftp.ls(path, (err, result) => {
-      assert.deepStrictEqual(err, error);
-      assert.strictEqual(result, undefined);
-      done();
-    });
+    await assert.rejects(ftp.ls(path), error);
   });
 
-  await t.test("ls should return an error if ls fails", (t, done) => {
+  await t.test("ls should return an error if ls fails", async (t) => {
     const path = "/";
     const error = new Error("LS failed");
 
     mockFtp.raw.cwd = (p, cb) => cb(null);
     mockFtp.ls = (p, cb) => cb(error);
 
-    ftp.ls(path, (err, result) => {
-      assert.deepStrictEqual(err, error);
-      assert.strictEqual(result, undefined);
-      done();
-    });
+    await assert.rejects(ftp.ls(path), error);
   });
 });

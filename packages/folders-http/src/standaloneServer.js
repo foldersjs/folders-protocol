@@ -6,7 +6,7 @@ import path from "path";
 import os from "os";
 //var publicIp = require('public-ip');
 import compression from "compression";
-import stubApp from "./app/stubApp.js";
+import stubApp from "./test/stubApp.js";
 import Annotation from "./annotate.js";
 import cors from "cors";
 import Handshake from "folders/src/handshake.js";

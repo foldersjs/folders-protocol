@@ -8,25 +8,25 @@ The project is currently undergoing a modernization effort to update the codebas
 
 The following providers are available:
 
-*   `folders-aws`: For interacting with AWS services.
-*   `folders-ftp`: For interacting with FTP servers.
-*   `folders-gulp`: For using Gulp tasks as a source.
-*   `folders-hdfs`: For interacting with HDFS.
-*   `folders-hive`: For querying Hive databases.
-*   `folders-http`: For making HTTP requests.
-*   `folders-ldap`: For interacting with LDAP directories.
-*   `folders-presto`: For querying Presto databases.
-*   `folders-s3`: For interacting with AWS S3.
-*   `folders-ssh`: For interacting with servers over SSH/SFTP.
+- `folders-aws`: For interacting with AWS services.
+- `folders-ftp`: For interacting with FTP servers.
+- `folders-gulp`: For using Gulp tasks as a source.
+- `folders-hdfs`: For interacting with HDFS.
+- `folders-hive`: For querying Hive databases.
+- `folders-http`: For making HTTP requests.
+- `folders-ldap`: For interacting with LDAP directories.
+- `folders-presto`: For querying Presto databases.
+- `folders-s3`: For interacting with AWS S3.
+- `folders-ssh`: For interacting with servers over SSH/SFTP.
 
 ## Project Status
 
 The following packages have been updated to modern standards, including up-to-date dependencies, comprehensive tests, and modern JavaScript syntax:
 
-*   `folders-aws`
-*   `folders-ftp`
-*   `folders-s3`
-*   `folders-ssh`
+- `folders-aws`
+- `folders-ftp`
+- `folders-s3`
+- `folders-ssh`
 
 The remaining packages are still in the process of being updated. For more details on the modernization effort, known issues, and the project roadmap, please see the [UNDONE.md](UNDONE.md) file.
 
@@ -34,12 +34,13 @@ The remaining packages are still in the process of being updated. For more detai
 
 ### Prerequisites
 
-*   [Node.js](https://nodejs.org/) (latest LTS version)
-*   [Yarn](https://yarnpkg.com/) (v4 or later)
+- [Node.js](https://nodejs.org/) (latest LTS version)
+- [Yarn](https://yarnpkg.com/) (v4 or later)
 
 ### Installation
 
 1.  Clone the repository:
+
     ```sh
     git clone https://github.com/foldersjs/folders-protocol.git
     cd folders-protocol
