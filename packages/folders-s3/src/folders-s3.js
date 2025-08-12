@@ -1,7 +1,9 @@
 import uriParse from 'url';
 import path from 'path';
+import stream from 'stream';
 import AWS from 'aws-sdk';
 import { z } from 'zod';
+import mime from 'mime-types';
 import Server from './embedded-s3-server.js';
 
 const FoldersS3Options = z.object({
@@ -33,18 +35,18 @@ const parseConnString = function (connectionString) {
 class FoldersS3 {
   constructor(prefix, options) {
     const parsedOptions = FoldersS3Options.parse(options || {});
-    parsedOptions.connectionString = parsedOptions.connectionString || 'http://localhost:4568/';
-    parsedOptions.directory = parsedOptions.directory || './bucket';
     this.prefix = prefix;
     this.client = null;
+    this.options = parsedOptions;
 
-    const enableEmbeddedServer = parsedOptions.enableEmbeddedServer || true;
-    if (enableEmbeddedServer) {
-      const conn = parseConnString(parsedOptions.connectionString);
-      conn.silent = parsedOptions.silent;
-      conn.directory = parsedOptions.directory;
+    if (this.options.enableEmbeddedServer) {
+      this.options.connectionString = this.options.connectionString || 'http://localhost:4568/';
+      this.options.directory = this.options.directory || './bucket';
+      const conn = parseConnString(this.options.connectionString);
+      conn.silent = this.options.silent;
+      conn.directory = this.options.directory;
       this.server = new Server(conn);
-      this.server.start(parsedOptions.backend);
+      this.server.start(this.options.backend);
     }
   }
 
@@ -87,31 +89,77 @@ class FoldersS3 {
   }
 
   async download(filePath) {
-    this.prepare();
-    const params = {
-      Bucket: 'bucket',
-      Key: 'Key',
-    };
-    const f = this.client.getObject(params);
-    const file = f.createReadStream();
-
-    return {
-      stream: file,
-      //size: data.ContentLength,
-      //name: path.basename(key)
-    };
+    return this.cat(filePath);
   }
 
   async upload(filePath, data) {
-    this.prepare();
+    return this.write(filePath, data);
+  }
 
+  async ls(path) {
+    const uri = uriParse.parse(this.options.connectionString);
+    const bucket = uri.hostname;
+    const data = await this.listObjects(bucket, path);
+    return this.asFolders(path, data);
+  }
+
+  asFolders(dir, files) {
+    return files.map((file) => {
+      const fileName = file.Key.substring(dir.length);
+      if (!fileName || fileName === '/') {
+        return null;
+      }
+      const isFolder = fileName.endsWith('/');
+      const name = isFolder
+        ? fileName.slice(0, -1).split('/').pop()
+        : fileName.split('/').pop();
+
+      const extension = isFolder ? '+folder' : path.extname(fileName).slice(1);
+      const type = isFolder ? '' : mime.lookup(fileName) || 'application/octet-stream';
+
+      return {
+        name: name,
+        fullPath: file.Key,
+        meta: {},
+        uri: file.Key,
+        size: file.Size || 0,
+        extension,
+        type,
+      };
+    }).filter(Boolean);
+  }
+
+  async cat(filePath) {
+    this.prepare();
+    const uri = uriParse.parse(this.options.connectionString);
+    const bucket = uri.hostname;
     const params = {
-      Key: 'Key',
-      Bucket: 'bucket',
+      Bucket: bucket,
+      Key: filePath,
+    };
+    const { Body, ContentLength } = await this.client.getObject(params).promise();
+    const readable = new stream.Readable();
+    readable.push(Body);
+    readable.push(null);
+    return {
+      stream: readable,
+      size: ContentLength,
+      name: path.basename(filePath),
+    };
+  }
+
+  async write(uri, data) {
+    this.prepare();
+    const UrifilePath = uriParse.parse(this.options.connectionString);
+    const bucket = UrifilePath.hostname;
+    const params = {
+      Key: uri,
+      Bucket: bucket,
       Body: data,
     };
 
-    return this.client.upload(params).promise();
+    await this.client.upload(params).promise();
+    return 'write uri success';
   }
 }
 
