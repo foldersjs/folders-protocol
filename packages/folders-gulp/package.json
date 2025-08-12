@@ -15,7 +15,12 @@
   "main": "./src/folders-gulp.js",
   "homepage": "https://github.com/foldersjs/folders-gulp",
   "dependencies": {
-    "vinyl": "^0.4.0",
-    "zod": "^3.0.0"
+    "folders-ftp": "workspace:*",
+    "gulp": "^5.0.1",
+    "vinyl": "^3.0.1",
+    "zod": "^4.0.17"
+  },
+  "scripts": {
+    "test": "node --test"
   }
 }
