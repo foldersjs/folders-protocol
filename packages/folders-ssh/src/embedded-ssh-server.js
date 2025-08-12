@@ -1,41 +1,29 @@
-import { Server as SshServer, utils as ssh2utils } from 'ssh2';
-import fs from 'fs';
-import crypto from 'crypto';
-import Config from '../config.js';
-import Fio from 'folders';
-import { PassThrough } from 'stream';
-import { Stats } from 'fs';
-import constants from 'constants';
-import path from 'path';
+import ssh2 from "ssh2";
+const { Server: SshServer, utils: ssh2utils } = ssh2;
+import fs from "fs";
+import crypto from "crypto";
+import Config from "../config.js";
+import { PassThrough } from "stream";
+import { Stats } from "fs";
+import constants from "constants";
+import path from "path";
 
-const home = function () {
-  return process.env[process.platform == 'win32' ? 'USERPROFILE' : 'HOME'];
-};
+const home = () =>
+  process.env[process.platform === "win32" ? "USERPROFILE" : "HOME"];
 
-function randomValueHex(len) {
-  len = len || 10;
-  return crypto.randomBytes(Math.ceil(len / 2)).toString('hex').slice(0, len);
-}
+const randomValueHex = (len = 10) =>
+  crypto
+    .randomBytes(Math.ceil(len / 2))
+    .toString("hex")
+    .slice(0, len);
 
-const constructLongName = function (file) {
-  let permissions;
+const constructLongName = (file) => {
   const d = new Date(parseFloat(file.modificationTime));
-  const date = [d.toString().substr(4, 6), d.getHours() + ':' + d.getMinutes()].join(' ');
+  const date = `${d.toString().substr(4, 6)} ${d.getHours()}:${d.getMinutes()}`;
+  const permissions =
+    file.extension === "+folder" ? "drw-rw-r--" : "-rw-rw-r--";
 
-  if (file.extension == '+folder') {
-    permissions = 'drw-rw-r--';
-  } else {
-    permissions = '-rw-rw-r--';
-  }
-  const longname = [];
-  longname[0] = permissions;
-  longname[1] = 1;
-  longname[2] = 'ssh';
-  longname[3] = 'ssh';
-  longname[4] = file.size;
-  longname[5] = date;
-  longname[6] = file.name;
-  return longname.join(' ');
+  return [permissions, 1, "ssh", "ssh", file.size, date, file.name].join(" ");
 };
 
 class Server {
@@ -43,30 +31,39 @@ class Server {
     this.SSHCredentials = credentials;
     this.debug = debug || Config.server.debug;
     this.sshServer = null;
-    console.log('[SSH Server] : inin the SSH Server,', this.SSHCredentials);
   }
 
   close() {
-    if (this.sshServer != null) {
+    if (this.sshServer) {
       this.sshServer.close();
     }
   }
 
   start(backend) {
-    const SSHCredentials = this.SSHCredentials;
-    backend = backend || Fio.provider('local').create('local');
+    if (!backend) {
+      throw new Error("Backend must be provided for embedded SSH server.");
+    }
+    const { host, port } = this.SSHCredentials;
 
-    if (SSHCredentials.host !== 'localhost') {
+    if (host !== "localhost") {
       return;
     }
 
     let pubKey;
     if (Config.client.publickKeyPath) {
-      pubKey = ssh2utils.genPublicKey(ssh2utils.parseKey(fs.readFileSync(Config.client.publickKeyPath)));
+      pubKey = ssh2utils.genPublicKey(
+        ssh2utils.parseKey(fs.readFileSync(Config.client.publickKeyPath)),
+      );
     } else if (Config.client.publicKey) {
-      pubKey = ssh2utils.genPublicKey(ssh2utils.parseKey(Config.client.publicKey));
-    } else {
-      pubKey = ssh2utils.genPublicKey(ssh2utils.parseKey(fs.readFileSync(home() + '/.ssh/id_rsa.pub')));
+      pubKey = ssh2utils.genPublicKey(
+        ssh2utils.parseKey(Config.client.publicKey),
+      );
+    } else if (fs.existsSync(path.join(home(), ".ssh", "id_rsa.pub"))) {
+      pubKey = ssh2utils.genPublicKey(
+        ssh2utils.parseKey(
+          fs.readFileSync(path.join(home(), ".ssh", "id_rsa.pub")),
+        ),
+      );
     }
 
     let privateKey;
@@ -74,53 +71,43 @@ class Server {
       privateKey = fs.readFileSync(Config.server.privateKeyPath);
     } else if (Config.server.privateKey) {
       privateKey = Config.server.privateKey;
-    } else {
-      privateKey = fs.readFileSync(home() + '/.ssh/id_rsa');
+    } else if (fs.existsSync(path.join(home(), ".ssh", "id_rsa"))) {
+      privateKey = fs.readFileSync(path.join(home(), ".ssh", "id_rsa"));
     }
 
-    const sshServer = new SshServer(
+    this.sshServer = new SshServer(
       {
-        privateKey: privateKey,
+        privateKey,
         debug: this.debug,
       },
       (client) => {
-        console.log('[SSH Server] : authentication client');
-        client.on('authentication', (ctx) => {
-          console.log(ctx.method, ctx.username);
-          if (ctx.method === 'publickey' && ctx.key.algo === pubKey.fulltype) {
+        client.on("authentication", (ctx) => {
+          if (ctx.method === "publickey" && ctx.key.algo === pubKey.fulltype) {
             if (ctx.signature) {
               const verifier = crypto.createVerify(ctx.sigAlgo);
               verifier.update(ctx.blob);
-              if (verifier.verify(pubKey.publicOrig, ctx.signature, 'binary')) {
-                console.log('[SSH Server] : authentication client accept');
+              if (verifier.verify(pubKey.publicOrig, ctx.signature, "binary")) {
                 ctx.accept();
               } else {
-                console.log('[SSH Server] : authentication client reject');
                 ctx.reject();
               }
             } else {
-              console.log('[SSH Server] : authentication client accept');
               ctx.accept();
             }
-          } else if (ctx.method === 'password') {
-            const username = Config.client.username;
-            const password = Config.client.password;
+          } else if (ctx.method === "password") {
+            const { username, password } = Config.client;
             if (ctx.username === username && ctx.password === password) {
-              console.log('[SSH Server] : authentication client accept');
               ctx.accept();
             } else {
-              console.log('[SSH Server] : authentication client reject');
               ctx.reject();
             }
           } else {
-            console.log('[SSH Server] : authentication client reject');
             ctx.reject();
           }
         });
 
         const setSftpListener = (sftp) => {
           sftp.handles = {};
-          sftp.cache = {};
 
           const STATUS_CODE = {
             OK: 0,
@@ -144,11 +131,12 @@ class Server {
           };
 
           const asSSHFile = (files) => {
-            let out = [];
-            for (let i = 0; i < files.length; i++) {
-              const file = files[i];
-              const mode = file.extension == '+folder' ? constants.S_IFDIR : constants.S_IFREG;
-              const o = {
+            const out = files.map((file) => {
+              const mode =
+                file.extension === "+folder"
+                  ? constants.S_IFDIR
+                  : constants.S_IFREG;
+              return {
                 filename: file.name,
                 longname: constructLongName(file),
                 attrs: new Stats({
@@ -160,23 +148,18 @@ class Server {
                   mtime: file.modificationTime,
                 }),
               };
-              out.push(o);
-            }
-            out = addParCurDir(out);
-            return out;
+            });
+            return addParCurDir(out);
           };
 
-          function addParCurDir(out) {
-            let isParDir = false;
-            let isCurDir = false;
-            for (let i = 0; i < out.length; ++i) {
-              if (out[i].filename === '.') isCurDir = true;
-              if (out[i].filename === '..') isParDir = true;
-            }
-            if (!isParDir) {
+          const addParCurDir = (out) => {
+            const hasParDir = out.some((f) => f.filename === "..");
+            const hasCurDir = out.some((f) => f.filename === ".");
+
+            if (!hasParDir) {
               out.push({
-                filename: '..',
-                longname: 'drwxr-xr-x   4 ssh   ssh      4096 May 16  2013 ..',
+                filename: "..",
+                longname: "drwxr-xr-x   4 ssh   ssh      4096 May 16  2013 ..",
                 attrs: new Stats({
                   mode: 0o755 | constants.S_IFDIR,
                   size: 4096,
@@ -187,10 +170,10 @@ class Server {
                 }),
               });
             }
-            if (!isCurDir) {
+            if (!hasCurDir) {
               out.push({
-                filename: '.',
-                longname: 'drwxr-xr-x  56 ssh   ssh      4096 Nov 10 01:05 .',
+                filename: ".",
+                longname: "drwxr-xr-x  56 ssh   ssh      4096 Nov 10 01:05 .",
                 attrs: new Stats({
                   mode: 0o755 | constants.S_IFDIR,
                   size: 4096,
@@ -202,39 +185,39 @@ class Server {
               });
             }
             return out;
-          }
+          };
 
-          sftp.on('STAT', (id, path) => {
-            const dirname = path.dirname(path);
-            const basename = path.basename(path);
-            let attrs_ = {};
-            if (path == '/') {
-              attrs_.mode = 0o664 | constants.S_IFDIR;
-              sftp.attrs(id, attrs_);
+          sftp.on("STAT", (id, filePath) => {
+            const dirname = path.dirname(filePath);
+            const basename = path.basename(filePath);
+            let attrs = {};
+            if (filePath === "/") {
+              attrs.mode = 0o664 | constants.S_IFDIR;
+              sftp.attrs(id, attrs);
               return;
             }
             backend.ls(dirname, (err, res) => {
-              for (let i = 0; i < res.length; ++i) {
-                const file = res[i];
-                if (file.name == basename) {
-                  const mode = file.extension == '+folder' ? constants.S_IFDIR : constants.S_IFREG;
-                  attrs_ = new Stats({
-                    mode: 0o644 | mode,
-                    size: file.size,
-                    uid: 9001,
-                    gid: 8001,
-                    atime: file.modificationTime,
-                    mtime: file.modificationTime,
-                  });
-                  break;
-                }
+              const file = res.find((f) => f.name === basename);
+              if (file) {
+                const mode =
+                  file.extension === "+folder"
+                    ? constants.S_IFDIR
+                    : constants.S_IFREG;
+                attrs = new Stats({
+                  mode: 0o644 | mode,
+                  size: file.size,
+                  uid: 9001,
+                  gid: 8001,
+                  atime: file.modificationTime,
+                  mtime: file.modificationTime,
+                });
               }
-              sftp.attrs(id, attrs_);
+              sftp.attrs(id, attrs);
             });
           });
 
-          sftp.on('LSTAT', (id, path) => {
-            const attrs_ = new Stats({
+          sftp.on("LSTAT", (id, filePath) => {
+            const attrs = new Stats({
               mode: 0o644 | constants.S_IFREG,
               size: 1024,
               uid: 9001,
@@ -242,39 +225,39 @@ class Server {
               atime: (Date.now() / 1000) | 0,
               mtime: (Date.now() / 1000) | 0,
             });
-            sftp.attrs(id, attrs_);
+            sftp.attrs(id, attrs);
           });
 
-          sftp.on('OPENDIR', (id, path) => {
-            const handle_ = Buffer.from(randomValueHex());
-            sftp.handles[handle_] = { path: path, next_index: 0 };
-            sftp.handle(id, handle_);
+          sftp.on("OPENDIR", (id, dirPath) => {
+            const handle = Buffer.from(randomValueHex());
+            sftp.handles[handle] = { path: dirPath, next_index: 0 };
+            sftp.handle(id, handle);
           });
 
-          sftp.on('READDIR', (id, handle) => {
-            const path = sftp.handles[handle].path;
+          sftp.on("READDIR", (id, handle) => {
+            const dirPath = sftp.handles[handle].path;
             if (sftp.handles[handle].next_index > 0) {
               sftp.name(id, []);
               return;
             }
-            backend.ls(path, (err, res) => {
-              const list_ = asSSHFile(res);
-              sftp.handles[handle].next_index = list_.length;
-              sftp.name(id, list_);
+            backend.ls(dirPath, (err, res) => {
+              const list = asSSHFile(res);
+              sftp.handles[handle].next_index = list.length;
+              sftp.name(id, list);
             });
           });
 
-          sftp.on('OPEN', (id, path, flags, attrs) => {
-            if (flags == OPEN_MODE.READ) {
-              backend.cat(path, (err, results) => {
+          sftp.on("OPEN", (id, filePath, flags, attrs) => {
+            if (flags === OPEN_MODE.READ) {
+              backend.cat(filePath, (err, results) => {
                 if (err) {
                   sftp.status(id, STATUS_CODE.NO_SUCH_FILE);
                   return;
                 }
-                const stream = results.stream;
-                const handle_ = Buffer.from(randomValueHex());
-                sftp.handles[handle_] = {
-                  stream: stream,
+                const { stream } = results;
+                const handle = Buffer.from(randomValueHex());
+                sftp.handles[handle] = {
+                  stream,
                   transferred: 0,
                   hooked: false,
                   queuedRead: [],
@@ -282,16 +265,24 @@ class Server {
                   isReadEnd: false,
                   buff: Buffer.alloc(0),
                 };
-                sftp.handle(id, handle_);
+                sftp.handle(id, handle);
                 stream.pause();
               });
             }
-            if (flags == (OPEN_MODE.TRUNC | OPEN_MODE.CREAT | OPEN_MODE.WRITE)) {
-              const handle_ = Buffer.from(randomValueHex());
+            if (
+              flags ===
+              (OPEN_MODE.TRUNC | OPEN_MODE.CREAT | OPEN_MODE.WRITE)
+            ) {
+              const handle = Buffer.from(randomValueHex());
               const pass = new PassThrough();
-              sftp.handles[handle_] = { stream: pass, mode: 'w', queuedWrite: [], hooked: false };
-              sftp.handle(id, handle_);
-              backend.write(path, pass, (err, result) => {
+              sftp.handles[handle] = {
+                stream: pass,
+                mode: "w",
+                queuedWrite: [],
+                hooked: false,
+              };
+              sftp.handle(id, handle);
+              backend.write(filePath, pass, (err, result) => {
                 if (err) {
                   sftp.status(id, STATUS_CODE.FAILURE);
                 }
@@ -299,119 +290,107 @@ class Server {
             }
           });
 
-          sftp.on('CLOSE', (id, handle) => {
-            if (sftp.handles[handle].mode == 'w') {
+          sftp.on("CLOSE", (id, handle) => {
+            if (sftp.handles[handle]?.mode === "w") {
               sftp.handles[handle].stream.push(null);
             }
-            if (sftp.handles[handle]) delete sftp.handles[handle];
+            delete sftp.handles[handle];
             sftp.status(id, STATUS_CODE.OK);
           });
 
-          sftp.on('READ', (id, handle, offset, length) => {
-            const stream = sftp.handles[handle].stream;
-            if (stream == null || typeof stream == 'undefined') {
+          sftp.on("READ", (id, handle, offset, length) => {
+            const h = sftp.handles[handle];
+            if (!h || !h.stream) {
               sftp.status(id, STATUS_CODE.NO_SUCH_FILE);
               return;
             }
-            if (sftp.handles[handle].isReadEnd) {
+            if (h.isReadEnd) {
               sftp.status(id, STATUS_CODE.EOF);
-              sftp.handles[handle].isReadEnd = false;
-              sftp.handles[handle].buff = null;
+              h.isReadEnd = false;
+              h.buff = null;
               return;
             }
-            if (!sftp.handles[handle].hooked) {
-              sftp.handles[handle].hooked = true;
-              stream.once('end', () => {
-                if (sftp.handles[handle].queuedRead.length > 0) {
-                  const cmd = sftp.handles[handle].queuedRead[0];
-                  const id = cmd.id;
-                  sftp.data(id, sftp.handles[handle].buff);
+            if (!h.hooked) {
+              h.hooked = true;
+              h.stream.once("end", () => {
+                if (h.queuedRead.length > 0) {
+                  const cmd = h.queuedRead.shift();
+                  sftp.data(cmd.id, h.buff);
                 }
-                sftp.handles[handle].queuedRead.shift();
-                if (sftp.handles[handle].queuedRead.length > 0) {
-                  const cmd = sftp.handles[handle].queuedRead[0];
-                  const id = cmd.id;
-                  sftp.status(id, STATUS_CODE.EOF);
+                if (h.queuedRead.length > 0) {
+                  const cmd = h.queuedRead.shift();
+                  sftp.status(cmd.id, STATUS_CODE.EOF);
                 }
-                sftp.handles[handle].isReadEnd = true;
+                h.isReadEnd = true;
               });
-              stream.on('data', (chunk) => {
-                sftp.handles[handle].buff = Buffer.concat([sftp.handles[handle].buff, chunk]);
-                if (sftp.handles[handle].queuedRead.length > 0) {
-                  const cmd = sftp.handles[handle].queuedRead[0];
-                  const length = cmd.length;
-                  const id = cmd.id;
-                  if (sftp.handles[handle].buff.length >= length) {
-                    const buf1 = sftp.handles[handle].buff.slice(0, length);
-                    sftp.handles[handle].transferred += length;
-                    sftp.data(id, buf1);
-                    sftp.handles[handle].buff = sftp.handles[handle].buff.slice(length);
-                    sftp.handles[handle].queuedRead.shift();
+              h.stream.on("data", (chunk) => {
+                h.buff = Buffer.concat([h.buff, chunk]);
+                if (h.queuedRead.length > 0) {
+                  const cmd = h.queuedRead[0];
+                  if (h.buff.length >= cmd.length) {
+                    const buf1 = h.buff.slice(0, cmd.length);
+                    h.transferred += cmd.length;
+                    sftp.data(cmd.id, buf1);
+                    h.buff = h.buff.slice(cmd.length);
+                    h.queuedRead.shift();
                   }
                 }
-                if (sftp.handles[handle].buff.length > 1e6) {
-                  stream.pause();
+                if (h.buff.length > 1e6) {
+                  h.stream.pause();
                 }
               });
             }
-            if (sftp.handles[handle].buff.length >= length) {
-              const buf1 = sftp.handles[handle].buff.slice(0, length);
-              sftp.handles[handle].transferred += length;
+            if (h.buff.length >= length) {
+              const buf1 = h.buff.slice(0, length);
+              h.transferred += length;
               sftp.data(id, buf1);
-              sftp.handles[handle].buff = sftp.handles[handle].buff.slice(length);
+              h.buff = h.buff.slice(length);
             } else {
-              sftp.handles[handle].queuedRead.push({ id: id, length: length });
+              h.queuedRead.push({ id, length });
             }
-            if (sftp.handles[handle].buff.length < 1e6 && !sftp.handles[handle].isReadEnd) {
-              stream.resume();
+            if (h.buff.length < 1e6 && !h.isReadEnd) {
+              h.stream.resume();
             }
           });
 
-          sftp.on('WRITE', (id, handle, offset, data) => {
-            const rs = sftp.handles[handle].stream;
-            if (rs == null || typeof rs == 'undefined') {
+          sftp.on("WRITE", (id, handle, offset, data) => {
+            const h = sftp.handles[handle];
+            if (!h || !h.stream) {
               sftp.status(id, STATUS_CODE.FAILURE);
               return;
             }
-            if (!sftp.handles[handle].hooked) {
-              sftp.handles[handle].hooked = true;
-              rs._read = function () {
-                const queueLength = sftp.handles[handle].queuedWrite.length;
-                const limit = queueLength < 5 ? queueLength : 5;
-                for (let i = 0; i < limit; ++i) {
-                  const id = sftp.handles[handle].queuedWrite[i];
-                  sftp.status(id, STATUS_CODE.OK);
-                }
-                for (let i = 0; i < limit; ++i) {
-                  sftp.handles[handle].queuedWrite.shift();
+            if (!h.hooked) {
+              h.hooked = true;
+              h.stream._read = () => {
+                const limit = Math.min(h.queuedWrite.length, 5);
+                for (let i = 0; i < limit; i++) {
+                  sftp.status(h.queuedWrite.shift(), STATUS_CODE.OK);
                 }
               };
             }
-            if (rs.push(data)) {
+            if (h.stream.push(data)) {
               sftp.status(id, STATUS_CODE.OK);
             } else {
-              sftp.handles[handle].queuedWrite.push(id);
+              h.queuedWrite.push(id);
             }
           });
 
-          sftp.on('REMOVE', (id, path) => {
-            backend.unlink(path, (err) => {
-              if (err) sftp.status(id, STATUS_CODE.FAILURE);
-              else sftp.status(id, STATUS_CODE.OK);
+          sftp.on("REMOVE", (id, filePath) => {
+            backend.unlink(filePath, (err) => {
+              sftp.status(id, err ? STATUS_CODE.FAILURE : STATUS_CODE.OK);
             });
           });
 
-          sftp.on('RMDIR', (id, path) => {
-            backend.rmdir(path, (err, res) => {
-              if (err) sftp.status(id, STATUS_CODE.FAILURE);
-              else sftp.status(id, STATUS_CODE.OK);
+          sftp.on("RMDIR", (id, dirPath) => {
+            backend.rmdir(dirPath, (err, res) => {
+              sftp.status(id, err ? STATUS_CODE.FAILURE : STATUS_CODE.OK);
             });
           });
 
-          sftp.on('REALPATH', (id, path) => {
-            path = path.normalize(path);
+          sftp.on("REALPATH", (id, filePath) => {
+            const normalizedPath = path.normalize(filePath);
             const name = {
-              filename: '/',
+              filename: "/",
               attrs: new Stats({
                 mode: 0o644 | constants.S_IFDIR,
                 size: 4096,
@@ -421,25 +400,21 @@ class Server {
                 mtime: (Date.now() / 1000) | 0,
               }),
             };
-            if (path != '.') name.filename = path;
+            if (normalizedPath !== ".") name.filename = normalizedPath;
             sftp.name(id, name);
           });
 
-          sftp.on('MKDIR', (id, path, attrs) => {
-            backend.mkdir(path, (err) => {
-              if (err) sftp.status(id, STATUS_CODE.FAILURE);
-              else sftp.status(id, STATUS_CODE.OK);
+          sftp.on("MKDIR", (id, dirPath, attrs) => {
+            backend.mkdir(dirPath, (err) => {
+              sftp.status(id, err ? STATUS_CODE.FAILURE : STATUS_CODE.OK);
             });
           });
         };
 
-        client.on('ready', () => {
-          client.on('session', (accept, reject) => {
+        client.on("ready", () => {
+          client.on("session", (accept, reject) => {
             const session = accept();
-            session.once('exec', (accept, reject, info) => {
-              console.log('[SSH Server] : Client wants to execute: ' + require('util').inspect(info.command));
-            });
-            session.once('sftp', (accept, reject) => {
+            session.once("sftp", (accept, reject) => {
               if (accept) {
                 const sftp = accept();
                 setSftpListener(sftp);
@@ -447,23 +422,10 @@ class Server {
             });
           });
         });
-
-        client.on('end', () => {
-          console.log('[SSH Server] :  The client socket disconnected.');
-        });
-
-        client.on('close', (hadError) => {
-          if (hadError) console.log('[SSH Server] :  The client socket was closed due to error');
-          console.log('[SSH Server] :  The client socket was closed');
-        });
       },
     );
 
-    sshServer.listen(SSHCredentials.port, SSHCredentials.host, function () {
-      console.log('[SSH Server] : Listening on port ' + this.address().port);
-    });
-
-    this.sshServer = sshServer;
+    this.sshServer.listen(port, host);
   }
 }
 
