@@ -1605,7 +1605,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"asn1@npm:~0.2.0, asn1@npm:~0.2.3":
+"asn1@npm:^0.2.6, asn1@npm:~0.2.3":
   version: 0.2.6
   resolution: "asn1@npm:0.2.6"
   dependencies:
@@ -1706,7 +1706,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bcrypt-pbkdf@npm:^1.0.0":
+"bcrypt-pbkdf@npm:^1.0.0, bcrypt-pbkdf@npm:^1.0.2":
   version: 1.0.2
   resolution: "bcrypt-pbkdf@npm:1.0.2"
   dependencies:
@@ -1768,13 +1768,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"buffer-equal-constant-time@npm:1.x":
-  version: 1.0.1
-  resolution: "buffer-equal-constant-time@npm:1.0.1"
-  checksum: 10c0/fb2294e64d23c573d0dd1f1e7a466c3e978fe94a4e0f8183937912ca374619773bef8e2aceb854129d2efecbbc515bbd0cc78d2734a3e3031edb0888531bbc8e
-  languageName: node
-  linkType: hard
-
 "buffer@npm:4.9.2":
   version: 4.9.2
   resolution: "buffer@npm:4.9.2"
@@ -1793,6 +1786,13 @@ __metadata:
     base64-js: "npm:^1.3.1"
     ieee754: "npm:^1.1.13"
   checksum: 10c0/27cac81cff434ed2876058d72e7c4789d11ff1120ef32c9de48f59eab58179b66710c488987d295ae89a228f835fc66d088652dffeb8e3ba8659f80eb091d55e
+  languageName: node
+  linkType: hard
+
+"buildcheck@npm:~0.0.6":
+  version: 0.0.6
+  resolution: "buildcheck@npm:0.0.6"
+  checksum: 10c0/8cbdb89f41bc484b8325f4828db4135b206a0dffb641eb6cdb2b7022483c45dd0e5aac6d820c9a67bdd2caab3a02c76d7ceec7bd9ec494b5a2270d2806b01a76
   languageName: node
   linkType: hard
 
@@ -2119,6 +2119,17 @@ __metadata:
   version: 1.0.3
   resolution: "core-util-is@npm:1.0.3"
   checksum: 10c0/90a0e40abbddfd7618f8ccd63a74d88deea94e77d0e8dbbea059fa7ebebb8fbb4e2909667fe26f3a467073de1a542ebe6ae4c73a73745ac5833786759cd906c9
+  languageName: node
+  linkType: hard
+
+"cpu-features@npm:~0.0.10":
+  version: 0.0.10
+  resolution: "cpu-features@npm:0.0.10"
+  dependencies:
+    buildcheck: "npm:~0.0.6"
+    nan: "npm:^2.19.0"
+    node-gyp: "npm:latest"
+  checksum: 10c0/0c4a12904657b22477ffbcfd2b4b2bdd45b174f283616b18d9e1ade495083f9f6098493feb09f4ae2d0b36b240f9ecd32cfb4afe210cf0d0f8f0cc257bd58e54
   languageName: node
   linkType: hard
 
@@ -2625,11 +2636,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "folders-ssh@workspace:packages/folders-ssh"
   dependencies:
-    buffer-equal-constant-time: "npm:1.x"
-    folders: "npm:0.0.x"
-    mime: "npm:^1.3.4"
-    ssh2: "npm:0.4.x"
-    zod: "npm:^3.0.0"
+    mime: "npm:^3.0.0"
+    ssh2: "npm:^1.15.0"
+    zod: "npm:^4.0.17"
   languageName: unknown
   linkType: soft
 
@@ -2637,13 +2646,6 @@ __metadata:
   version: 0.0.5
   resolution: "folders@npm:0.0.5"
   checksum: 10c0/e8f4c04e4e830959d7bd2a8ecd4b8fa1ebf837d5baa73fe4e2b773a0a723671977fffac2d6bceea18e174e316c39f5f5bb4b9f5959a321913e4018c60cac5d33
-  languageName: node
-  linkType: hard
-
-"folders@npm:0.0.x":
-  version: 0.0.7
-  resolution: "folders@npm:0.0.7"
-  checksum: 10c0/715afdf67416429b9c2dbcf2aa5d84731de3b890b26be5476ec8afcdd0e239129eeaf6d5b8a1828e99ec6ccb3e66ff302269f3ec5d984a7c7e9b8550f7b39a3b
   languageName: node
   linkType: hard
 
@@ -3594,6 +3596,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mime@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "mime@npm:3.0.0"
+  bin:
+    mime: cli.js
+  checksum: 10c0/402e792a8df1b2cc41cb77f0dcc46472b7944b7ec29cb5bbcd398624b6b97096728f1239766d3fdeb20551dd8d94738344c195a6ea10c4f906eb0356323b0531
+  languageName: node
+  linkType: hard
+
 "mimic-response@npm:^3.1.0":
   version: 3.1.0
   resolution: "mimic-response@npm:3.1.0"
@@ -3772,6 +3783,15 @@ __metadata:
   version: 2.1.3
   resolution: "ms@npm:2.1.3"
   checksum: 10c0/d924b57e7312b3b63ad21fc5b3dc0af5e78d61a1fc7cfb5457edaf26326bf62be5307cc87ffb6862ef1c2b33b0233cdb5d4f01c4c958cc0d660948b65a287a48
+  languageName: node
+  linkType: hard
+
+"nan@npm:^2.19.0, nan@npm:^2.20.0":
+  version: 2.23.0
+  resolution: "nan@npm:2.23.0"
+  dependencies:
+    node-gyp: "npm:latest"
+  checksum: 10c0/b986dd257dca53ab43a3b6ca6d0eafde697b69e1d63b242fa4aece50ce97eb169f9c4a5d8eb0eb5f58d118a9595fee11f3198fa210f023440053bb6f54109e73
   languageName: node
   linkType: hard
 
@@ -4285,18 +4305,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"readable-stream@npm:~1.0.0":
-  version: 1.0.34
-  resolution: "readable-stream@npm:1.0.34"
-  dependencies:
-    core-util-is: "npm:~1.0.0"
-    inherits: "npm:~2.0.1"
-    isarray: "npm:0.0.1"
-    string_decoder: "npm:~0.10.x"
-  checksum: 10c0/02272551396ed8930ddee1a088bdf0379f0f7cc47ac49ed8804e998076cb7daec9fbd2b1fd9c0490ec72e56e8bb3651abeb8080492b8e0a9c3f2158330908ed6
-  languageName: node
-  linkType: hard
-
 "request@npm:^2.55.0":
   version: 2.88.2
   resolution: "request@npm:2.88.2"
@@ -4619,24 +4627,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ssh2-streams@npm:~0.0.22":
-  version: 0.0.23
-  resolution: "ssh2-streams@npm:0.0.23"
+"ssh2@npm:^1.15.0":
+  version: 1.16.0
+  resolution: "ssh2@npm:1.16.0"
   dependencies:
-    asn1: "npm:~0.2.0"
-    readable-stream: "npm:~1.0.0"
-    streamsearch: "npm:~0.1.2"
-  checksum: 10c0/713a97d3c298cb120de70a9f1787759ea94f6d157a98efc709664e54eda52d7dad3e007f3e47688142e076a4e83ab19d606cae3df402c6d5e7e84f94621bc878
-  languageName: node
-  linkType: hard
-
-"ssh2@npm:0.4.x":
-  version: 0.4.15
-  resolution: "ssh2@npm:0.4.15"
-  dependencies:
-    readable-stream: "npm:~1.0.0"
-    ssh2-streams: "npm:~0.0.22"
-  checksum: 10c0/6acb9f3337dd81c691336903b6b441df9c94f0d4eabe46f891250ff7c50ddd1a331476503ff5fef1b9da45272fa0466414dcd20114cd334b8d3b1698923badb4
+    asn1: "npm:^0.2.6"
+    bcrypt-pbkdf: "npm:^1.0.2"
+    cpu-features: "npm:~0.0.10"
+    nan: "npm:^2.20.0"
+  dependenciesMeta:
+    cpu-features:
+      optional: true
+    nan:
+      optional: true
+  checksum: 10c0/d336a85d87501c64ba230b6c1a2901a9b0e376fe7f7a1640a7f8dbdafe674b2e1a5dc6236ffd1329969dc0cf03cd57759b28743075e61229a984065ee1d56bed
   languageName: node
   linkType: hard
 
@@ -4717,7 +4721,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"streamsearch@npm:0.1.2, streamsearch@npm:~0.1.2":
+"streamsearch@npm:0.1.2":
   version: 0.1.2
   resolution: "streamsearch@npm:0.1.2"
   checksum: 10c0/408a3db5b5643c1d6eb65c9d8ccc011b4857bfca41946d808b7f165b5b85f47755b2ff56ec1c4bbbeb5a496afcde9adfea12f9f67bd09ff3f04ae3f1f58d37c6

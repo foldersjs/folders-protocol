@@ -1,39 +1,33 @@
-import uriParse from 'url';
-import { Client } from 'ssh2';
-import path from 'path';
-import mime from 'mime';
-import { z } from 'zod';
-import fs from 'fs';
+import ssh2 from "ssh2";
+const { Client } = ssh2;
+import path from "path";
+import mime from "mime";
+import { z } from "zod";
+import fs from "fs";
+import { promisify } from "util";
 
-import Config from '../config.js';
-import SSHServer from './embedded-ssh-server.js';
+import Config from "../config.js";
+import SSHServer from "./embedded-ssh-server.js";
 
 const FoldersSshOptions = z.object({
-  connectionString: z.string(),
+  connectionString: z.string().url(),
   enableEmbeddedServer: z.boolean().optional(),
   backend: z.any().optional(),
+  privateKeyPath: z.string().optional(),
+  privateKey: z.string().optional(),
 });
 
-const home = function () {
-  return process.env[process.platform == 'win32' ? 'USERPROFILE' : 'HOME'];
-};
+const home = () =>
+  process.env[process.platform === "win32" ? "USERPROFILE" : "HOME"];
 
-const parseConnString = function (connectionString) {
-  const uri = uriParse.parse(connectionString, true);
-  const conn = {
-    host: uri.hostname || uri.host,
-    port: uri.port || 21,
+const parseConnString = (connectionString) => {
+  const uri = new URL(connectionString);
+  return {
+    host: uri.hostname,
+    port: uri.port || 22,
+    user: uri.username,
+    pass: uri.password,
   };
-  if (uri.auth) {
-    const auth = uri.auth.split(':', 2);
-    conn.user = auth[0];
-    if (auth.length == 2) {
-      conn.pass = auth[1];
-    }
-  }
-  conn.debugMode = true;
-
-  return conn;
 };
 
 class FoldersSsh {
@@ -53,7 +47,7 @@ class FoldersSsh {
   }
 
   static dataVolume() {
-    return { RXOK: FoldersSsh.RXOK, TXOK: FoldersSsh.TXOK };
+    return { RXOK: FoldersSsh.RXOK, TXOK: FoldSsh.TXOK };
   }
 
   static TXOK = 0;
@@ -64,325 +58,161 @@ class FoldersSsh {
     ls: true,
     write: true,
     server: true,
+    unlink: true,
+    rmdir: true,
+    mkdir: true,
+    stat: true,
   };
 
-  connect(conn) {
+  async #connect() {
+    const conn = new Client();
+    const connectionDetails = this.#getConnectionDetails();
+    const readyPromise = new Promise((resolve, reject) => {
+      conn.on("ready", () => resolve(conn)).on("error", reject);
+    });
+    conn.connect(connectionDetails);
+    return readyPromise;
+  }
+
+  #getConnectionDetails() {
     let privateKey;
-    if (Config.client.privateKeyPath) {
-      privateKey = fs.readFileSync(Config.client.privateKeyPath);
-    } else if (Config.client.privateKey) {
-      privateKey = Config.client.privateKey;
-    } else {
-      privateKey = fs.readFileSync(home() + '/.ssh/id_rsa');
+    if (this.options.privateKeyPath) {
+      privateKey = fs.readFileSync(this.options.privateKeyPath);
+    } else if (this.options.privateKey) {
+      privateKey = this.options.privateKey;
+    } else if (fs.existsSync(path.join(home(), ".ssh", "id_rsa"))) {
+      privateKey = fs.readFileSync(path.join(home(), ".ssh", "id_rsa"));
     }
+
+    const conn = parseConnString(this.connectionString);
 
     const connectionDetails = {
-      host: this.credentials.host,
-      port: this.credentials.port,
-      username: this.credentials.user,
-      privateKey: privateKey,
+      host: conn.host,
+      port: conn.port,
+      username: conn.user,
     };
 
-    if (this.credentials.pass) {
-      connectionDetails.password = this.credentials.pass;
+    if (privateKey) {
+      connectionDetails.privateKey = privateKey;
     }
-    conn.connect(connectionDetails);
-  }
-
-  ls(filePath, cb) {
-    console.log('[folders-ssh ls] folders-ssh, ls ', filePath);
-    if (filePath.length && filePath.substr(0, 1) != '/') filePath = '/' + filePath;
-    if (filePath.length && filePath.substr(-1) != '/') filePath = filePath + '/';
-
-    const conn = new Client();
-    conn
-      .on('ready', () => {
-        console.log('[folders-ssh ls] Client :: ready');
-
-        conn.sftp((err, sftp) => {
-          if (err) {
-            console.error('[folders-ssh ls] error in sftp,', err);
-            return cb(err);
-          }
-
-          sftp.opendir(filePath, (err, handle) => {
-            if (err) {
-              console.error('[folders-ssh ls] error in opendir,', err);
-              return cb(err);
-            }
-
-            sftp.readdir(handle, { full: true }, (err, list) => {
-              if (err) {
-                console.error('[folders-ssh ls] error in readdir,', err);
-                return cb(err);
-              }
-
-              cb(null, this.asFolders(filePath, list));
-              conn.end();
-            });
-          });
-        });
-      })
-      .on('error', (err) => {
-        cb(err);
-      });
-
-    this.connect(conn);
-  }
-
-  asFolders(dir, files) {
-    const z = [];
-
-    for (let i = 0; i < files.length; ++i) {
-      const file = files[i];
-      const o = {};
-      o.name = file.filename;
-      o.extension = path.extname(o.name);
-      o.size = file.attrs.size || 0;
-      if (file.longname.substr(0, 1) == 'd') {
-        o.extension = '+folder';
-        o.type = '';
-      }
-      o.type = o.extension == '+folder' ? '' : mime.lookup(o.extension);
-      o.fullPath = dir + file.filename;
-
-      o.uri = o.fullPath;
-      if (!o.meta) o.meta = {};
-      const cols = ['mode', 'permissions', 'uid', 'gid'];
-      for (const meta in cols) o.meta[cols[meta]] = file.attrs[cols[meta]];
-      o.modificationTime = file.attrs.mtime;
-      z.push(o);
+    if (conn.pass) {
+      connectionDetails.password = conn.pass;
     }
 
-    return z;
+    return connectionDetails;
   }
 
-  cat(filePath, cb) {
-    console.log('[folders-ssh cat] folders-ssh, cat ', filePath);
-
-    const conn = new Client();
-    conn
-      .on('ready', () => {
-        console.log('[folders-ssh cat] Client :: ready');
-
-        conn.sftp((err, sftp) => {
-          if (err) {
-            console.error('[folders-ssh cat] error in sftp conn,', err);
-            return cb(err);
-          }
-
-          sftp.stat(filePath, (err, attrs) => {
-            if (err) {
-              console.error('[folders-ssh cat] error in stat ,', err);
-              return cb(err);
-            }
-
-            const stream = sftp.createReadStream(filePath);
-            cb(null, {
-              stream: stream,
-              size: attrs.size,
-              name: path.basename(filePath),
-            });
-          });
-        });
-      })
-      .on('error', (err) => {
-        cb(err);
+  async ls(filePath) {
+    const conn = await this.#connect();
+    try {
+      const sftp = await promisify(conn.sftp.bind(conn))();
+      const list = await promisify(sftp.readdir.bind(sftp))(filePath, {
+        full: true,
       });
-
-    this.connect(conn);
+      return this.#asFolders(filePath, list);
+    } finally {
+      conn.end();
+    }
   }
 
-  write(filePath, data, cb) {
-    console.log('[folders-ssh write] folders-ssh, write ', filePath);
+  #asFolders(dir, files) {
+    return files.map((file) => {
+      const isDirectory = file.longname.startsWith("d");
+      const extension = isDirectory ? "+folder" : path.extname(file.filename);
+      const type = isDirectory
+        ? ""
+        : mime.getType(extension) || "application/octet-stream";
 
-    const conn = new Client();
-    conn
-      .on('ready', () => {
-        console.log('[folders-ssh write] Client :: ready');
-
-        conn.sftp((err, sftp) => {
-          if (err) {
-            console.error('[folders-ssh write] error in sftp conn,', err);
-            return cb(err);
-          }
-
-          try {
-            if (data instanceof Buffer) {
-              const stream = sftp.createWriteStream(filePath);
-              stream.write(data, () => {
-                stream.end(() => {
-                  cb('write uri success');
-                  conn.end();
-                });
-              });
-            } else {
-              const errHandle = (e) => {
-                cb(e.message);
-                conn.end();
-              };
-
-              sftp.open(filePath, 'w', (err, handle) => {
-                if (err) {
-                  return errHandle(err);
-                }
-
-                data.on('data', (buf) => {
-                  FoldersSsh.RXOK += buf.length;
-                  sftp.write(handle, buf, 0, buf.length, 0, (err) => {
-                    if (err) {
-                      return errHandle(err);
-                    }
-                  });
-                });
-
-                data.on('end', () => {
-                  // sftp.end();
-                });
-
-                data.on('close', () => {
-                  sftp.close(handle, (err) => {
-                    if (err) {
-                      return errHandle(err);
-                    }
-                    cb(null, 'write uri success');
-                    conn.end();
-                  });
-                });
-              });
-            }
-          } catch (e) {
-            cb('unable to write uri,' + e.message);
-            conn.end();
-          }
-        });
-      })
-      .on('error', (err) => {
-        cb(err);
-      });
-
-    this.connect(conn);
+      return {
+        name: file.filename,
+        extension,
+        size: file.attrs.size || 0,
+        type,
+        fullPath: path.join(dir, file.filename),
+        uri: path.join(dir, file.filename),
+        meta: {
+          mode: file.attrs.mode,
+          permissions: file.attrs.permissions,
+          uid: file.attrs.uid,
+          gid: file.attrs.gid,
+        },
+        modificationTime: file.attrs.mtime,
+      };
+    });
   }
 
-  unlink(filePath, cb) {
-    console.log('[folders-ssh unlink] folders-ssh, unlink ', filePath);
-
-    const conn = new Client();
-    conn
-      .on('ready', () => {
-        console.log('[folders-ssh unlink] Client :: ready');
-
-        conn.sftp((err, sftp) => {
-          if (err) {
-            console.error('[folders-ssh unlink] error in sftp conn,', err);
-            return cb(err);
-          }
-
-          sftp.unlink(filePath, (err) => {
-            if (err) {
-              console.error('[folders-ssh unlink] error in sftp unlink,', err);
-              return cb(err);
-            }
-            cb();
-            conn.end();
-          });
-        });
-      })
-      .on('error', (err) => {
-        cb(err);
-      });
-
-    this.connect(conn);
+  async cat(filePath) {
+    const conn = await this.#connect();
+    try {
+      const sftp = await promisify(conn.sftp.bind(conn))();
+      const attrs = await promisify(sftp.stat.bind(sftp))(filePath);
+      const stream = sftp.createReadStream(filePath);
+      return {
+        stream,
+        size: attrs.size,
+        name: path.basename(filePath),
+      };
+    } catch (err) {
+      conn.end();
+      throw err;
+    }
   }
 
-  rmdir(filePath, cb) {
-    console.log('[folders-ssh rmdir] folders-ssh, rmdir ', filePath);
-
-    const conn = new Client();
-    conn
-      .on('ready', () => {
-        console.log('[folders-ssh rmdir] Client :: ready');
-        conn.sftp((err, sftp) => {
-          if (err) {
-            console.error('[folders-ssh rmdir] error in sftp conn,', err);
-            return cb(err);
-          }
-
-          sftp.rmdir(filePath, (err) => {
-            if (err) {
-              console.error('[folders-ssh rmdir] error in sftp rmdir,', err);
-              return cb(err);
-            }
-            cb();
-            conn.end();
-          });
-        });
-      })
-      .on('error', (err) => {
-        cb(err);
+  async write(filePath, data) {
+    const conn = await this.#connect();
+    try {
+      const sftp = await promisify(conn.sftp.bind(conn))();
+      const writeStream = sftp.createWriteStream(filePath);
+      data.pipe(writeStream);
+      await new Promise((resolve, reject) => {
+        writeStream.on("finish", resolve);
+        writeStream.on("error", reject);
+        data.on("error", reject);
       });
-
-    this.connect(conn);
+      return "write uri success";
+    } finally {
+      conn.end();
+    }
   }
 
-  mkdir(filePath, cb) {
-    console.log('[folders-ssh mkdir] folders-ssh, mkdir ', filePath);
-
-    const conn = new Client();
-    conn
-      .on('ready', () => {
-        console.log('[folders-ssh mkdir] Client :: ready');
-        conn.sftp((err, sftp) => {
-          if (err) {
-            console.error('[folders-ssh mkdir] error in sftp conn,', err);
-            return cb(err);
-          }
-
-          sftp.mkdir(filePath, (err) => {
-            if (err) {
-              console.error('[folders-ssh mkdir] error in sftp mkdir,', err);
-              return cb(err);
-            }
-            cb();
-            conn.end();
-          });
-        });
-      })
-      .on('error', (err) => {
-        cb(err);
-      });
-
-    this.connect(conn);
+  async unlink(filePath) {
+    const conn = await this.#connect();
+    try {
+      const sftp = await promisify(conn.sftp.bind(conn))();
+      await promisify(sftp.unlink.bind(sftp))(filePath);
+    } finally {
+      conn.end();
+    }
   }
 
-  stat(filePath, cb) {
-    console.log('[folders-ssh stat] folders-ssh, stat ', filePath);
+  async rmdir(filePath) {
+    const conn = await this.#connect();
+    try {
+      const sftp = await promisify(conn.sftp.bind(conn))();
+      await promisify(sftp.rmdir.bind(sftp))(filePath);
+    } finally {
+      conn.end();
+    }
+  }
 
-    const conn = new Client();
-    conn
-      .on('ready', () => {
-        console.log('[folders-ssh stat] Client :: ready');
-        conn.sftp((err, sftp) => {
-          if (err) {
-            console.error('[folders-ssh stat] error in sftp conn,', err);
-            return cb(err);
-          }
+  async mkdir(filePath) {
+    const conn = await this.#connect();
+    try {
+      const sftp = await promisify(conn.sftp.bind(conn))();
+      await promisify(sftp.mkdir.bind(sftp))(filePath);
+    } finally {
+      conn.end();
+    }
+  }
 
-          sftp.stat(filePath, (err, stats) => {
-            if (err) {
-              console.error('[folders-ssh stat] error in sftp stat,', err);
-              return cb(err);
-            }
-            cb(null, stats);
-            conn.end();
-          });
-        });
-      })
-      .on('error', (err) => {
-        cb(err);
-      });
-
-    this.connect(conn);
+  async stat(filePath) {
+    const conn = await this.#connect();
+    try {
+      const sftp = await promisify(conn.sftp.bind(conn))();
+      return await promisify(sftp.stat.bind(sftp))(filePath);
+    } finally {
+      conn.end();
+    }
   }
 
   dump() {
