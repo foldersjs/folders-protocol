@@ -7,27 +7,22 @@ import { Readable } from "stream";
 let hdfs;
 
 const prefix = "/http_window.io_0:webhdfs/";
-const PORT = 40051; // Use a different port to avoid conflict with other tests
+const PORT = 9870; // Port exposed by the Docker container
 const url = `http://localhost:${PORT}/webhdfs/v1/`;
 
-before(async () => {
+before(() => {
+  // The username 'testuser' is passed as a query parameter to WebHDFS.
+  // The Hadoop container will create the user's home directory on the fly.
   const options = {
     baseurl: url,
     username: "testuser",
-    startEmbeddedProxy: true,
-    backend: {
-      provider: "memory",
-      port: PORT,
-    },
   };
   hdfs = new FoldersHdfs(prefix, options);
-  await hdfs.start();
+  // The HDFS container is started by an external script, so no hdfs.start() is needed here.
 });
 
-after(async () => {
-  if (hdfs) {
-    await hdfs.stop();
-  }
+after(() => {
+  // The HDFS container is stopped by an external script, so no hdfs.stop() is needed here.
 });
 
 test("FoldersHdfs integration tests", async (t) => {
