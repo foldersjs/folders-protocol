@@ -82,7 +82,7 @@ test("FoldersHdfs unit tests", async (t) => {
           async text() {
             return res._body;
           },
-          body: res._body ? Readable.from(res._body) : null,
+          body: res._body ? Readable.toWeb(Readable.from(res._body)) : null,
         };
         resolve(response);
       };

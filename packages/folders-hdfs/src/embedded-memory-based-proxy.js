@@ -44,7 +44,8 @@ const memoryStorageHandler = function (
     next();
   };
 
-  switch (operation) {
+  const op = operation.toLowerCase();
+  switch (op) {
     case "mkdirs":
       if (storage.hasOwnProperty(path)) {
         return next(new Error("File already exists"));
