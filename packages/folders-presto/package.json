@@ -20,6 +20,8 @@
     "zod": "^4.0.17"
   },
   "scripts": {
-    "test": "node --test"
+    "test": "yarn test:unit && yarn test:integration",
+    "test:unit": "node --test src/test/test.unit.js",
+    "test:integration": "node --test src/test/test.integration.js"
   }
 }

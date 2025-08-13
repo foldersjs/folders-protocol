@@ -20,6 +20,8 @@
     "zod": "^4.0.17"
   },
   "scripts": {
-    "test": "node --test src/test/folders-hive.test.js"
+    "test": "yarn test:unit && yarn test:integration",
+    "test:unit": "node --test src/test/folders-hive.unit.test.js",
+    "test:integration": "node --test src/test/folders-hive.integration.js"
   }
 }
