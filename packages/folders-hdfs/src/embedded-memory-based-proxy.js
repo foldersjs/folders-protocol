@@ -20,7 +20,7 @@ const getMetadata = (data) => {
 };
 
 // write a memory based hdfs proxy, data stored in Buffer.
-export default function memoryStorageHandler(
+const memoryStorageHandler = function (
   err,
   path,
   operation,
@@ -217,4 +217,12 @@ export default function memoryStorageHandler(
     default:
       return next();
   }
-}
+};
+
+memoryStorageHandler.clear = () => {
+  for (const key in storage) {
+    delete storage[key];
+  }
+};
+
+export default memoryStorageHandler;
