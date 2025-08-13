@@ -79,14 +79,18 @@ export const post = async (
   data,
   headers,
   session,
+  transform,
   fetch = global.fetch,
 ) => {
   const postHeaders = { ...headers };
   postHeaders.Cookie = session.token;
 
+  const body = transform ? data.pipe(transform) : data;
+
   await fetch(endpoint(streamId, `/upload_file?streamId=${streamId}`), {
     method: "POST",
-    body: data,
+    body: body,
     headers: postHeaders,
+    duplex: "half",
   });
 };

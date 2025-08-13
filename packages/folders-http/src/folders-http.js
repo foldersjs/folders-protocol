@@ -1,6 +1,8 @@
 import { z } from "zod";
 import * as defaultRoute from "./route.js";
 import util from "util";
+import { createNaclTransforms } from "./impl.js";
+import { Readable } from "stream";
 
 const OptionsSchema = z.object({
   provider: z.any(),
@@ -14,6 +16,8 @@ class FoldersHttp {
     this.provider = validatedOptions.provider;
     this.route = validatedOptions.route || defaultRoute;
     this.session = null;
+    this.encryptor = null;
+    this.decryptor = null;
 
     if (!this.provider) {
       throw new Error("No backend provider specified.");
@@ -22,6 +26,9 @@ class FoldersHttp {
 
   async start() {
     this.session = await this.route.open("");
+    const { encryptor, decryptor } = createNaclTransforms();
+    this.encryptor = encryptor;
+    this.decryptor = decryptor;
     await this.route.watch(this.session, (message) => this.onMessage(message));
   }
 
@@ -42,7 +49,16 @@ class FoldersHttp {
     const { path, streamId } = data;
     const lsAsync = util.promisify(this.provider.ls).bind(this.provider);
     const result = await lsAsync(path);
-    await this.route.post(streamId, JSON.stringify(result), {}, this.session);
+    const resultStream = new Readable();
+    resultStream.push(JSON.stringify(result));
+    resultStream.push(null);
+    await this.route.post(
+      streamId,
+      resultStream,
+      {},
+      this.session,
+      this.encryptor,
+    );
   }
 
   async cat(data) {
@@ -50,9 +66,15 @@ class FoldersHttp {
     const catAsync = util.promisify(this.provider.cat).bind(this.provider);
     const result = await catAsync(path);
     const headers = {
-      "Content-Length": result.size,
+      "Content-Length": result.size, // This will be incorrect after encryption.
     };
-    await this.route.post(streamId, result.stream, headers, this.session);
+    await this.route.post(
+      streamId,
+      result.stream,
+      headers,
+      this.session,
+      this.encryptor,
+    );
   }
 }
 

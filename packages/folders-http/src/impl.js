@@ -1,38 +1,28 @@
-// Not yet used, not used here.
-// var backoff = require('backoff');
-// stream can be moved out. postal interface is mostly limited in this use.
-
-/*
- * Polyfill for promises: let's just implement a subset.
- */
-import Promise from "promise";
-
-/*
- * Messaging library: security and verification.
- * Special thanks to TweetNaCl public domain contributors.
- */
-import nf from "tweetnacl";
-var handshakePub = nf.util.encodeBase64(nf.box.keyPair().publicKey);
-// var Nacl = require('nacl-stream');
+import nacl from "tweetnacl";
 import Nacl from "./util/stream-nacl.js";
 
-import outbound from "request";
-import postal from "postal";
-import * as route from "./route.js";
-route.channel = function (uri) {
-  var channel = postal.channel(namespace);
-  return channel;
-};
-route.post = function (uri, opts) {
-  return outbound.post(uri, { headers: headers });
-};
-route.Promise = Promise;
-
-// NOTES: This is currently just a singleton transfom, we are not managing multiple states.
-route.transform = Nacl;
-route.metaTransform = handshakePub;
-/*
- *
- * Fio().watch returns a Promise for a postaljs channel and provides a post method which pipes to request.post, optionally using a transform.
- *
+/**
+ * @typedef {Object} NaclTransforms
+ * @property {import('stream').Transform} encryptor - The encryption transform.
+ * @property {import('stream').Transform} decryptor - The decryption transform.
  */
+
+/**
+ * Creates a pair of NaCl encryption and decryption streams.
+ *
+ * FIXME: This uses a hardcoded, insecure key and nonce for demonstration
+ * purposes. In a real application, you must use a secure key exchange
+ * mechanism (like Diffie-Hellman) to generate a shared secret, and then
+ * derive the key and nonce from that secret.
+ *
+ * @returns {NaclTransforms} An object containing the encryptor and decryptor streams.
+ */
+export function createNaclTransforms() {
+  const key = new Uint8Array(32).fill(1); // INSECURE: Replace with a derived shared secret
+  const nonce = new Uint8Array(16).fill(2); // INSECURE: Replace with a derived nonce
+
+  const encryptor = new Nacl({ key, nonce });
+  const decryptor = new Nacl({ key, nonce, unbox: true });
+
+  return { encryptor, decryptor };
+}
