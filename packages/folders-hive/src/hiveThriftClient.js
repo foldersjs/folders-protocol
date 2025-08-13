@@ -39,9 +39,14 @@ const getReverseTColumn = (numericValue) => {
   }
 };
 
+const saslPlainHandleShake = promisify(thriftSaslHelper.saslPlainHandleShake);
+
 class HiveThriftClient {
   constructor(options) {
     this.options = options;
+    this.client = null;
+    this.connection = null;
+    this.session = null;
   }
 
   async connect() {
@@ -61,61 +66,49 @@ class HiveThriftClient {
     );
     this.client = thrift.createClient(hive, this.connection);
 
-    this.client.OpenSession = promisify(this.client.OpenSession).bind(
-      this.client,
-    );
-    this.client.CloseSession = promisify(this.client.CloseSession).bind(
-      this.client,
-    );
-    this.client.GetSchemas = promisify(this.client.GetSchemas).bind(
-      this.client,
-    );
-    this.client.GetTables = promisify(this.client.GetTables).bind(this.client);
-    this.client.GetColumns = promisify(this.client.GetColumns).bind(
-      this.client,
-    );
-    this.client.ExecuteStatement = promisify(this.client.ExecuteStatement).bind(
-      this.client,
-    );
-    this.client.GetResultSetMetadata = promisify(
-      this.client.GetResultSetMetadata,
-    ).bind(this.client);
-    this.client.FetchResults = promisify(this.client.FetchResults).bind(
-      this.client,
-    );
+    const clientMethodsToPromisify = [
+      "OpenSession",
+      "CloseSession",
+      "GetSchemas",
+      "GetTables",
+      "GetColumns",
+      "ExecuteStatement",
+      "GetResultSetMetadata",
+      "FetchResults",
+    ];
 
-    return new Promise((resolve, reject) => {
-      this.connection.on("error", reject);
-      this.connection.on("connect", async () => {
-        try {
-          if (this.options.auth.toLowerCase() === "none") {
-            await new Promise((resolve, reject) => {
-              thriftSaslHelper.saslPlainHandleShake(
-                this.connection.connection,
-                this.options,
-                (err) => {
-                  if (err) return reject(err);
-                  resolve();
-                },
-              );
-            });
-          }
+    for (const method of clientMethodsToPromisify) {
+      this.client[method] = promisify(this.client[method]).bind(this.client);
+    }
 
-          const protocol = ttypes.TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V7;
-          const openSessReq = new ttypes.TOpenSessionReq({
-            username: this.options.username,
-            password: this.options.password,
-            client_protocol: protocol,
-          });
-          const response = await this.client.OpenSession(openSessReq);
-          this.session = response.sessionHandle;
-          resolve(this.session);
-        } catch (error) {
-          this.session = null;
-          reject(error);
-        }
-      });
+    const connectPromise = new Promise((resolve, reject) => {
+      this.connection.once("error", reject);
+      this.connection.once("connect", resolve);
     });
+
+    try {
+      await connectPromise;
+
+      if (this.options.auth.toLowerCase() === "none") {
+        await saslPlainHandleShake(this.connection.connection, this.options);
+      }
+
+      const protocol = ttypes.TProtocolVersion.HIVE_CLI_SERVICE_PROTOCOL_V7;
+      const openSessReq = new ttypes.TOpenSessionReq({
+        username: this.options.username,
+        password: this.options.password,
+        client_protocol: protocol,
+      });
+      const response = await this.client.OpenSession(openSessReq);
+      this.session = response.sessionHandle;
+      return this.session;
+    } catch (error) {
+      this.session = null;
+      if (this.connection) {
+        this.connection.end();
+      }
+      throw error;
+    }
   }
 
   async disconnect() {

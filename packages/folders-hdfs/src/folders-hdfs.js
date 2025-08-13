@@ -1,4 +1,5 @@
 import { resolve as urlResolve } from "url";
+import { promisify } from "util";
 import assert from "node:assert";
 import mime from "mime";
 import WebHDFSProxy from "webhdfs-proxy";
@@ -47,38 +48,36 @@ const parseError = async (res) => {
 };
 
 const startEmbeddedProxy = async (options) => {
-  let _handler;
-  if (options.backend && options.backend.instance) {
+  let handler;
+  if (options.backend?.instance) {
     const { default: FoldersStorageHandler } = await import(
       "./embedded-folders-based-proxy.js"
     );
     const foldersStorageHandler = new FoldersStorageHandler(
       options.backend.instance,
     );
-    _handler = foldersStorageHandler.storageHandler();
+    handler = foldersStorageHandler.storageHandler();
   } else {
-    const { default: handler } = await import(
+    const { default: defaultHandler } = await import(
       "./embedded-memory-based-proxy.js"
     );
-    _handler = handler;
+    handler = defaultHandler;
   }
 
-  const PORT = (options.backend && options.backend.port) || 40050;
+  const port = options.backend?.port || 40050;
+  const createServerAsync = promisify(WebHDFSProxy.createServer);
 
-  return new Promise((resolve, reject) => {
-    WebHDFSProxy.createServer(
-      { path: "/webhdfs/v1", validate: true, http: { port: PORT } },
-      _handler,
-      (err, servers) => {
-        if (err) {
-          console.error(`WebHDFS proxy server started failed: ${err.message}`);
-          return reject(err);
-        }
-        console.log("WebHDFS proxy server started success.");
-        resolve(servers);
-      },
+  try {
+    const servers = await createServerAsync(
+      { path: "/webhdfs/v1", validate: true, http: { port } },
+      handler,
     );
-  });
+    console.log("WebHDFS proxy server started successfully.");
+    return servers;
+  } catch (err) {
+    console.error(`WebHDFS proxy server failed to start: ${err.message}`);
+    throw err;
+  }
 };
 
 class FoldersHdfs {
@@ -104,9 +103,7 @@ class FoldersHdfs {
 
   async stop() {
     if (this.servers) {
-      await Promise.all(
-        this.servers.map((s) => new Promise((resolve) => s.close(resolve))),
-      );
+      await Promise.all(this.servers.map((s) => promisify(s.close).call(s)));
     }
   }
 
