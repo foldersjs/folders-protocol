@@ -6,7 +6,7 @@ import path from "path";
 import os from "os";
 //var publicIp = require('public-ip');
 import compression from "compression";
-import stubApp from "./test/stubApp.js";
+import stubApp from "./util/stubApp.js";
 import Annotation from "./annotate.js";
 import cors from "cors";
 import Handshake from "folders/src/handshake.js";
@@ -14,6 +14,7 @@ import Qs from "qs";
 import mime from "mime";
 import LocalFio from "folders/src/folders-local.js";
 import helpers from "folders/src/util/helpers.js";
+import Nacl from "./util/stream-nacl.js";
 
 const app = express();
 const HandshakeService = Handshake.HandshakeService;
@@ -35,17 +36,18 @@ class StandaloneServer {
 
   handshakeService(serverPublicKey, serverSecretKey) {
     this.service = new HandshakeService();
-    this.secured = true;
     if (serverPublicKey && serverPublicKey != "") {
-      this.publicKey = serverPublicKey;
       this.keypair = {
         publicKey: Handshake.decodeHexString(serverPublicKey),
         secretKey: Handshake.decodeHexString(serverSecretKey),
       };
     } else {
+      //
       this.keypair = Handshake.createKeypair();
-      this.publicKey = Handshake.stringify(this.keypair.publicKey);
     }
+    this.service.bob = this.keypair;
+    this.publicKey = Handshake.stringify(this.keypair.publicKey);
+    this.secured = true;
   }
 
   mountInstance(cb, clientUri) {
@@ -228,8 +230,48 @@ class StandaloneServer {
       if (!ok) {
         res.status(401).send("invalid token");
       } else {
+        const sessionKey =
+          this.service.session[this.instanceId][
+            this.service.session[this.instanceId].length - 1
+          ];
+        const sharedSecret = nacl.box.before(sessionKey, this.keypair.secretKey);
+        if (!this.sharedSecrets) {
+          this.sharedSecrets = {};
+        }
+        this.sharedSecrets[this.instanceId] = sharedSecret;
         res.status(200).json({ success: true });
       }
+    });
+
+    app.post("/set_files", (req, res) => {
+      // TODO: Implement proper session management
+      const shareId = "testshareid";
+      const shareName = "testshare";
+      const token = "testtoken";
+
+      res.status(200).json({
+        shareId,
+        shareName,
+        token,
+        publicKey: this.publicKey,
+      });
+    });
+
+    app.post("/upload_file", (req, res) => {
+      const streamId = req.query.streamId;
+      const sharedSecret = this.sharedSecrets[this.instanceId];
+      const key = sharedSecret.slice(0, 32);
+      const nonce = sharedSecret.slice(0, 16);
+      const decryptor = new Nacl({ key, nonce, unbox: true });
+
+      const decryptedStream = req.pipe(decryptor);
+
+      // TODO: Do something with the decrypted stream
+      decryptedStream.on("data", (chunk) => {
+        // console.log('decrypted data:', chunk.toString());
+      });
+
+      res.status(200).send("OK");
     });
   }
 

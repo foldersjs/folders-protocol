@@ -3,6 +3,7 @@ import * as defaultRoute from "./route.js";
 import util from "util";
 import { createNaclTransforms } from "./impl.js";
 import { Readable } from "stream";
+import Handshake from "folders/src/handshake.js";
 
 const OptionsSchema = z.object({
   provider: z.any(),
@@ -26,7 +27,12 @@ class FoldersHttp {
 
   async start() {
     this.session = await this.route.open("");
-    const { encryptor, decryptor } = createNaclTransforms();
+    const clientKeypair = Handshake.createKeypair();
+    const sessionKey = await this.route.handshake(this.session, clientKeypair);
+    const { encryptor, decryptor } = createNaclTransforms(
+      this.session.publicKey,
+      sessionKey,
+    );
     this.encryptor = encryptor;
     this.decryptor = decryptor;
     await this.route.watch(this.session, (message) => this.onMessage(message));

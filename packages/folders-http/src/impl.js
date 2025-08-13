@@ -1,6 +1,14 @@
 import nacl from "tweetnacl";
 import Nacl from "./util/stream-nacl.js";
 
+function decodeHexString(str) {
+  const arr = [];
+  for (let i = 0; i < str.length; i += 2) {
+    arr.push(parseInt(str.substring(i, i + 2), 16));
+  }
+  return new Uint8Array(arr);
+}
+
 /**
  * @typedef {Object} NaclTransforms
  * @property {import('stream').Transform} encryptor - The encryption transform.
@@ -17,9 +25,12 @@ import Nacl from "./util/stream-nacl.js";
  *
  * @returns {NaclTransforms} An object containing the encryptor and decryptor streams.
  */
-export function createNaclTransforms() {
-  const key = new Uint8Array(32).fill(1); // INSECURE: Replace with a derived shared secret
-  const nonce = new Uint8Array(16).fill(2); // INSECURE: Replace with a derived nonce
+export function createNaclTransforms(serverPublicKeyStr, sessionKey) {
+  const serverPublicKey = decodeHexString(serverPublicKeyStr);
+  const sharedSecret = nacl.box.before(serverPublicKey, sessionKey.secretKey);
+
+  const key = sharedSecret.slice(0, 32);
+  const nonce = sharedSecret.slice(0, 16);
 
   const encryptor = new Nacl({ key, nonce });
   const decryptor = new Nacl({ key, nonce, unbox: true });

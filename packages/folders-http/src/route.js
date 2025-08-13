@@ -5,12 +5,15 @@
  * This connects to a remote service requesting a new session and watches for events.
  *
  */
-const prefix = "https://folders.io";
+const prefix = "http://localhost:8080";
 process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
 
 const endpoint = (key, path) => {
+  // TODO: key is unused
   return `${prefix}${path}`;
 };
+
+import Handshake from "folders/src/handshake.js";
 
 // Request a new session, getting a share ID and token.
 export const open = async (baseUri, params, fetch = global.fetch) => {
@@ -26,14 +29,14 @@ export const open = async (baseUri, params, fetch = global.fetch) => {
     headers: { "Content-Type": "application/json" },
   });
 
-  const cookie = response.headers.get("set-cookie");
   const data = await response.json();
 
   return {
     endpoint: endpoint(data.shareName, `/g/${data.shareName}`),
     shareName: data.shareName,
     shareId: data.shareId,
-    token: cookie,
+    token: data.token,
+    publicKey: data.publicKey,
   };
 };
 
@@ -71,6 +74,32 @@ export const watch = async (session, onMessage, fetch = global.fetch) => {
   stream.on("end", () => {
     // console.log('stream closed');
   });
+};
+
+export const handshake = async (
+  session,
+  clientKeypair,
+  fetch = global.fetch,
+) => {
+  const { shareId, publicKey: serverPublicKeyStr } = session;
+  const serverPublicKey = Handshake.decodeHexString(serverPublicKeyStr);
+
+  const handshake = Handshake.createHandshake(clientKeypair, {
+    publicKey: serverPublicKey,
+  });
+  const token = handshake.handshake;
+
+  const response = await fetch(
+    endpoint(shareId, `/handshake?token=${token}`),
+    {
+      method: "GET",
+    },
+  );
+
+  if (response.status !== 200) {
+    throw new Error("Handshake failed");
+  }
+  return handshake.session;
 };
 
 // Send a buffered response to a watched request.
