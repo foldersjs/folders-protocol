@@ -2,6 +2,7 @@ import { test, mock } from "node:test";
 import assert from "node:assert";
 import FoldersHttp from "../folders-http.js";
 import { Readable, Writable } from "stream";
+import Handshake from "folders/src/handshake.js";
 
 test("FoldersHttp encryption integration test", async () => {
   const mockProvider = {
@@ -17,7 +18,15 @@ test("FoldersHttp encryption integration test", async () => {
   };
 
   const mockRoute = {
-    open: async () => ({ token: "test-token", shareId: "test-share" }),
+    open: async () => ({
+      token: "test-token",
+      shareId: "test-share",
+      publicKey: Handshake.stringify(Handshake.createKeypair().publicKey),
+    }),
+    handshake: async () => ({
+      secretKey: new Uint8Array(32),
+      publicKey: new Uint8Array(32),
+    }),
     watch: async (session, onMessage) => {
       // Simulate receiving a message
       onMessage({
